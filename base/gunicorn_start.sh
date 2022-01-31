@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-NAME="OpenEats"                                   # Name of the application
+NAME="OwnRecipes"                                   # Name of the application
 DJANGODIR=/code                                   # Django project directory
 USER=root                                    # the user to run as
 GROUP=root                                   # the group to run as

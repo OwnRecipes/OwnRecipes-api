@@ -1,4 +1,4 @@
-# Django settings for openeats project.
+# Django settings for OwnRecipes project.
 import os, datetime
 
 # We can't set the debug just using the env var.
