@@ -25,13 +25,13 @@ SITE_ID = 1
 DATABASES = {
     'default': {
         'ENGINE': os.environ.get('DATABASE_ENGINE', 'django.db.backends.mysql'),
-        'NAME': os.environ.get('MYSQL_DATABASE', 'openeats'),
+        'NAME': os.environ.get('MYSQL_DATABASE', 'ownrecipes'),
         'USER': os.environ.get('MYSQL_USER', 'root'),
         'PASSWORD': os.environ.get('MYSQL_ROOT_PASSWORD', ''),
         'HOST': os.environ.get('MYSQL_HOST', 'db'),
         'PORT': os.environ.get('MYSQL_PORT', '3306'),
         'TEST': {
-            'NAME': os.environ.get('MYSQL_TEST_DATABASE', 'test_openeats')
+            'NAME': os.environ.get('MYSQL_TEST_DATABASE', 'test_ownrecipes')
         }
     }
 }

@@ -8,12 +8,12 @@ services:
     environment:
       - DJANGO_SECERT_KEY=sdfsadfas32e98zsdvhhsnz6udvbksjdhfi4galshjfg
       - DJANGO_SETTINGS_MODULE=base.settings
-      - MYSQL_DATABASE=test_openeats
-      - MYSQL_TEST_DATABASE=test_openeats
+      - MYSQL_DATABASE=test_ownrecipes
+      - MYSQL_TEST_DATABASE=test_ownrecipes
       - MYSQL_ROOT_PASSWORD=root
   db:
     image: mariadb
     environment:
-      - MYSQL_DATABASE=test_openeats
-      - MYSQL_TEST_DATABASE=test_openeats
+      - MYSQL_DATABASE=test_ownrecipes
+      - MYSQL_TEST_DATABASE=test_ownrecipes
       - MYSQL_ROOT_PASSWORD=root

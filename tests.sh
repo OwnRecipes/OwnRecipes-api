@@ -1,12 +1,11 @@
 #!/usr/bin/env sh
 
 # Install test related dependencies
-pip install coveralls==1.3.0
-apk add git
+pip install coveralls==3.3.1
 
 # Prep the DB for testing
-python manage.py reset_db --noinput
-python manage.py migrate
+python3 manage.py reset_db --noinput
+python3 manage.py migrate
 
 # Run the tests and create a coverage report
 coverage run --omit="*/migrations*,*/fixtures*" manage.py test -k
@@ -16,4 +15,4 @@ if [ $ret -ne 0 ]; then
 fi
 
 # Submit coverage to Coveralls
-coveralls
+#coveralls
