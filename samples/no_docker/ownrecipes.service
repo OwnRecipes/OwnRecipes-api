@@ -1,0 +1,18 @@
+[Unit]
+Description=OwnRecipes
+After = mariadb.service systemd-user-sessions.service network-online.target systemd-networkd.service
+
+[Service]
+Type=simple
+User=ownrecipes
+
+EnvironmentFile=/opt/ownrecipes/ownrecipes-api/.env
+ExecStart =/usr/bin/ionice -c 3 /usr/bin/nice -n 18 /bin/bash /opt/ownrecipes/ownrecipes-api/base/prod-entrypoint.sh
+Restart = always
+RestartSec = 1
+
+# Configures the time to wait before service is stopped forcefully.
+TimeoutStopSec=2000
+
+[Install]
+WantedBy=multi-user.target
