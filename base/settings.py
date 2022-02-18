@@ -2,12 +2,17 @@
 import os, datetime
 
 # We can't set the debug just using the env var.
-# Python with evaluate any string as a True bool.
+# Python will evaluate any string as a True bool.
 DEBUG = False
 if os.environ.get('DJANGO_DEBUG', 'False').lower() == 'true':
     DEBUG = True
 
 SERVE_MEDIA = True
+
+# If you are using the api behind a reverse proxy,
+# then generate the correct absolute URI's:
+if os.environ.get('USE_X_FORWARDED_HOST', 'False').lower() == 'true':
+    USE_X_FORWARDED_HOST = True
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 PROJECT_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
