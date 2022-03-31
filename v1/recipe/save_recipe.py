@@ -86,8 +86,8 @@ class SaveRecipe(Validators):
     def _delete_recipe_groups():
             # Check to see if we have any Cuisines or Courses with no recipes associated with them.
             # Id we do, delete them.
-            Cuisine.objects.all().annotate(total=Count('recipe', distinct=True)).filter(total=0).delete()
-            Course.objects.all().annotate(total=Count('recipe', distinct=True)).filter(total=0).delete()
+            Cuisine.objects.all().exclude(author__is_staff='1').annotate(total=Count('recipe', distinct=True)).filter(total=0).delete()
+            Course.objects.all().exclude(author__is_staff='1').annotate(total=Count('recipe', distinct=True)).filter(total=0).delete()
 
     def _save_tags(self, recipe):
         if self.tags:
