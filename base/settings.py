@@ -18,7 +18,7 @@ if os.environ.get('USE_X_FORWARDED_HOST', 'False').lower() == 'true':
 PROJECT_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'ChangeMe!')
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # Force Django to use https headers if its behind a https proxy.
 # See: https://docs.djangoproject.com/en/2.0/ref/settings/#secure-proxy-ssl-header
@@ -32,7 +32,7 @@ DATABASES = {
         'ENGINE': os.environ.get('DATABASE_ENGINE', 'django.db.backends.mysql'),
         'NAME': os.environ.get('MYSQL_DATABASE', 'ownrecipes'),
         'USER': os.environ.get('MYSQL_USER', 'root'),
-        'PASSWORD': os.environ.get('MYSQL_ROOT_PASSWORD', ''),
+        'PASSWORD': os.environ.get('MYSQL_ROOT_PASSWORD'),
         'HOST': os.environ.get('MYSQL_HOST', 'db'),
         'PORT': os.environ.get('MYSQL_PORT', '3306'),
         'TEST': {

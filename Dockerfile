@@ -14,8 +14,7 @@ RUN apk update && apk upgrade && \
 COPY base/prod-entrypoint.sh /startup/
 RUN chmod +x /startup/prod-entrypoint.sh
 
-RUN mkdir /code
 WORKDIR /code
-ADD base/requirements.txt /code/requirements.txt
+COPY base/requirements.txt ./requirements.txt
 RUN pip install -r requirements.txt
-ADD . /code/
+COPY . ./
