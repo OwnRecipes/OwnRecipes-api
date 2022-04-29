@@ -67,7 +67,7 @@
         "model": "recipe_groups.course",
         "fields": {
             "author": 1,
-            "slug": "sidedish",
+            "slug": "side-dish",
             "title": "Side Dish"
         }
     },

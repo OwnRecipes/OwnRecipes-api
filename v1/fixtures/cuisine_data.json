@@ -27,7 +27,16 @@
         }
     },
     {
-        "pk": 3,
+        "pk": 4,
+        "model": "recipe_groups.cuisine",
+        "fields": {
+            "author": 1,
+            "slug": "czech",
+            "title": "Czech"
+        }
+    },
+    {
+        "pk": 5,
         "model": "recipe_groups.cuisine",
         "fields": {
             "author": 1,
@@ -36,7 +45,7 @@
         }
     },
     {
-        "pk": 4,
+        "pk": 6,
         "model": "recipe_groups.cuisine",
         "fields": {
             "author": 1,
@@ -45,7 +54,7 @@
         }
     },
     {
-        "pk": 5,
+        "pk": 7,
         "model": "recipe_groups.cuisine",
         "fields": {
             "author": 1,
@@ -54,7 +63,7 @@
         }
     },
     {
-        "pk": 6,
+        "pk": 8,
         "model": "recipe_groups.cuisine",
         "fields": {
             "author": 1,
@@ -63,7 +72,7 @@
         }
     },
     {
-        "pk": 7,
+        "pk": 9,
         "model": "recipe_groups.cuisine",
         "fields": {
             "author": 1,
@@ -72,7 +81,7 @@
         }
     },
     {
-        "pk": 8,
+        "pk": 10,
         "model": "recipe_groups.cuisine",
         "fields": {
             "author": 1,
@@ -81,7 +90,7 @@
         }
     },
     {
-        "pk": 9,
+        "pk": 11,
         "model": "recipe_groups.cuisine",
         "fields": {
             "author": 1,
@@ -90,7 +99,7 @@
         }
     },
     {
-        "pk": 10,
+        "pk": 12,
         "model": "recipe_groups.cuisine",
         "fields": {
             "author": 1,
@@ -99,7 +108,7 @@
         }
     },
     {
-        "pk": 11,
+        "pk": 13,
         "model": "recipe_groups.cuisine",
         "fields": {
             "author": 1,
@@ -108,7 +117,7 @@
         }
     },
     {
-        "pk": 12,
+        "pk": 14,
         "model": "recipe_groups.cuisine",
         "fields": {
             "author": 1,
@@ -117,7 +126,7 @@
         }
     },
     {
-        "pk": 13,
+        "pk": 15,
         "model": "recipe_groups.cuisine",
         "fields": {
             "author": 1,
@@ -126,16 +135,16 @@
         }
     },
     {
-        "pk": 14,
+        "pk": 16,
         "model": "recipe_groups.cuisine",
         "fields": {
             "author": 1,
             "slug": "mediterranean",
-            "title": "Medierranean"
+            "title": "Mediterranean"
         }
     },
     {
-        "pk": 15,
+        "pk": 17,
         "model": "recipe_groups.cuisine",
         "fields": {
             "author": 1,
@@ -144,16 +153,16 @@
         }
     },
     {
-        "pk": 16,
+        "pk": 18,
         "model": "recipe_groups.cuisine",
         "fields": {
             "author": 1,
-            "slug": "middleeast",
+            "slug": "middle-east",
             "title": "Middle East"
         }
     },
     {
-        "pk": 17,
+        "pk": 19,
         "model": "recipe_groups.cuisine",
         "fields": {
             "author": 1,
@@ -162,7 +171,7 @@
         }
     },
     {
-        "pk": 18,
+        "pk": 20,
         "model": "recipe_groups.cuisine",
         "fields": {
             "author": 1,
@@ -171,7 +180,7 @@
         }
     },
     {
-        "pk": 19,
+        "pk": 21,
         "model": "recipe_groups.cuisine",
         "fields": {
             "author": 1,
