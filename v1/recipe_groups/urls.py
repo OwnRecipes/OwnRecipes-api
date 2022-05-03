@@ -12,6 +12,7 @@ router.register(r'cuisine-count', views.CuisineCountViewSet, base_name='cuisine-
 router.register(r'cuisine', views.CuisineViewSet, base_name='cuisine')
 router.register(r'course-count', views.CourseCountViewSet, base_name='course-count')
 router.register(r'course', views.CourseViewSet, base_name='course')
+router.register(r'tag-count', views.TagCountViewSet, base_name='tag-count')
 router.register(r'tag', views.TagViewSet)
 
 urlpatterns = [

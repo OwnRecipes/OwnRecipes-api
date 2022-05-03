@@ -12,6 +12,7 @@ class RecipeGroupsTests(TestCase):
         'test/users.json',
         'course_data.json',
         'cuisine_data.json',
+        'tag_data.json',
         'recipe_data.json'
     ]
 
@@ -64,9 +65,29 @@ class RecipeGroupsTests(TestCase):
 
         self.assertEqual(response.data.get('count'), 1)
 
+    def test_cuisine_with_tag_filter(self):
+        view = views.CuisineCountViewSet.as_view({'get': 'list'})
+        request = self.factory.get('/api/v1/recipe_groups/cuisine-count/?course=entry&tag=easy')
+        response = view(request)
+
+        self.assertEqual(response.data.get('count'), 1)
+
+        results = response.data.get('results')
+        totals = {"american": 1}
+
+        for item in results:
+            self.assertEquals(totals[item.get('slug')], item.get('total'))
+
     def test_cuisine_with_non_existent_course(self):
         view = views.CuisineCountViewSet.as_view({'get': 'list'})
         request = self.factory.get('/api/v1/recipe_groups/cuisine-count/?course=non-existent')
+        response = view(request)
+
+        self.assertEqual(response.data.get('count'), 0)
+
+    def test_cuisine_with_non_existent_tag(self):
+        view = views.CuisineCountViewSet.as_view({'get': 'list'})
+        request = self.factory.get('/api/v1/recipe_groups/cuisine-count/?tag=non-existent')
         response = view(request)
 
         self.assertEqual(response.data.get('count'), 0)
@@ -80,6 +101,19 @@ class RecipeGroupsTests(TestCase):
 
         results = response.data.get('results')
         totals = {"entry": 31}
+
+        for item in results:
+            self.assertEquals(totals[item.get('slug')], item.get('total'))
+
+    def test_course_with_tag_filter(self):
+        view = views.CourseCountViewSet.as_view({'get': 'list'})
+        request = self.factory.get('/api/v1/recipe_groups/course-count/?cuisine=american&tag=easy')
+        response = view(request)
+
+        self.assertEqual(response.data.get('count'), 1)
+
+        results = response.data.get('results')
+        totals = {"entry": 1}
 
         for item in results:
             self.assertEquals(totals[item.get('slug')], item.get('total'))

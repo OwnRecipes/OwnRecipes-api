@@ -19,7 +19,7 @@ class Recipe(models.Model):
     Cuisines have a one to Many relation with Recipes.
     Tags have a Many to Many relation with Recipes.
     Ingredient Groups have a Many to one relation with Recipes.
-    Subrecipes have a Many to Many relation with Recipes. 
+    Subrecipes have a Many to Many relation with Recipes.
         They allow another recipe to be show in the Ingredient section.
 
     :title: = Title of the Recipe
@@ -48,7 +48,7 @@ class Recipe(models.Model):
     subrecipes = models.ManyToManyField('self', verbose_name=_('subrecipes'), through='SubRecipe', symmetrical=False)
     info = models.TextField(_('info'), help_text="enter information about the recipe", blank=True)
     directions = models.TextField(_('direction_text'), help_text="directions", blank=True)
-    source = models.CharField(_('course'), max_length=200, blank=True)
+    source = models.CharField(_('source'), max_length=200, blank=True)
     prep_time = models.IntegerField(_('prep time'), help_text="enter time in minutes")
     cook_time = models.IntegerField(_('cook time'), help_text="enter time in minutes")
     servings = models.IntegerField(_('servings'), help_text="enter total number of servings")

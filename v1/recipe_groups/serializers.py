@@ -34,6 +34,14 @@ class CuisineSerializer(serializers.ModelSerializer):
             'title',
         )
 
+class TagSerializer(serializers.ModelSerializer):
+    """ Standard `rest_framework` ModelSerializer """
+    class Meta:
+        model = Tag
+        fields = (
+            'id',
+            'title',
+        )
 
 class AggCuisineSerializer(serializers.ModelSerializer):
     """ Standard `rest_framework` ModelSerializer """
@@ -52,12 +60,10 @@ class AggCourseSerializer(serializers.ModelSerializer):
         model = Course
         fields = '__all__'
 
-
-class TagSerializer(serializers.ModelSerializer):
+class AggTagSerializer(serializers.ModelSerializer):
     """ Standard `rest_framework` ModelSerializer """
+    total = serializers.IntegerField(read_only=True)
+
     class Meta:
         model = Tag
-        fields = (
-            'id',
-            'title',
-        )
+        fields = '__all__'

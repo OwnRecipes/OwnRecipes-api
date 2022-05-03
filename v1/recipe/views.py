@@ -11,7 +11,7 @@ from v1.rating.average_rating import convert_rating_to_int
 from . import serializers
 from .models import Recipe
 from .save_recipe import SaveRecipe
-from v1.recipe_groups.models import Cuisine, Course
+from v1.recipe_groups.models import Cuisine, Course, Tag
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
@@ -42,6 +42,11 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if 'course__slug' in self.request.query_params:
             filter_set['course__in'] = Course.objects.filter(
                 slug__in=self.request.query_params.get('course__slug').split(',')
+            )
+
+        if 'tag__slug' in self.request.query_params:
+            filter_set['tags__in'] = Tag.objects.filter(
+                slug__in=self.request.query_params.get('tag__slug').split(',')
             )
 
         query = query.filter(**filter_set)

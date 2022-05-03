@@ -1,0 +1,66 @@
+[
+    {
+        "pk": 1,
+        "model": "recipe_groups.tag",
+        "fields": {
+            "slug": "easy",
+            "title": "easy"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "recipe_groups.tag",
+        "fields": {
+            "slug": "gluten-free",
+            "title": "guten-free"
+        }
+    },
+    {
+        "pk": 3,
+        "model": "recipe_groups.tag",
+        "fields": {
+            "slug": "milk-free",
+            "title": "milk-free"
+        }
+    },
+    {
+        "pk": 4,
+        "model": "recipe_groups.tag",
+        "fields": {
+            "slug": "nut-free",
+            "title": "nut-free"
+        }
+    },
+    {
+        "pk": 5,
+        "model": "recipe_groups.tag",
+        "fields": {
+            "slug": "quick",
+            "title": "quick"
+        }
+    },
+    {
+        "pk": 6,
+        "model": "recipe_groups.tag",
+        "fields": {
+            "slug": "sugar-free",
+            "title": "sugar-free"
+        }
+    },
+    {
+        "pk": 7,
+        "model": "recipe_groups.tag",
+        "fields": {
+            "slug": "vegan",
+            "title": "vegan"
+        }
+    },
+    {
+        "pk": 8,
+        "model": "recipe_groups.tag",
+        "fields": {
+            "slug": "vegetarian",
+            "title": "vegetarian"
+        }
+    }
+]

@@ -15,6 +15,7 @@ class RecipeSerializerTests(TestCase):
         'test/users.json',
         'course_data.json',
         'cuisine_data.json',
+        'tag_data.json',
     ]
 
     def setUp(self):
