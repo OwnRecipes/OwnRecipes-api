@@ -32,7 +32,7 @@ DATABASES = {
         'ENGINE': os.environ.get('DATABASE_ENGINE', 'django.db.backends.mysql'),
         'NAME': os.environ.get('MYSQL_DATABASE', 'ownrecipes'),
         'USER': os.environ.get('MYSQL_USER', 'root'),
-        'PASSWORD': os.environ.get('MYSQL_ROOT_PASSWORD'),
+        'PASSWORD': os.environ.get('MYSQL_USER_PASSWORD', os.environ.get('MYSQL_ROOT_PASSWORD')),
         'HOST': os.environ.get('MYSQL_HOST', 'db'),
         'PORT': os.environ.get('MYSQL_PORT', '3306'),
         'TEST': {

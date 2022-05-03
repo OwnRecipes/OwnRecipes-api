@@ -10,10 +10,10 @@ services:
       - DJANGO_SETTINGS_MODULE=base.settings
       - MYSQL_DATABASE=test_ownrecipes
       - MYSQL_TEST_DATABASE=test_ownrecipes
-      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER_PASSWORD=root
   db:
     image: mariadb
     environment:
       - MYSQL_DATABASE=test_ownrecipes
       - MYSQL_TEST_DATABASE=test_ownrecipes
-      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER_PASSWORD=root
