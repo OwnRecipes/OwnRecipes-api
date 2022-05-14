@@ -84,13 +84,14 @@ class MiniBrowseViewSet(viewsets.mixins.ListModelMixin,
     """
     queryset = Recipe.objects.all()
     serializer_class = serializers.MiniBrowseSerializer
+    ordering_fields = ('-pub_date', 'title')
 
     def list(self, request, *args, **kwargs):
         # If user is anonymous, restrict recipes to public.
         if self.request.user.is_authenticated:
-            qs = Recipe.objects.all()
+            qs = Recipe.objects.all().order_by('-pub_date', 'title')
         else:
-            qs = Recipe.objects.filter(public=True)
+            qs = Recipe.objects.filter(public=True).order_by('-pub_date', 'title')
 
         # Get the limit from the request and the count from the DB.
         # Compare to make sure you aren't accessing more than possible.
@@ -104,6 +105,6 @@ class MiniBrowseViewSet(viewsets.mixins.ListModelMixin,
         # Select a random sample from the DB.
         rand_ids = random.sample(my_ids, limit)
         # set the queryset to that random sample.
-        self.queryset = Recipe.objects.filter(id__in=rand_ids)
+        self.queryset = Recipe.objects.filter(id__in=rand_ids).order_by('-pub_date', 'title')
 
         return super(MiniBrowseViewSet, self).list(request, *args, **kwargs)

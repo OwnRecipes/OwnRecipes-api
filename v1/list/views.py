@@ -21,13 +21,14 @@ class GroceryListViewSet(viewsets.ModelViewSet):
     lookup_field = 'slug'
     serializer_class = GroceryListSerializer
     permission_classes = (IsListOwner,)
+    ordering_fields = ('pub_date',)
 
     def get_queryset(self):
         user = self.request.user
         if user and not user.is_anonymous:
             return GroceryList.objects.filter(
                 Q(author=user) | Q(groceryshared__shared_to=user)
-            )
+            ).order_by('pub_date',)
         return GroceryList.objects.none()
 
 
@@ -40,14 +41,15 @@ class GroceryItemViewSet(viewsets.ModelViewSet):
     serializer_class = GroceryItemSerializer
     permission_classes = (IsItemOwner,)
     filter_backends = (filters.SearchFilter, DjangoFilterBackend)
-    filter_fields = ('list',)
+    filterset_fields = ('list',)
+    ordering_fields = ('list_id', 'order', 'pk')
 
     def get_queryset(self):
         user = self.request.user
         if user and not user.is_anonymous:
             return GroceryItem.objects.filter(
                 Q(list__author=user) | Q(list__groceryshared__shared_to=user)
-            )
+            ).order_by('list_id', 'order', 'pk')
         return GroceryItem.objects.none()
 
 
@@ -65,7 +67,7 @@ class BulkGroceryItemViewSet(ListBulkCreateUpdateDestroyAPIView):
         if user and not user.is_anonymous:
             return GroceryItem.objects.filter(
                 Q(list__author=user) | Q(list__groceryshared__shared_to=user)
-            )
+            ).order_by('list_id', 'order', 'pk')
         return GroceryItem.objects.none()
 
     def bulk_destroy(self, request, *args, **kwargs):

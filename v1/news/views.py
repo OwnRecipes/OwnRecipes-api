@@ -18,6 +18,7 @@ class NewsViewSet(viewsets.ModelViewSet):
     queryset = News.objects.all()
     serializer_class = NewsSerializer
     permission_classes = (IsAdminOrReadOnly,)
+    ordering_fields = ('pub_date',)
 
     @action(detail=True, renderer_classes=[renderers.StaticHTMLRenderer])
     def title(self, request, *args, **kwargs):

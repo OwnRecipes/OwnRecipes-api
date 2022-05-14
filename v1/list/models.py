@@ -23,9 +23,6 @@ class GroceryList(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     pub_date = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
-        ordering = ['pub_date']
-
     def __str__(self):
         return '%s' % self.title
 
@@ -47,9 +44,6 @@ class GroceryItem(models.Model):
     title = models.CharField(_("title"), max_length=550)
     completed = models.BooleanField(_("completed"), default=False)
     order = models.IntegerField(_("order"), default=0)
-
-    class Meta:
-        ordering = ['list_id', 'order', 'pk']
 
     def __str__(self):
         return '%s' % self.title

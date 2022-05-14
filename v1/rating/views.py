@@ -28,7 +28,8 @@ class RatingViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticatedOrReadOnly,
         IsOwnerOrReadOnly
     )
-    filter_fields = ('recipe', 'recipe__slug', 'author', 'comment', 'rating')
+    filterset_fields = ('recipe', 'recipe__slug', 'author', 'comment', 'rating')
+    ordering_fields = ('id',)
 
 
 class RatingCountViewSet(APIView):

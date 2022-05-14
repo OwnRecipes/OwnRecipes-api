@@ -56,9 +56,6 @@ class Recipe(models.Model):
     update_date = models.DateTimeField(auto_now=True)
     public = models.BooleanField(default=True)
 
-    class Meta:
-        ordering = ['-pub_date', 'title']
-
     def __str__(self):
         return '%s' % self.title
 
