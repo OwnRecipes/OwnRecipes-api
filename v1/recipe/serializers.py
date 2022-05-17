@@ -61,7 +61,7 @@ class MiniBrowseSerializer(FieldLimiter, serializers.ModelSerializer):
     """ Used to get random recipes and limit the return data. """
     photo_thumbnail = CustomImageField(required=False)
     pub_date = serializers.DateTimeField(read_only=True)
-    rating = AverageRating(source='id')
+    rating = serializers.ReadOnlyField(source='rating_avg')
 
     class Meta:
         model = Recipe
@@ -82,7 +82,7 @@ class RecipeSerializer(FieldLimiter, serializers.ModelSerializer):
     photo_thumbnail = CustomImageField(required=False)
     ingredient_groups = IngredientGroupSerializer(many=True)
     tags = TagSerializer(many=True, required=False)
-    rating = AverageRating(source='id')
+    rating = serializers.ReadOnlyField(source='rating_avg')
     subrecipes = SerializerMethodField()
     pub_date = serializers.DateTimeField(read_only=True)
     update_date = serializers.DateTimeField(read_only=True)

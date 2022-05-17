@@ -2,6 +2,7 @@
 # encoding: utf-8
 
 import json
+from django.contrib.auth.models import User
 from django.test import TestCase
 from rest_framework.test import APIRequestFactory
 from v1.recipe import views
@@ -14,7 +15,8 @@ class RecipeSerializerTests(TestCase):
         'cuisine_data.json',
         'tag_data.json',
         'ing_data.json',
-        'recipe_data.json'
+        'recipe_data.json',
+        'rating_data.json'
     ]
 
     def setUp(self):
@@ -37,6 +39,12 @@ class RecipeSerializerTests(TestCase):
         request = self.factory.get('/api/v1/recipe/recipes/tasty-chili?course=entry&cuisine=american')
         response = view(request)
 
+        self.assertEqual(len(response.data.get('results')), 31)
+
+        request = self.factory.get('/api/v1/recipe/recipes/?ordering=-rating_avg')
+        response = view(request)
+        # for i in range(len(response.data.get('results'))):
+        #     print(response.data.get('results')[i]['slug'] + ' : ' + str(response.data.get('results')[i]['rating']))
         self.assertEqual(len(response.data.get('results')), 31)
 
     def test_mini_browse(self):
