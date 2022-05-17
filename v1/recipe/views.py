@@ -65,7 +65,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         return Response(
             serializers.RecipeSerializer(
-                SaveRecipe(request.data, self.request.user).create()
+                SaveRecipe(request.data, self.request.user).create(),
+                context={'request': request}
             ).data
         )
 
@@ -73,7 +74,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
         partial = kwargs.pop('partial', False)
         return Response(
             serializers.RecipeSerializer(
-                SaveRecipe(request.data, self.request.user, partial=partial).update(self.get_object())
+                SaveRecipe(request.data, self.request.user, partial=partial).update(self.get_object()),
+                context={'request': request}
             ).data
         )
 
