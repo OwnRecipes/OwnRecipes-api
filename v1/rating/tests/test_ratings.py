@@ -31,22 +31,22 @@ class RatingsSerializerTests(TestCase):
         response = self.client.get('/api/v1/rating/rating/' + str(inserted_rating_id) + '/', {})
         self.assertEqual(response.status_code, 200)
         retrieved_rating_data = response.json()
-        self.assertEquals(retrieved_rating_data['id'], inserted_rating_id)
-        self.assertEquals(retrieved_rating_data['recipe'], new_rating_data['recipe'])
-        self.assertEquals(retrieved_rating_data['comment'], new_rating_data['comment'])
-        self.assertEquals(retrieved_rating_data['author'], new_rating_data['author'])
-        self.assertEquals(retrieved_rating_data['rating'], new_rating_data['rating'])
-        self.assertEquals(retrieved_rating_data['username'], self.user_name)
+        self.assertEqual(retrieved_rating_data['id'], inserted_rating_id)
+        self.assertEqual(retrieved_rating_data['recipe'], new_rating_data['recipe'])
+        self.assertEqual(retrieved_rating_data['comment'], new_rating_data['comment'])
+        self.assertEqual(retrieved_rating_data['author'], new_rating_data['author'])
+        self.assertEqual(retrieved_rating_data['rating'], new_rating_data['rating'])
+        self.assertEqual(retrieved_rating_data['username'], self.user_name)
         now = datetime.now().strftime("%d.%m.%Y %H:%M:%S")
-        self.assertEquals(retrieved_rating_data['pub_date'], now)
-        self.assertEquals(retrieved_rating_data['update_date'], now)
+        self.assertEqual(retrieved_rating_data['pub_date'], now)
+        self.assertEqual(retrieved_rating_data['update_date'], now)
         recipe_slug = retrieved_rating_data['recipe']
 
         # recipe get request
         response = self.client.get('/api/v1/recipe/recipes/' + recipe_slug + "/", {})
         self.assertEqual(response.status_code, 200)
         retrieved_recipe_data = response.json()
-        self.assertEquals(retrieved_recipe_data['slug'], new_rating_data['recipe'])
+        self.assertEqual(retrieved_recipe_data['slug'], new_rating_data['recipe'])
 
     def test_update_rating(self):
         new_rating_data = {"recipe": "tasty-chili", "author": self.user_id,
@@ -61,7 +61,7 @@ class RatingsSerializerTests(TestCase):
         response = self.client.get('/api/v1/rating/rating/' + str(inserted_rating_id) + '/', {})
         self.assertEqual(response.status_code, 200)
         retrieved_rating_data = response.json()
-        self.assertEquals(retrieved_rating_data['id'], inserted_rating_id)
+        self.assertEqual(retrieved_rating_data['id'], inserted_rating_id)
         recipe_slug = retrieved_rating_data['recipe']
 
         # rating put request
@@ -76,11 +76,11 @@ class RatingsSerializerTests(TestCase):
         response = self.client.get('/api/v1/rating/rating/' + str(inserted_rating_id) + '/', {})
         self.assertEqual(response.status_code, 200)
         retrieved_rating_data = response.json()
-        self.assertEquals(retrieved_rating_data['id'], inserted_rating_id)
-        self.assertEquals(retrieved_rating_data['recipe'], update_rating_data['recipe'])
-        self.assertEquals(retrieved_rating_data['comment'], update_rating_data['comment'])
-        self.assertEquals(retrieved_rating_data['author'], update_rating_data['author'])
-        self.assertEquals(retrieved_rating_data['rating'], update_rating_data['rating'])
+        self.assertEqual(retrieved_rating_data['id'], inserted_rating_id)
+        self.assertEqual(retrieved_rating_data['recipe'], update_rating_data['recipe'])
+        self.assertEqual(retrieved_rating_data['comment'], update_rating_data['comment'])
+        self.assertEqual(retrieved_rating_data['author'], update_rating_data['author'])
+        self.assertEqual(retrieved_rating_data['rating'], update_rating_data['rating'])
 
     def test_delete_rating(self):
         new_rating_data = {"recipe": "tasty-chili", "author": self.user_id,
@@ -95,7 +95,7 @@ class RatingsSerializerTests(TestCase):
         response = self.client.get('/api/v1/rating/rating/' + str(inserted_rating_id) + '/', {})
         self.assertEqual(response.status_code, 200)
         retrieved_rating_data = response.json()
-        self.assertEquals(retrieved_rating_data['id'], inserted_rating_id)
+        self.assertEqual(retrieved_rating_data['id'], inserted_rating_id)
         recipe_slug = retrieved_rating_data['recipe']
 
         # rating delete request
@@ -110,4 +110,4 @@ class RatingsSerializerTests(TestCase):
         response = self.client.get('/api/v1/recipe/recipes/' + recipe_slug + "/", {})
         self.assertEqual(response.status_code, 200)
         retrieved_recipe_data = response.json()
-        self.assertEquals(retrieved_recipe_data['slug'], new_rating_data['recipe'])
+        self.assertEqual(retrieved_recipe_data['slug'], new_rating_data['recipe'])

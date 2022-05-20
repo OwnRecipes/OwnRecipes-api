@@ -12,8 +12,8 @@ class RatingSerializer(serializers.ModelSerializer):
     recipe = serializers.SlugRelatedField(slug_field='slug', queryset=Recipe.objects.all())
     user_id = serializers.ReadOnlyField(source='author.id')
     username = serializers.ReadOnlyField(source='author.username')
-    pub_date = serializers.DateTimeField(format="%d.%m.%Y %H:%M:%S", read_only=True)
-    update_date = serializers.DateTimeField(format="%d.%m.%Y %H:%M:%S", read_only=True)
+    pub_date = serializers.DateTimeField(read_only=True)
+    update_date = serializers.DateTimeField(read_only=True)
 
     class Meta:
         model = Rating

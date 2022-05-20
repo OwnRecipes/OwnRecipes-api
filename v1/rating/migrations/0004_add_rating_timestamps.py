@@ -14,12 +14,12 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='rating',
             name='pub_date',
-            field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now),
+            field=models.DateTimeField(auto_now_add=True, default='1970-01-01 00:00:00.000000+00:00'),
             preserve_default=False,
         ),
         migrations.AddField(
             model_name='rating',
             name='update_date',
-            field=models.DateTimeField(auto_now=True),
+            field=models.DateTimeField(auto_now=True, default='1970-01-01 00:00:00.000000+00:00'),
         ),
     ]

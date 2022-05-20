@@ -30,7 +30,7 @@ class RatingViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticatedOrReadOnly,
         IsOwnerOrReadOnly
     )
-    filter_fields = ('recipe', 'recipe__slug', 'author', 'rating', 'update_date')
+    filterset_fields = ('recipe', 'recipe__slug', 'author', 'rating', 'update_date')
 
 
 class RatingCountViewSet(APIView):
