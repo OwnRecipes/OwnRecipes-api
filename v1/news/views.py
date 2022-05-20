@@ -15,10 +15,9 @@ class NewsViewSet(viewsets.ModelViewSet):
     This viewset automatically provides `list`, `create`, `retrieve`,
     `update` and `destroy` actions for THe homepage News items.
     """
-    queryset = News.objects.all()
+    queryset = News.objects.all().order_by('pub_date')
     serializer_class = NewsSerializer
     permission_classes = (IsAdminOrReadOnly,)
-    ordering_fields = ('pub_date',)
 
     @action(detail=True, renderer_classes=[renderers.StaticHTMLRenderer])
     def title(self, request, *args, **kwargs):

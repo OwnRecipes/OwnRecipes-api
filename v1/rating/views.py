@@ -5,6 +5,8 @@ from django.db.models import Avg
 from rest_framework import viewsets, permissions
 from rest_framework.views import APIView
 
+from rest_framework import filters
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
 
 from .models import Rating
@@ -22,18 +24,18 @@ class RatingViewSet(viewsets.ModelViewSet):
     This viewset automatically provides `list`, `create`, `retrieve`,
     `update` and `destroy` actions for Ingredients.
     """
-    queryset = Rating.objects.all()
+    queryset = Rating.objects.all().order_by('id')
     serializer_class = RatingSerializer
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
         IsOwnerOrReadOnly
     )
+    filter_backends = (DjangoFilterBackend,)
     filterset_fields = ('recipe', 'recipe__slug', 'author', 'comment', 'rating')
-    ordering_fields = ('id',)
 
 
 class RatingCountViewSet(APIView):
-    def get(self, request, *args, **kwargs):
+    def get(self):
         query = Recipe.objects
         filter_set = {}
 

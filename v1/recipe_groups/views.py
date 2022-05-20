@@ -5,6 +5,7 @@ from django.db.models import Count
 from rest_framework import permissions
 from rest_framework import viewsets
 from django.db.models import Avg
+from django_filters.rest_framework import DjangoFilterBackend
 
 from v1.recipe_groups.models import Cuisine, Course, Tag
 from v1.recipe.models import Recipe
@@ -26,7 +27,6 @@ class CuisineViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,
                           IsOwnerOrReadOnly)
     lookup_field = 'slug'
-    ordering_fields = ('title',)
 
 class CuisineCountViewSet(viewsets.ModelViewSet):
     """
@@ -96,7 +96,6 @@ class CourseViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,
                           IsOwnerOrReadOnly)
     lookup_field = 'slug'
-    ordering_fields = ('title',)
 
 class CourseCountViewSet(viewsets.ModelViewSet):
     """
