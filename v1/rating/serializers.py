@@ -3,15 +3,17 @@
 
 from rest_framework import serializers
 
-from v1.recipe.serializers import RecipeSlug
 from .models import Rating
+from .models import Recipe
 
 
 class RatingSerializer(serializers.ModelSerializer):
     """ Standard `rest_framework` ModelSerializer """
-    recipe = RecipeSlug()
+    recipe = serializers.SlugRelatedField(slug_field='slug', queryset=Recipe.objects.all())
     user_id = serializers.ReadOnlyField(source='author.id')
     username = serializers.ReadOnlyField(source='author.username')
+    pub_date = serializers.DateTimeField(read_only=True)
+    update_date = serializers.DateTimeField(read_only=True)
 
     class Meta:
         model = Rating
@@ -22,7 +24,9 @@ class RatingSerializer(serializers.ModelSerializer):
             'recipe',
             'user_id',
             'username',
-            'author'
+            'author',
+            'pub_date',
+            'update_date'
         ]
 
     def update(self, instance, validated_data):

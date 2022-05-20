@@ -30,8 +30,7 @@ class RatingViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticatedOrReadOnly,
         IsOwnerOrReadOnly
     )
-    filter_backends = (DjangoFilterBackend,)
-    filterset_fields = ('recipe', 'recipe__slug', 'author', 'comment', 'rating')
+    filterset_fields = ('recipe', 'recipe__slug', 'author', 'rating', 'update_date')
 
 
 class RatingCountViewSet(APIView):
