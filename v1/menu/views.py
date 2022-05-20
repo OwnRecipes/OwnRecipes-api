@@ -36,7 +36,7 @@ class MenuItemViewSet(viewsets.ModelViewSet):
 class MenuStatsViewSet(views.APIView):
     permission_classes = (IsAuthenticated,)
 
-    def get(self):
+    def get(self, request):
         return Response(
             Recipe.objects.annotate(
                 num_menuitems=Count('menu_recipe'),

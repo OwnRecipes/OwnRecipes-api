@@ -35,7 +35,7 @@ class RatingViewSet(viewsets.ModelViewSet):
 
 
 class RatingCountViewSet(APIView):
-    def get(self):
+    def get(self, request):
         query = Recipe.objects
         filter_set = {}
 
