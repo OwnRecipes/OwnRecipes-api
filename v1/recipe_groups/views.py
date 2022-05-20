@@ -5,6 +5,7 @@ from django.db.models import Count
 from rest_framework import permissions
 from rest_framework import viewsets
 from django.db.models import Avg
+from django_filters.rest_framework import DjangoFilterBackend
 
 from v1.recipe_groups.models import Cuisine, Course, Tag
 from v1.recipe.models import Recipe
@@ -26,7 +27,6 @@ class CuisineViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,
                           IsOwnerOrReadOnly)
     lookup_field = 'slug'
-
 
 class CuisineCountViewSet(viewsets.ModelViewSet):
     """
@@ -81,7 +81,7 @@ class CuisineCountViewSet(viewsets.ModelViewSet):
                 if str(convert_rating_to_int(recipe.rating_avg)) in self.request.query_params.get('rating').split(',')
             ]
 
-        return Cuisine.objects.filter(recipe__in=query).annotate(total=Count('recipe', distinct=True))
+        return Cuisine.objects.filter(recipe__in=query).order_by('title').annotate(total=Count('recipe', distinct=True))
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -96,7 +96,6 @@ class CourseViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,
                           IsOwnerOrReadOnly)
     lookup_field = 'slug'
-
 
 class CourseCountViewSet(viewsets.ModelViewSet):
     """
@@ -151,7 +150,7 @@ class CourseCountViewSet(viewsets.ModelViewSet):
                 if str(convert_rating_to_int(recipe.rating_avg)) in self.request.query_params.get('rating').split(',')
             ]
 
-        return Course.objects.filter(recipe__in=query).annotate(total=Count('recipe', distinct=True))
+        return Course.objects.filter(recipe__in=query).order_by('title').annotate(total=Count('recipe', distinct=True))
 
 
 class TagViewSet(viewsets.ModelViewSet):
@@ -166,6 +165,7 @@ class TagViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,
                           IsOwnerOrReadOnly)
     lookup_field = 'title'
+    ordering_fields = ('title',)
 
 class TagCountViewSet(viewsets.ModelViewSet):
     """
@@ -220,4 +220,4 @@ class TagCountViewSet(viewsets.ModelViewSet):
                 if str(convert_rating_to_int(recipe.rating_avg)) in self.request.query_params.get('rating').split(',')
             ]
 
-        return Tag.objects.filter(recipe__in=query).annotate(total=Count('recipe', distinct=True))
+        return Tag.objects.filter(recipe__in=query).order_by('title').annotate(total=Count('recipe', distinct=True))

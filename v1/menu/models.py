@@ -17,8 +17,5 @@ class MenuItem(models.Model):
     start_date = models.DateTimeField(null=True, blank=True)
     complete_date = models.DateTimeField(null=True, blank=True)
 
-    class Meta:
-        ordering = ['start_date', 'id']
-
     def __str__(self):
         return '%s' % self.recipe.title

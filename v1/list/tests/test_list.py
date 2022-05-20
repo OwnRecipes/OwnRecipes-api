@@ -31,18 +31,18 @@ class ListTests(TestCase):
         totals = {"test-list": 7, "another-test-list": 5}
 
         for item in results:
-            self.assertEquals(totals[item.get('slug')], item.get('item_count'))
+            self.assertEqual(totals[item.get('slug')], item.get('item_count'))
 
     def test_anonymous_user_get_lists(self):
         """Check to make sure anonymous users don't get any data back"""
         response = self.getResponse(User.objects.get(pk=2))
         results = response.data.get('results')
 
-        self.assertEquals(results, [])
+        self.assertEqual(results, [])
 
     def test_no_lists_user_get_lists(self):
         """Make sure users with no lists get nothing back"""
         response = self.getResponse(AnonymousUser())
         results = response.data.get('results')
 
-        self.assertEquals(results, [])
+        self.assertEqual(results, [])

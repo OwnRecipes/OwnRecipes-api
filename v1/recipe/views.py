@@ -25,6 +25,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.SearchFilter, filters.OrderingFilter)
     search_fields = ('title', 'tags__title', 'ingredient_groups__ingredients__title')
     ordering_fields = ('pub_date', 'title', 'rating', )
+    ordering = ('-pub_date', 'title')
 
     def get_queryset(self):
         query = Recipe.objects

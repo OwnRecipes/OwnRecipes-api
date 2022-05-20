@@ -19,9 +19,6 @@ class Cuisine(models.Model):
     slug = AutoSlugField(_('slug'), populate_from='title', unique=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    class Meta:
-        ordering = ['title']
-
     def __str__(self):
         return self.title
 
@@ -38,9 +35,6 @@ class Course(models.Model):
     slug = AutoSlugField(_('slug'), populate_from='title', unique=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    class Meta:
-        ordering = ['title']
-
     def __str__(self):
         return '%s' % self.title
 
@@ -55,9 +49,6 @@ class Tag(models.Model):
     """
     title = models.CharField(_('title'), max_length=100, unique=True)
     slug = AutoSlugField(_('slug'), populate_from='title', unique=True)
-
-    class Meta:
-        ordering = ['title']
 
     def __str__(self):
         return '%s' % self.title

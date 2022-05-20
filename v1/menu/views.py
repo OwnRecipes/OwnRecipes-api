@@ -5,13 +5,14 @@ from rest_framework import viewsets, views
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.db.models import Count, Max
-from django.core import serializers
+
+from rest_framework import filters
+from django_filters.rest_framework import DjangoFilterBackend
 
 from v1.recipe.models import Recipe
 from .models import MenuItem
 from .serializers import MenuItemSerializer
 from .permissions import IsMenuItemOwner
-
 
 class MenuItemViewSet(viewsets.ModelViewSet):
     """
@@ -21,19 +22,21 @@ class MenuItemViewSet(viewsets.ModelViewSet):
     queryset = MenuItem.objects.all()
     serializer_class = MenuItemSerializer
     permission_classes = (IsMenuItemOwner,)
-    filter_fields = ('recipe', 'start_date', 'complete_date', 'complete')
+    filter_backends = (DjangoFilterBackend, filters.OrderingFilter)
+    filterset_fields = ('recipe', 'start_date', 'complete_date', 'complete')
+    ordering_fields = ('start_date', 'id')
 
     def get_queryset(self):
         user = self.request.user
         if user and not user.is_anonymous:
-            return MenuItem.objects.filter(author=user)
+            return MenuItem.objects.filter(author=user).order_by('start_date', 'id')
         return MenuItem.objects.none()
 
 
 class MenuStatsViewSet(views.APIView):
     permission_classes = (IsAuthenticated,)
 
-    def get(self, request):
+    def get(self):
         return Response(
             Recipe.objects.annotate(
                 num_menuitems=Count('menu_recipe'),

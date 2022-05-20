@@ -23,8 +23,5 @@ class Rating(models.Model):
     comment = models.CharField(_('comment'), max_length=250)
     rating = models.IntegerField(_('rating'), default=0)
 
-    class Meta:
-        ordering = ['id']
-
     def __str__(self):
         return '%s - %s' % (self.rating, self.comment)
