@@ -1,7 +1,6 @@
 # #!/usr/bin/env python
 # # encoding: utf-8
 
-from datetime import datetime
 from django.contrib.auth.models import User
 from django.test import TestCase
 
@@ -14,7 +13,7 @@ class RatingsSerializerTests(TestCase):
         user = User.objects.create(username='testuser')
         user.set_password('12345')
         user.save()
-        logged_in = self.client.login(username='testuser', password='12345')
+        self.client.login(username='testuser', password='12345')
         self.user_id = getattr(user, 'id')
         self.user_name = getattr(user, 'username')
 
@@ -37,9 +36,8 @@ class RatingsSerializerTests(TestCase):
         self.assertEqual(retrieved_rating_data['author'], new_rating_data['author'])
         self.assertEqual(retrieved_rating_data['rating'], new_rating_data['rating'])
         self.assertEqual(retrieved_rating_data['username'], self.user_name)
-        now = datetime.now().strftime("%d.%m.%Y %H:%M:%S")
-        self.assertEqual(retrieved_rating_data['pub_date'], now)
-        self.assertEqual(retrieved_rating_data['update_date'], now)
+        self.assertIsNotNone(retrieved_rating_data['pub_date'])
+        self.assertIsNotNone(retrieved_rating_data['update_date'])
         recipe_slug = retrieved_rating_data['recipe']
 
         # recipe get request
@@ -62,7 +60,6 @@ class RatingsSerializerTests(TestCase):
         self.assertEqual(response.status_code, 200)
         retrieved_rating_data = response.json()
         self.assertEqual(retrieved_rating_data['id'], inserted_rating_id)
-        recipe_slug = retrieved_rating_data['recipe']
 
         # rating put request
         update_rating_data = {"recipe": "tasty-chili", "author": self.user_id,

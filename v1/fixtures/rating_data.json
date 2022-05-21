@@ -1,0 +1,98 @@
+[
+    {
+        "pk": 1,
+        "model": "rating.rating",
+        "fields": {
+            "author": 1,
+            "recipe": 1,
+            "comment": "comment 1",
+            "rating": 1,
+            "update_date": "2022-05-21 08:35:32+02:00",
+            "pub_date": "2022-05-21 08:35:32+02:00"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "rating.rating",
+        "fields": {
+            "author": 1,
+            "recipe": 1,
+            "comment": "comment 2",
+            "rating": 2,
+            "update_date": "2022-05-21 09:35:32+02:00",
+            "pub_date": "2022-05-21 09:35:32+02:00"
+        }
+    },
+    {
+        "pk": 3,
+        "model": "rating.rating",
+        "fields": {
+            "author": 1,
+            "recipe": 1,
+            "comment": "comment 3",
+            "rating": 3,
+            "update_date": "2022-05-21 10:35:32+02:00",
+            "pub_date": "2022-05-21 10:35:32+02:00"
+        }
+    },
+    {
+        "pk": 4,
+        "model": "rating.rating",
+        "fields": {
+            "author": 1,
+            "recipe": 1,
+            "comment": "comment 4",
+            "rating": 4,
+            "update_date": "2022-05-21 11:35:32+02:00",
+            "pub_date": "2022-05-21 11:35:32+02:00"
+        }
+    },
+    {
+        "pk": 5,
+        "model": "rating.rating",
+        "fields": {
+            "author": 1,
+            "recipe": 1,
+            "comment": "comment 5",
+            "rating": 5,
+            "update_date": "2022-05-21 12:35:32+02:00",
+            "pub_date": "2022-05-21 12:35:32+02:00"
+        }
+    },
+    {
+        "pk": 6,
+        "model": "rating.rating",
+        "fields": {
+            "author": 1,
+            "recipe": 2,
+            "comment": "comment 1",
+            "rating": 1,
+            "update_date": "2022-05-21 13:35:32+02:00",
+            "pub_date": "2022-05-21 13:35:32+02:00"
+        }
+    },
+    {
+        "pk": 7,
+        "model": "rating.rating",
+        "fields": {
+            "author": 1,
+            "recipe": 2,
+            "comment": "comment 2",
+            "rating": 3,
+            "update_date": "2022-05-21 14:35:32+02:00",
+            "pub_date": "2022-05-21 14:35:32+02:00"
+        }
+    },
+    {
+        "pk": 8,
+        "model": "rating.rating",
+        "fields": {
+            "author": 1,
+            "recipe": 2,
+            "comment": "comment 3",
+            "rating": 4,
+            "update_date": "2022-05-21 15:35:32+02:00",
+            "pub_date": "2022-05-21 15:35:32+02:00"
+        }
+    }
+]
