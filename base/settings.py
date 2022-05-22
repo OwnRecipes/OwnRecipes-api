@@ -221,6 +221,8 @@ USE_L10N = True
 SERVE_MEDIA = True
 FILE_UPLOAD_PERMISSIONS = 0o644
 
+RECIPE_IMAGE_QUALITY = os.environ.get('RECIPE_IMAGE_QUALITY', 'MEDIUM')
+
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
 MEDIA_ROOT = os.path.join(PROJECT_PATH, 'site-media')
