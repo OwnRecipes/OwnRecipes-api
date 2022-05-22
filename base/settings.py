@@ -7,8 +7,6 @@ DEBUG = False
 if os.environ.get('DJANGO_DEBUG', 'False').lower() == 'true':
     DEBUG = True
 
-SERVE_MEDIA = True
-
 # If you are using the api behind a reverse proxy,
 # then generate the correct absolute URI's:
 if os.environ.get('USE_X_FORWARDED_HOST', 'False').lower() == 'true':
@@ -220,6 +218,9 @@ USE_I18N = True
 # calendars according to the current locale
 USE_L10N = True
 
+SERVE_MEDIA = True
+FILE_UPLOAD_PERMISSIONS = 0o644
+
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
 MEDIA_ROOT = os.path.join(PROJECT_PATH, 'site-media')
@@ -228,8 +229,11 @@ STATIC_ROOT = os.path.join(PROJECT_PATH, 'static-files')
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
-MEDIA_URL = '/site-media/'
-STATIC_URL = '/static-files/'
+MEDIA_URL = f"/{os.environ.get('SITE_MEDIA_URL', 'site-media')}/"
+STATIC_URL = f"/{os.environ.get('STATIC_FILES_URL', 'static-files')}/"
+
+# Change this to access the Django Admin Pages from a different url.
+ADMIN_URL = os.environ.get('ADMIN_URL', 'admin')
 
 ugettext = lambda s: s
 LANGUAGES = (

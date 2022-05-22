@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+from django.conf import settings
 from django.contrib.auth.models import AnonymousUser, User
 from django.test import TestCase, RequestFactory
 from v1.common.permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
@@ -18,7 +19,7 @@ class PermissionTest(TestCase):
     def test_is_owner_or_read_only(self):
         # Try and access something as an admin user.
         # Both get and post should have access.
-        request = self.factory.get('/admin')
+        request = self.factory.get(f'/{settings.ADMIN_URL}')
         request.user = self.user
         self.assertTrue(
             IsOwnerOrReadOnly().has_permission(request, None)
@@ -26,7 +27,7 @@ class PermissionTest(TestCase):
         self.assertTrue(
             IsOwnerOrReadOnly().has_object_permission(request, None, None)
         )
-        request = self.factory.post('/admin')
+        request = self.factory.post(f'/{settings.ADMIN_URL}')
         request.user = self.user
         self.assertTrue(
             IsOwnerOrReadOnly().has_permission(request, None)
@@ -34,7 +35,7 @@ class PermissionTest(TestCase):
 
         # Try and access something as an anonymous user.
         # Both get should have access but post shouldn't.
-        request = self.factory.get('/admin')
+        request = self.factory.get(f'/{settings.ADMIN_URL}')
         request.user = AnonymousUser()
         self.assertTrue(
             IsOwnerOrReadOnly().has_permission(request, None)
@@ -42,7 +43,7 @@ class PermissionTest(TestCase):
         self.assertTrue(
             IsOwnerOrReadOnly().has_object_permission(request, None, None)
         )
-        request = self.factory.post('/admin')
+        request = self.factory.post(f'/{settings.ADMIN_URL}')
         request.user = AnonymousUser()
         self.assertTrue(
             IsOwnerOrReadOnly().has_permission(request, None)
@@ -51,12 +52,12 @@ class PermissionTest(TestCase):
     def test_is_admin_or_read_only(self):
         # Try and access something as an admin user.
         # Both get and post should have access.
-        request = self.factory.get('/admin')
+        request = self.factory.get(f'/{settings.ADMIN_URL}')
         request.user = self.user
         self.assertTrue(
             IsAdminOrReadOnly().has_permission(request, None)
         )
-        request = self.factory.post('/admin')
+        request = self.factory.post(f'/{settings.ADMIN_URL}')
         request.user = self.user
         self.assertTrue(
             IsAdminOrReadOnly().has_permission(request, None)
@@ -64,12 +65,12 @@ class PermissionTest(TestCase):
 
         # Try and access something as an anonymous user.
         # Both get should have access but post shouldn't.
-        request = self.factory.get('/admin')
+        request = self.factory.get(f'/{settings.ADMIN_URL}')
         request.user = AnonymousUser()
         self.assertTrue(
             IsAdminOrReadOnly().has_permission(request, None)
         )
-        request = self.factory.post('/admin')
+        request = self.factory.post(f'/{settings.ADMIN_URL}')
         request.user = AnonymousUser()
         self.assertFalse(
             IsAdminOrReadOnly().has_permission(request, None)
