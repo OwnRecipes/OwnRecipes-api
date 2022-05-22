@@ -5,8 +5,6 @@ from django.db.models import Avg
 from rest_framework import viewsets, permissions
 from rest_framework.views import APIView
 
-from rest_framework import filters
-from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
 
 from .models import Rating

@@ -6,7 +6,6 @@ from django.db.models import Avg
 
 from rest_framework import permissions, viewsets, filters
 from rest_framework.response import Response
-from v1.rating.average_rating import convert_rating_to_int
 
 from . import serializers
 from .models import Recipe
@@ -24,7 +23,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     filter_backends = (filters.SearchFilter, filters.OrderingFilter)
     search_fields = ('title', 'tags__title', 'ingredient_groups__ingredients__title')
-    ordering_fields = ('pub_date', 'title', 'rating', )
+    ordering_fields = ('pub_date', 'title', 'rating')
     ordering = ('-pub_date', 'title')
 
     def get_queryset(self):
@@ -57,10 +56,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
         # TODO: this many not be very efficient on huge query sets.
         # I don't think I will ever get to the point of this mattering
         query = query.annotate(rating_avg=Avg('rating__rating'))
-        return [
-            recipe for recipe in query
-            if str(convert_rating_to_int(recipe.rating_avg)) in self.request.query_params.get('rating').split(',')
-        ]
+        query_ratings = self.request.query_params.get('rating').split(',')
+
+        return query.filter(rating_avg__in = query_ratings)
 
     def create(self, request, *args, **kwargs):
         return Response(
