@@ -1100,6 +1100,18 @@
             "type": "number",
             "description": "user-id of the rating creator ?",
             "readOnly": true
+          },
+          "pub_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO8601 date",
+            "example": "2022-05-20T13:45:04.322238-05:00"
+          },
+          "upd_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO8601 date",
+            "example": "2022-05-20T13:45:04.322238-05:00"
           }
         },
         "required": [
@@ -1356,13 +1368,15 @@
           },
           "pub_date": {
             "type": "string",
-            "example": "2011-05-20",
-            "description": "ISO8601 date"
+            "example": "2022-05-20T13:45:04.322238-05:00",
+            "description": "ISO8601 date",
+            "format": "date-time"
           },
           "update_date": {
             "type": "string",
-            "example": "2011-05-20",
-            "description": "ISO8601 date"
+            "example": "2022-05-20T13:45:04.322238-05:00",
+            "description": "ISO8601 date",
+            "format": "date-time"
           },
           "source": {
             "type": "string",
