@@ -38,3 +38,5 @@ You can access the API roots via there app names:
 * Recipe groups - http://localhost:8000/api/v1/recipe_groups/
 * News - http://localhost:8000/api/v1/news/
 * Lists - http://localhost:8000/api/v1/list/
+
+You can also check the [OpenAPI document](docs/ownrecipes-api.json) for more detailed information.
