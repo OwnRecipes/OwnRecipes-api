@@ -1,11 +1,11 @@
 # Third party package requirements for OwnRecipes API
-Django==3.0.14
+Django==3.1.14
 django-imagekit==4.1.0
 djangorestframework==3.13.1
 
 djangorestframework-bulk==0.2.1
 djangorestframework-jwt==1.11.0
-django-filter==2.2.0
+django-filter==21.1
 # just for slug
 django-extensions==3.1.5
 django-cors-headers==3.8.0
