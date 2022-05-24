@@ -15,7 +15,7 @@ class FieldLimiter(object):
         # Instantiate the superclass normally
         super(FieldLimiter, self).__init__(*args, **kwargs)
 
-        if 'request' in self.context:
+        if 'request' in self.context and self.context['request'] is not None:
             fields = self.context['request'].query_params.get('fields')
             if fields:
                 fields = fields.split(',')

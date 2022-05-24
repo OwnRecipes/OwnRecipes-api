@@ -107,7 +107,6 @@ INSTALLED_APPS = (
     'django_filters',
     'rest_framework',
     'rest_framework.authtoken',
-    'coreapi',
 
     'base',
     'v1.recipe',
