@@ -186,11 +186,11 @@ if not DEBUG:
     )
 
 if 'http' in os.environ.get('NODE_URL', 'localhost:8080'):
-    CORS_ORIGIN_WHITELIST = (
+    CORS_ALLOWED_ORIGINS = (
         os.environ.get('NODE_URL', 'localhost:8080')
     )
 else:
-    CORS_ORIGIN_WHITELIST = (
+    CORS_ALLOWED_ORIGINS = (
         f"http://{os.environ.get('NODE_URL', 'localhost:8080')}",
         f"https://{os.environ.get('NODE_URL', 'localhost:8080')}"
     )
