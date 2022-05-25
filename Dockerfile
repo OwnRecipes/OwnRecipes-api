@@ -1,4 +1,4 @@
-FROM python:3.6.5-alpine3.7
+FROM python:3.8.13-alpine3.15
 ENV PYTHONUNBUFFERED 1
 
 RUN apk update && apk upgrade && \
@@ -6,7 +6,6 @@ RUN apk update && apk upgrade && \
     gcc \
     mariadb \
     mariadb-dev \
-    py-mysqldb \
     musl-dev \
     libjpeg-turbo-dev \
     zlib-dev
