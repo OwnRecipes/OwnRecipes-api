@@ -1,0 +1,10 @@
+**/docs
+
+## ignore git files
+**/.git*
+
+## ignore env files
+.env*
+
+## ignore test files
+**/tests
