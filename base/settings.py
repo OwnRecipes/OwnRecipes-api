@@ -242,6 +242,38 @@ LANGUAGES = (
      ('de', ugettext('German')),
    )
 
+LOGGING_LEVEL = os.environ.get('LOGGING', 'ERROR').upper()
+if LOGGING_LEVEL != 'OFF':
+    LOGS_ROOT = os.path.join(PROJECT_PATH, 'logs')
+    if not os.path.exists(LOGS_ROOT):
+        os.makedirs(LOGS_ROOT)
+
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {
+            'file': {
+                'level': LOGGING_LEVEL,
+                'class': 'logging.handlers.TimedRotatingFileHandler',
+                'filename': os.path.join(LOGS_ROOT, f"{LOGGING_LEVEL.lower()}.log"),
+                'when': 'midnight',
+                'backupCount': 10,
+            },
+        },
+        'loggers': {
+            'django': {
+                'handlers': ['file'],
+                'level': LOGGING_LEVEL,
+                'propagate': True,
+            },
+            'rest_framework': {
+                'handlers': ['file'],
+                'level': LOGGING_LEVEL,
+                'propagate': False,
+            },
+        },
+    }
+
 try:
     from local_settings import *
 except ImportError:
