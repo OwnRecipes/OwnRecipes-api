@@ -224,8 +224,8 @@ RECIPE_IMAGE_QUALITY = os.environ.get('RECIPE_IMAGE_QUALITY', 'MEDIUM')
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = os.path.join(PROJECT_PATH, 'site-media')
-STATIC_ROOT = os.path.join(PROJECT_PATH, 'static-files')
+MEDIA_ROOT = os.path.join(PROJECT_PATH, os.environ.get('SITE_MEDIA_URL', 'site-media'))
+STATIC_ROOT = os.path.join(PROJECT_PATH, os.environ.get('STATIC_FILES_URL', 'static-files'))
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
