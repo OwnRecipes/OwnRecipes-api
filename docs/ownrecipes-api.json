@@ -313,7 +313,8 @@
               "type": "string"
             },
             "in": "query",
-            "name": "tag__slug"
+            "name": "tag__slug",
+            "description": "Filter results by tag by slug name"
           }
         ]
       }
