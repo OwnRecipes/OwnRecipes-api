@@ -299,6 +299,21 @@
             "in": "query",
             "name": "course__slug",
             "description": "Filter results by course by slug name"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "cuisine__slug",
+            "description": "Filter results by cuisine by slug name"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "tag__slug"
           }
         ]
       }

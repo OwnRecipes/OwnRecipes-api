@@ -2,7 +2,7 @@
 # encoding: utf-8
 
 import random
-from django.db.models import Avg
+from django.db.models import Avg, Q
 
 from rest_framework import permissions, viewsets, filters
 from rest_framework.response import Response
@@ -94,12 +94,24 @@ class MiniBrowseViewSet(viewsets.mixins.ListModelMixin,
             qs = Recipe.objects.filter(public=True)
 
         filter_set = {}
+        if 'cuisine__slug' in self.request.query_params:
+            filter_set['cuisine__in'] = Cuisine.objects.filter(
+                slug__in=self.request.query_params.get('cuisine__slug').split(',')
+            )
         if 'course__slug' in self.request.query_params:
             filter_set['course__in'] = Course.objects.filter(
                 slug__in=self.request.query_params.get('course__slug').split(',')
             )
+        if 'tag__slug' in self.request.query_params:
+            # filter tags with OR
+            filter_set['tags__in'] = Tag.objects.filter(
+                slug__in=self.request.query_params.get('tag__slug').split(',')
+            )
+            # filter tags with AND (for future use)
+            # tags = self.request.query_params.get('tag__slug').split(',')
+            # for t in tags:
+            #     qs = qs.filter(tags__in=Tag.objects.filter(slug=t))
         qs = qs.filter(**filter_set)
-
         # Get the limit from the request and the count from the DB.
         # Compare to make sure you aren't accessing more than possible.
         limit = int(request.query_params.get('limit', 4))
