@@ -2,7 +2,7 @@
 # encoding: utf-8
 
 import random
-from django.db.models import Avg, Q
+from django.db.models import Avg
 
 from rest_framework import permissions, viewsets, filters
 from rest_framework.response import Response
