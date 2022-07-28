@@ -42,6 +42,8 @@ if 'django.db.backends.mysql' in DATABASES['default']['ENGINE']:
     DATABASES['default'].setdefault('OPTIONS', {})
     DATABASES['default']['OPTIONS']['charset'] = 'utf8mb4'
 
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/2.0/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'node', 'web']
