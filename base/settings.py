@@ -253,9 +253,16 @@ if LOGGING_LEVEL != 'OFF':
     LOGGING = {
         'version': 1,
         'disable_existing_loggers': False,
+        'formatters': {
+            'verbose': {
+                'format': '{levelname} {asctime} {module} {message}',
+                'style': '{',
+            },
+        },
         'handlers': {
             'file': {
                 'level': LOGGING_LEVEL,
+                'formatter': 'verbose',
                 'class': 'logging.handlers.TimedRotatingFileHandler',
                 'filename': os.path.join(LOGS_ROOT, f"{LOGGING_LEVEL.lower()}.log"),
                 'when': 'midnight',
@@ -263,6 +270,11 @@ if LOGGING_LEVEL != 'OFF':
             },
         },
         'loggers': {
+            'v1': {
+                'handlers': ['file'],
+                'level': LOGGING_LEVEL,
+                'propagate': True,
+            },
             'django': {
                 'handlers': ['file'],
                 'level': LOGGING_LEVEL,
