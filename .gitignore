@@ -1,6 +1,7 @@
 # Folders
 site-media/
 static-files/
+logs/
 database/
 .idea/
 
