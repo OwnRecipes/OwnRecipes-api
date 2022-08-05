@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
+import logging
+import os
 
 from django.db.models import Count
 from django.core.exceptions import FieldDoesNotExist
@@ -180,6 +182,10 @@ class SaveRecipe(Validators):
 
     def update(self, instance):
         """ Update and return a new `Recipe` instance, given the validated data """
+        old_img = None
+        new_img = None
+        if instance.photo:
+            old_img = instance.photo.path
         self._save_course()
         self._save_cuisine()
         for attr, value in self.data.items():
@@ -188,6 +194,14 @@ class SaveRecipe(Validators):
         self._save_subrecipe_data(instance)
         self._save_tags(instance)
         instance.save()
+        if instance.photo:
+            new_img = instance.photo.path
+        if old_img and old_img != new_img:
+            try:
+                if os.path.exists(old_img):
+                    os.remove(old_img)
+            except FileNotFoundError as e:
+                logging.error('Failed.', exc_info=e)
 
         self._delete_recipe_groups()
 
