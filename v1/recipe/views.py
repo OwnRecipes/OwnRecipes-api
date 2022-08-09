@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 # encoding: utf-8
-
+import logging
+import os
 import random
 from django.db.models import Avg
 
-from rest_framework import permissions, viewsets, filters
+from rest_framework import permissions, viewsets, filters, status
 from rest_framework.response import Response
 
 from . import serializers
@@ -76,6 +77,19 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 context={'request': request}
             ).data
         )
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if instance.photo:
+            img_path = instance.photo.path
+            if img_path:
+                try:
+                    if os.path.exists(img_path):
+                        os.remove(img_path)
+                except FileNotFoundError as e:
+                    logging.error('Failed.', exc_info=e)
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class MiniBrowseViewSet(viewsets.mixins.ListModelMixin,
