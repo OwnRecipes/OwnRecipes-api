@@ -1,0 +1,1504 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "ownrecipes-api",
+    "version": "1.0",
+    "description": "OwnRecipes API",
+    "contact": {
+      "name": "Frank \"Roy\" Hartung",
+      "url": "https://github.com/ownrecipes/OwnRecipes"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5210/api/v1"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Auth"
+    },
+    {
+      "name": "Error"
+    },
+    {
+      "name": "News"
+    },
+    {
+      "name": "Rating"
+    },
+    {
+      "name": "Recipe"
+    }
+  ],
+  "paths": {
+    "/accounts/obtain-auth-token": {
+      "post": {
+        "summary": "Login",
+        "operationId": "post-login",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "tags": [
+          "Auth"
+        ],
+        "description": "Authenticates a user and returns a jwt.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/accounts/refresh-auth-token": {
+      "post": {
+        "summary": "Refresh Token",
+        "operationId": "post-refresh-auth-token",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Auth"
+        ],
+        "description": "Refresh the auth token and returns a new jwt.",
+        "security": [
+          {
+            "TokenAuth": []
+          }
+        ]
+      }
+    },
+    "/news/entry": {
+      "get": {
+        "summary": "Get News",
+        "tags": [
+          "News"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewsIterator"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-news",
+        "description": "Get all News of this application instance"
+      },
+      "post": {
+        "summary": "Create News Entry",
+        "operationId": "post-news-entry",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "description": "Creates a new news entry.",
+        "security": [
+          {
+            "TokenAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewsRequest"
+              }
+            }
+          }
+        },
+        "tags": [
+          "News"
+        ]
+      }
+    },
+    "/news/entry/{newsId}": {
+      "parameters": [
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "newsId",
+          "in": "path",
+          "required": true
+        }
+      ],
+      "get": {
+        "summary": "Get News Entry",
+        "tags": [
+          "News"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewsResponse"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-news-entry",
+        "description": "Get a single News Entry"
+      },
+      "put": {
+        "summary": "Put News Entry",
+        "operationId": "put-news-entry",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "TokenAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewsRequest"
+              }
+            }
+          }
+        },
+        "description": "Update News Entry",
+        "tags": [
+          "News"
+        ]
+      },
+      "delete": {
+        "summary": "Delete News Entry",
+        "operationId": "delete-news-entry",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "description": "Delete News Entry",
+        "security": [
+          {
+            "TokenAuth": []
+          }
+        ],
+        "tags": [
+          "News"
+        ]
+      }
+    },
+    "/recipe/mini-browse": {
+      "get": {
+        "summary": "Get random recipes",
+        "tags": [
+          "Recipe"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecipeIterator"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "operationId": "get-recipe-mini-browse",
+        "description": "Returns randomly some recipes",
+        "parameters": [
+          {
+            "schema": {
+              "type": "number"
+            },
+            "in": "query",
+            "name": "limit",
+            "description": "Number of items to return",
+            "required": true
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "fields",
+            "description": "Which fields of the object to return"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "course__slug",
+            "description": "Filter results by course by slug name"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "cuisine__slug",
+            "description": "Filter results by cuisine by slug name"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "tag__slug",
+            "description": "Filter results by tag by slug name"
+          }
+        ]
+      }
+    },
+    "/recipe/recipes": {
+      "get": {
+        "summary": "Get Recipes List",
+        "tags": [
+          "Recipe"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RecipeIterator"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "operationId": "get-recipes",
+        "description": "Return list of simplified recipes data.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "id,slug,title,pub_date,rating,photo_thumbnail,info"
+            },
+            "in": "query",
+            "name": "fields",
+            "description": "Comma separated attribute values that should be returned from the recipe model",
+            "required": true
+          },
+          {
+            "schema": {
+              "type": "number",
+              "minLength": 1,
+              "example": 12
+            },
+            "in": "query",
+            "name": "limit",
+            "description": "How many recipes to return."
+          },
+          {
+            "schema": {
+              "type": "number",
+              "example": 24,
+              "minLength": 0
+            },
+            "in": "query",
+            "description": "Pagination offset.",
+            "name": "offset"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "-rating"
+            },
+            "in": "query",
+            "name": "ordering",
+            "description": "Fields to order by. Prefix with minus to order descending."
+          }
+        ]
+      },
+      "post": {
+        "summary": "Create Recipe",
+        "operationId": "post-recipe",
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "409": {
+            "description": "Conflict"
+          }
+        },
+        "tags": [
+          "Recipe"
+        ],
+        "description": "Create recipe.",
+        "security": [
+          {
+            "TokenAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecipeRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/recipe/recipes/{slug}": {
+      "parameters": [
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "slug",
+          "in": "path",
+          "required": true
+        }
+      ],
+      "get": {
+        "summary": "Get Recipe",
+        "tags": [
+          "Recipe"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecipeResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "operationId": "get-recipe",
+        "description": "Get Recipe by slug."
+      },
+      "delete": {
+        "summary": "Delete Recipe",
+        "operationId": "delete-recipe",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "tags": [
+          "Recipe"
+        ],
+        "description": "Deletes the recipe. Only the author and admin may use this.",
+        "security": [
+          {
+            "TokenAuth": []
+          }
+        ]
+      },
+      "patch": {
+        "summary": "Update Recipe",
+        "operationId": "patch-recipe",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "description": "Updates an existing recipe.",
+        "tags": [
+          "Recipe"
+        ],
+        "security": [
+          {
+            "TokenAuth": []
+          }
+        ]
+      }
+    },
+    "/recipe_groups/course-count": {
+      "get": {
+        "summary": "Get Course Count",
+        "tags": [
+          "Recipe"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryIterator"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-course-count",
+        "description": "Return for each course the number of associated recipes."
+      }
+    },
+    "/recipe_groups/cuisine-count": {
+      "get": {
+        "summary": "Get Cuisine Count",
+        "tags": [
+          "Recipe"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryIterator"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-cuisine-count",
+        "description": "Return for each cuisine the number of associated recipes."
+      },
+      "parameters": []
+    },
+    "/recipe_groups/tag-count": {
+      "get": {
+        "summary": "Get Tag Count",
+        "tags": [
+          "Recipe"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryIterator"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-tag-count",
+        "description": "Return for each tag the number of associated recipes."
+      },
+      "parameters": []
+    },
+    "/rating/rating": {
+      "get": {
+        "summary": "Get Ratings",
+        "tags": [
+          "Rating"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RatingIterator"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-ratings",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "recipe__slug",
+            "description": "Recipe Slug"
+          }
+        ],
+        "description": "Get Ratings for a recipe."
+      },
+      "post": {
+        "summary": "Create Rating",
+        "operationId": "post-rating",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RatingResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "description": "Create rating.",
+        "security": [
+          {
+            "TokenAuth": []
+          }
+        ],
+        "tags": [
+          "Rating"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RatingRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rating/rating-count": {
+      "get": {
+        "summary": "Get Rating Count",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RatingCount"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-rating-count",
+        "description": "Return for each rating the number of associated recipes.",
+        "tags": [
+          "Rating"
+        ]
+      },
+      "parameters": []
+    },
+    "/rating/rating/{ratingId}": {
+      "parameters": [
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "ratingId",
+          "in": "path",
+          "required": true
+        }
+      ],
+      "delete": {
+        "summary": "Delete Rating",
+        "operationId": "delete-rating-by-id",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "tags": [
+          "Rating"
+        ],
+        "description": "Delete rating.",
+        "security": [
+          {
+            "TokenAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CategoryCount": {
+        "title": "CategoryCount",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "readOnly": true
+          },
+          "total": {
+            "type": "number",
+            "description": "How many recipes belong to this category.",
+            "readOnly": true
+          },
+          "title": {
+            "type": "string",
+            "example": "Entry"
+          },
+          "slug": {
+            "type": "string",
+            "example": "entry",
+            "readOnly": true
+          },
+          "author": {
+            "type": "number",
+            "readOnly": true
+          }
+        },
+        "required": [
+          "id",
+          "total",
+          "title",
+          "slug",
+          "author"
+        ]
+      },
+      "CategoryIterator": {
+        "title": "NewsIterator",
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "number"
+          },
+          "next": {
+            "type": "number",
+            "nullable": true
+          },
+          "previous": {
+            "type": "number",
+            "nullable": true
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CategoryCount"
+            }
+          }
+        },
+        "required": [
+          "count",
+          "next",
+          "previous",
+          "results"
+        ]
+      },
+      "Course": {
+        "title": "Course",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "readOnly": true
+          },
+          "title": {
+            "type": "string",
+            "description": "Appetizer, Breakfast, Dessert, Entry",
+            "maxLength": 100
+          }
+        },
+        "required": [
+          "id",
+          "title"
+        ]
+      },
+      "Cuisine": {
+        "title": "Cuisine",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "readOnly": true
+          },
+          "title": {
+            "type": "string",
+            "description": "American, Chinese, French, Indian, Italian, Japanese, Korean, Mexican, Thai",
+            "maxLength": 100
+          }
+        },
+        "required": [
+          "id",
+          "title"
+        ]
+      },
+      "ErrorDto": {
+        "title": "ErrorDto",
+        "type": "object",
+        "properties": {
+          "non_field_errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "Ingredient": {
+        "title": "Ingredient",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "readOnly": true
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 250
+          },
+          "numerator": {
+            "type": "number",
+            "default": 0,
+            "format": "float"
+          },
+          "denominator": {
+            "type": "number",
+            "format": "float",
+            "default": 1,
+            "minimum": 1
+          },
+          "measurement": {
+            "type": "string",
+            "description": "pound, dash, can, cans, tablespoon, tablespoons, whole",
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "numerator",
+          "denominator"
+        ]
+      },
+      "IngredientGroup": {
+        "title": "IngredientGroup",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "readOnly": true
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 150
+          },
+          "ingredients": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Ingredient"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "ingredients"
+        ]
+      },
+      "LoginRequest": {
+        "title": "LoginRequest",
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "username",
+          "password"
+        ]
+      },
+      "LoginResponse": {
+        "title": "LoginResponse",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "user id",
+            "readOnly": true
+          },
+          "token": {
+            "type": "string",
+            "description": "JWT"
+          }
+        },
+        "required": [
+          "id",
+          "token"
+        ]
+      },
+      "NewsIterator": {
+        "title": "NewsIterator",
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "number"
+          },
+          "next": {
+            "type": "number",
+            "nullable": true
+          },
+          "previous": {
+            "type": "number",
+            "nullable": true
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NewsResponse"
+            }
+          }
+        },
+        "required": [
+          "count",
+          "next",
+          "previous",
+          "results"
+        ]
+      },
+      "NewsRequest": {
+        "title": "NewsRequest",
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string",
+            "description": "HTML"
+          },
+          "frontpage": {
+            "type": "boolean",
+            "description": "If it should be displayed on the frontpage"
+          },
+          "image": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "content",
+          "frontpage"
+        ]
+      },
+      "NewsResponse": {
+        "title": "NewsResponse",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "readOnly": true
+          },
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string",
+            "description": "HTML"
+          },
+          "frontpage": {
+            "type": "boolean",
+            "description": "If it should be displayed on the frontpage"
+          },
+          "iamge": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "content",
+          "frontpage"
+        ]
+      },
+      "RatingCount": {
+        "title": "RatingCount",
+        "type": "object",
+        "description": "",
+        "properties": {
+          "rating": {
+            "type": "number",
+            "readOnly": true
+          },
+          "total": {
+            "type": "number",
+            "description": "How many recipes have this rating.",
+            "readOnly": true
+          }
+        },
+        "required": [
+          "rating",
+          "total"
+        ]
+      },
+      "RatingIterator": {
+        "title": "RecipeIterator",
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "number"
+          },
+          "next": {
+            "type": "number",
+            "nullable": true
+          },
+          "previous": {
+            "type": "number",
+            "nullable": true
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RatingResponse"
+            }
+          }
+        },
+        "required": [
+          "count",
+          "next",
+          "previous",
+          "results"
+        ]
+      },
+      "RatingRequest": {
+        "title": "RatingRequest",
+        "type": "object",
+        "properties": {
+          "rating": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 5
+          },
+          "comment": {
+            "type": "string"
+          },
+          "recipe": {
+            "type": "string",
+            "description": "Recipe slug",
+            "readOnly": true
+          },
+          "author": {
+            "type": "number",
+            "description": "user-id of the rating creator ?",
+            "readOnly": true
+          }
+        },
+        "required": [
+          "rating",
+          "comment",
+          "recipe",
+          "author"
+        ]
+      },
+      "RatingResponse": {
+        "title": "RatingResponse",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "readOnly": true
+          },
+          "rating": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 5
+          },
+          "comment": {
+            "type": "string",
+            "maxLength": 250
+          },
+          "recipe": {
+            "type": "string",
+            "description": "Recipe slug",
+            "readOnly": true
+          },
+          "user_id": {
+            "type": "number",
+            "description": "user-id of the rating creator.",
+            "readOnly": true
+          },
+          "username": {
+            "type": "string",
+            "description": "username of the rating creator.",
+            "readOnly": true
+          },
+          "author": {
+            "type": "number",
+            "description": "user-id of the rating creator ?",
+            "readOnly": true
+          },
+          "pub_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO8601 date",
+            "example": "2022-05-20T13:45:04.322238-05:00"
+          },
+          "upd_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO8601 date",
+            "example": "2022-05-20T13:45:04.322238-05:00"
+          }
+        },
+        "required": [
+          "id",
+          "rating",
+          "comment",
+          "recipe",
+          "user_id",
+          "username",
+          "author"
+        ]
+      },
+      "RecipeIterator": {
+        "title": "RecipeIterator",
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "number"
+          },
+          "next": {
+            "type": "number",
+            "nullable": true
+          },
+          "previous": {
+            "type": "number",
+            "nullable": true
+          },
+          "results": {
+            "type": "array",
+            "description": "This is just an example. It depends on the queried fields.",
+            "items": {
+              "$ref": "#/components/schemas/RecipeList"
+            }
+          }
+        },
+        "required": [
+          "count",
+          "next",
+          "previous",
+          "results"
+        ]
+      },
+      "RecipeList": {
+        "title": "RecipeList",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "readOnly": true
+          },
+          "slug": {
+            "type": "string",
+            "example": "tasty-chili-1"
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 250,
+            "example": "Tasty Chili"
+          },
+          "pub_date": {
+            "type": "string",
+            "example": "2011-05-20",
+            "description": "ISO8601 date"
+          },
+          "rating": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 5,
+            "description": "Zero means no rating."
+          },
+          "photo_thumbnail": {
+            "type": "string"
+          },
+          "info": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "title",
+          "pub_date",
+          "rating",
+          "photo_thumbnail",
+          "info"
+        ]
+      },
+      "RecipeRequest": {
+        "title": "RecipeRequest",
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Tasty Chili",
+            "maxLength": 250
+          },
+          "info": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Tag"
+            }
+          },
+          "course": {
+            "$ref": "#/components/schemas/Course"
+          },
+          "cuisine": {
+            "$ref": "#/components/schemas/Cuisine"
+          },
+          "ingredient_groups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IngredientGroup"
+            }
+          },
+          "servings": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Zero means no information given."
+          },
+          "directions": {
+            "type": "string"
+          },
+          "prep_time": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Zero means no prep_time needed."
+          },
+          "cook_time": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Zero means no cook_time needed."
+          },
+          "subrecipes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubRecipe"
+            }
+          },
+          "author": {
+            "type": "number",
+            "description": "author user id",
+            "readOnly": true
+          },
+          "source": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "public": {
+            "type": "boolean",
+            "description": "If unauthorized visitors may view the recipe.",
+            "default": true
+          }
+        },
+        "required": [
+          "title",
+          "info",
+          "tags",
+          "course",
+          "cuisine",
+          "ingredient_groups",
+          "servings",
+          "directions",
+          "prep_time",
+          "cook_time",
+          "subrecipes",
+          "source"
+        ]
+      },
+      "RecipeResponse": {
+        "title": "RecipeResponse",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "readOnly": true
+          },
+          "slug": {
+            "type": "string",
+            "example": "tasty-chili-1"
+          },
+          "title": {
+            "type": "string",
+            "example": "Tasty Chili",
+            "maxLength": 250
+          },
+          "photo": {
+            "type": "string"
+          },
+          "photo_thumbnail": {
+            "type": "string"
+          },
+          "info": {
+            "type": "string"
+          },
+          "rating": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 5,
+            "description": "Zero means no rating."
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Tag"
+            }
+          },
+          "course": {
+            "$ref": "#/components/schemas/Course"
+          },
+          "cuisine": {
+            "$ref": "#/components/schemas/Cuisine"
+          },
+          "ingredient_groups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IngredientGroup"
+            }
+          },
+          "servings": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Zero means no information given."
+          },
+          "directions": {
+            "type": "string"
+          },
+          "prep_time": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Zero means no prep_time needed."
+          },
+          "cook_time": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Zero means no cook_time needed."
+          },
+          "subrecipes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubRecipe"
+            }
+          },
+          "author": {
+            "type": "number",
+            "description": "author user id",
+            "readOnly": true
+          },
+          "username": {
+            "type": "string",
+            "description": "Author username"
+          },
+          "pub_date": {
+            "type": "string",
+            "example": "2022-05-20T13:45:04.322238-05:00",
+            "description": "ISO8601 date",
+            "format": "date-time"
+          },
+          "update_date": {
+            "type": "string",
+            "example": "2022-05-20T13:45:04.322238-05:00",
+            "description": "ISO8601 date",
+            "format": "date-time"
+          },
+          "source": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "public": {
+            "type": "boolean",
+            "description": "If unauthorized visitors may view the recipe.",
+            "default": true
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "title",
+          "info",
+          "rating",
+          "tags",
+          "course",
+          "cuisine",
+          "ingredient_groups",
+          "servings",
+          "directions",
+          "prep_time",
+          "cook_time",
+          "subrecipes",
+          "author",
+          "username",
+          "pub_date",
+          "update_date",
+          "source",
+          "public"
+        ]
+      },
+      "SubRecipe": {
+        "title": "SubRecipe",
+        "type": "object",
+        "x-tags": [
+          "Recipe"
+        ],
+        "properties": {
+          "id": {
+            "type": "number",
+            "readOnly": true
+          },
+          "numerator": {
+            "type": "number",
+            "default": 0
+          },
+          "denominator": {
+            "type": "number",
+            "default": 1
+          },
+          "measurement": {
+            "type": "string"
+          },
+          "child_recipe": {
+            "type": "number"
+          },
+          "parent_recipe": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "numerator",
+          "denominator"
+        ]
+      },
+      "Tag": {
+        "title": "Tag",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "readOnly": true
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "slug": {
+            "type": "string",
+            "readOnly": true
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "slug"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "TokenAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}

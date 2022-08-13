@@ -1,11 +1,11 @@
 [
     {
-        "pk": 1, 
+        "pk": 1,
         "model": "recipe_groups.course",
         "fields": {
-            "author": 1, 
-            "slug": "breakfast",
-            "title": "Breakfast"
+            "author": 1,
+            "slug": "appetizer",
+            "title": "Appetizer"
         }
     },
     {
@@ -13,8 +13,8 @@
         "model": "recipe_groups.course",
         "fields": {
             "author": 1,
-            "slug": "entry",
-            "title": "Entry"
+            "slug": "breakfast",
+            "title": "Breakfast"
         }
     },
     {
@@ -22,8 +22,8 @@
         "model": "recipe_groups.course",
         "fields": {
             "author": 1,
-            "slug": "appetizer",
-            "title": "Appetizer"
+            "slug": "cake",
+            "title": "Cake"
         }
     },
     {
@@ -33,6 +33,51 @@
             "author": 1,
             "slug": "dessert",
             "title": "Dessert"
+        }
+    },
+    {
+        "pk": 5,
+        "model": "recipe_groups.course",
+        "fields": {
+            "author": 1,
+            "slug": "drink",
+            "title": "Drink"
+        }
+    },
+    {
+        "pk": 6,
+        "model": "recipe_groups.course",
+        "fields": {
+            "author": 1,
+            "slug": "entry",
+            "title": "Entry"
+        }
+    },
+    {
+        "pk": 7,
+        "model": "recipe_groups.course",
+        "fields": {
+            "author": 1,
+            "slug": "main",
+            "title": "Main"
+        }
+    },
+    {
+        "pk": 8,
+        "model": "recipe_groups.course",
+        "fields": {
+            "author": 1,
+            "slug": "side-dish",
+            "title": "Side Dish"
+        }
+    },
+    {
+        "pk": 9,
+        "model": "recipe_groups.course",
+        "fields": {
+            "author": 1,
+            "slug": "snack",
+            "title": "Snack"
         }
     }
 ]

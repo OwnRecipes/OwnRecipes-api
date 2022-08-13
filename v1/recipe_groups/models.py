@@ -4,7 +4,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django_extensions.db.fields import AutoSlugField
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 
 class Cuisine(models.Model):
@@ -18,9 +18,6 @@ class Cuisine(models.Model):
     title = models.CharField(_('title'), max_length=100, unique=True)
     slug = AutoSlugField(_('slug'), populate_from='title', unique=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-
-    class Meta:
-        ordering = ['title']
 
     def __str__(self):
         return self.title
@@ -38,9 +35,6 @@ class Course(models.Model):
     slug = AutoSlugField(_('slug'), populate_from='title', unique=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    class Meta:
-        ordering = ['title']
-
     def __str__(self):
         return '%s' % self.title
 
@@ -55,9 +49,6 @@ class Tag(models.Model):
     """
     title = models.CharField(_('title'), max_length=100, unique=True)
     slug = AutoSlugField(_('slug'), populate_from='title', unique=True)
-
-    class Meta:
-        ordering = ['title']
 
     def __str__(self):
         return '%s' % self.title

@@ -3,7 +3,7 @@
 
 from django.db import models
 from django_extensions.db.fields import AutoSlugField
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 
 class News(models.Model):
@@ -24,7 +24,6 @@ class News(models.Model):
     pub_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ('pub_date',)
         verbose_name_plural = "news"
 
     def __str__(self):

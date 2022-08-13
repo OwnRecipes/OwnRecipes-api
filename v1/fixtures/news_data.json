@@ -3,11 +3,23 @@
         "pk": 1,
         "model": "news.news",
         "fields": {
-        	"content": "OwnRecipes is an open source recipe management site. You can share recipes with friends, rate recipes, store your favorite recipes to find easily, and more. If you want to run your own personal OwnRecipes site visit the <a href=\"https://github.com/OwnRecipes/OwnRecipes\" target=\"_blank\">GitHub page</a>",
+        	"content": "%introduction%",
         	"image": "",
-        	"pub_date": "2010-10-10 13:32:47+00:00",
-        	"slug": "default-news-entry",
+        	"pub_date": "2022-04-01 13:32:47+00:00",
+        	"slug": "news-introduction",
         	"title": "OwnRecipes",
+            "frontpage": 1
+        }
+    },
+    {
+        "pk": 2,
+        "model": "news.news",
+        "fields": {
+        	"content": "%features%",
+        	"image": "",
+        	"pub_date": "2022-06-01 13:32:47+00:00",
+        	"slug": "news-features",
+        	"title": "Features",
             "frontpage": 1
         }
     }

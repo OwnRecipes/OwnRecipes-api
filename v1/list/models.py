@@ -3,7 +3,7 @@
 
 from django.db import models
 from django.contrib.auth.models import User
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django_extensions.db.fields import AutoSlugField
 
 from v1.recipe.models import Recipe
@@ -22,9 +22,6 @@ class GroceryList(models.Model):
     slug = AutoSlugField(_('slug'), populate_from='title')
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     pub_date = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        ordering = ['pub_date']
 
     def __str__(self):
         return '%s' % self.title
@@ -47,9 +44,6 @@ class GroceryItem(models.Model):
     title = models.CharField(_("title"), max_length=550)
     completed = models.BooleanField(_("completed"), default=False)
     order = models.IntegerField(_("order"), default=0)
-
-    class Meta:
-        ordering = ['list_id', 'order', 'pk']
 
     def __str__(self):
         return '%s' % self.title

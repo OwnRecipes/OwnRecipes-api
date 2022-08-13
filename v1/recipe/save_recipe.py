@@ -86,11 +86,11 @@ class SaveRecipe(Validators):
     def _delete_recipe_groups():
             # Check to see if we have any Cuisines or Courses with no recipes associated with them.
             # Id we do, delete them.
-            Cuisine.objects.all().annotate(total=Count('recipe', distinct=True)).filter(total=0).delete()
-            Course.objects.all().annotate(total=Count('recipe', distinct=True)).filter(total=0).delete()
+            Cuisine.objects.all().exclude(author__is_staff='1').annotate(total=Count('recipe', distinct=True)).filter(total=0).delete()
+            Course.objects.all().exclude(author__is_staff='1').annotate(total=Count('recipe', distinct=True)).filter(total=0).delete()
 
     def _save_tags(self, recipe):
-        if self.tags:
+        if self.tags is not None:
             # TODO: don't delete everything when we edit the recipe. Use an ID.
             for tag in recipe.tags.all():
                 recipe.tags.remove(tag)
@@ -100,7 +100,7 @@ class SaveRecipe(Validators):
                 recipe.tags.add(obj)
 
     def _save_ingredient_data(self, recipe):
-        if self.ingredients:
+        if self.ingredients is not None:
             # TODO: don't delete everything when we edit the recipe. Use an ID.
             for ingredient_group in recipe.ingredient_groups.all():
                 for ingredient in ingredient_group.ingredients.all():
@@ -118,7 +118,7 @@ class SaveRecipe(Validators):
                     )
 
     def _save_subrecipe_data(self, recipe):
-        if self.subrecipes:
+        if self.subrecipes is not None:
             for subrecipe in SubRecipe.objects.filter(parent_recipe=recipe):
                 subrecipe.delete()
 

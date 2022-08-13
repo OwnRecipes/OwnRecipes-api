@@ -1,15 +1,33 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django_extensions.db.fields import AutoSlugField
-from imagekit.models import ImageSpecField
-from imagekit.processors import ResizeToFill
+from imagekit.models import ProcessedImageField, ImageSpecField
+from imagekit.processors import ResizeToFit, ResizeToFill
 
 from v1.recipe_groups.models import Cuisine, Course, Tag
 
+def _getImageQualityProcessors():
+    if settings.RECIPE_IMAGE_QUALITY == 'HIGH':
+        return [ResizeToFit(1920, 1440, False)]
+    elif settings.RECIPE_IMAGE_QUALITY == 'MEDIUM':
+        return [ResizeToFit(1440, 1080, False)]
+    elif settings.RECIPE_IMAGE_QUALITY == 'LOW':
+        return [ResizeToFit(1024, 768, False)]
+    else: return None
+
+def _getImageQualityOptions():
+    if settings.RECIPE_IMAGE_QUALITY == 'HIGH':
+        return {'quality': 97}
+    elif settings.RECIPE_IMAGE_QUALITY == 'MEDIUM':
+        return {'quality': 94}
+    elif settings.RECIPE_IMAGE_QUALITY == 'LOW':
+        return {'quality': 90}
+    else: return None
 
 class Recipe(models.Model):
     """
@@ -19,7 +37,7 @@ class Recipe(models.Model):
     Cuisines have a one to Many relation with Recipes.
     Tags have a Many to Many relation with Recipes.
     Ingredient Groups have a Many to one relation with Recipes.
-    Subrecipes have a Many to Many relation with Recipes. 
+    Subrecipes have a Many to Many relation with Recipes.
         They allow another recipe to be show in the Ingredient section.
 
     :title: = Title of the Recipe
@@ -37,7 +55,12 @@ class Recipe(models.Model):
     title = models.CharField(_("Recipe Title"), max_length=250)
     slug = AutoSlugField(_('slug'), populate_from='title', unique=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    photo = models.ImageField(_('photo'), blank=True, upload_to="upload/recipe_photos")
+    photo = ProcessedImageField(verbose_name='photo',
+                                blank=True,
+                                upload_to="upload/recipe_photos",
+                                processors=_getImageQualityProcessors(),
+                                format='JPEG',
+                                options=_getImageQualityOptions())
     photo_thumbnail = ImageSpecField(source='photo',
                                      processors=[ResizeToFill(300, 200)],
                                      format='JPEG',
@@ -48,16 +71,13 @@ class Recipe(models.Model):
     subrecipes = models.ManyToManyField('self', verbose_name=_('subrecipes'), through='SubRecipe', symmetrical=False)
     info = models.TextField(_('info'), help_text="enter information about the recipe", blank=True)
     directions = models.TextField(_('direction_text'), help_text="directions", blank=True)
-    source = models.CharField(_('course'), max_length=200, blank=True)
+    source = models.CharField(_('source'), max_length=200, blank=True)
     prep_time = models.IntegerField(_('prep time'), help_text="enter time in minutes")
     cook_time = models.IntegerField(_('cook time'), help_text="enter time in minutes")
     servings = models.IntegerField(_('servings'), help_text="enter total number of servings")
     pub_date = models.DateTimeField(auto_now_add=True)
     update_date = models.DateTimeField(auto_now=True)
     public = models.BooleanField(default=True)
-
-    class Meta:
-        ordering = ['-pub_date', 'title']
 
     def __str__(self):
         return '%s' % self.title

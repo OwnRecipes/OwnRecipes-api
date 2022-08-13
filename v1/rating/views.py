@@ -12,7 +12,7 @@ from .serializers import RatingSerializer
 from .permissions import IsOwnerOrReadOnly
 
 from .models import Recipe
-from v1.recipe_groups.models import Cuisine, Course
+from v1.recipe_groups.models import Cuisine, Course, Tag
 from v1.common.recipe_search import get_search_results
 from v1.rating.average_rating import convert_rating_to_int
 
@@ -22,17 +22,17 @@ class RatingViewSet(viewsets.ModelViewSet):
     This viewset automatically provides `list`, `create`, `retrieve`,
     `update` and `destroy` actions for Ingredients.
     """
-    queryset = Rating.objects.all()
+    queryset = Rating.objects.all().order_by('id')
     serializer_class = RatingSerializer
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
         IsOwnerOrReadOnly
     )
-    filter_fields = ('recipe', 'recipe__slug', 'author', 'comment', 'rating')
+    filterset_fields = ('recipe', 'recipe__slug', 'author', 'rating', 'update_date')
 
 
 class RatingCountViewSet(APIView):
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         query = Recipe.objects
         filter_set = {}
 
@@ -52,6 +52,14 @@ class RatingCountViewSet(APIView):
             try:
                 filter_set['course__in'] = Course.objects.filter(
                     slug__in=self.request.query_params.get('course').split(',')
+                )
+            except:
+                return []
+
+        if 'tag' in self.request.query_params:
+            try:
+                filter_set['tags__in'] = Tag.objects.filter(
+                    slug__in=self.request.query_params.get('tag').split(',')
                 )
             except:
                 return []

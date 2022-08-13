@@ -1,4 +1,4 @@
-FROM python:3.6.5-alpine3.7
+FROM python:3.8.13-alpine3.15
 ENV PYTHONUNBUFFERED 1
 
 RUN apk update && apk upgrade && \
@@ -6,7 +6,6 @@ RUN apk update && apk upgrade && \
     gcc \
     mariadb \
     mariadb-dev \
-    py-mysqldb \
     musl-dev \
     libjpeg-turbo-dev \
     zlib-dev
@@ -14,8 +13,7 @@ RUN apk update && apk upgrade && \
 COPY base/prod-entrypoint.sh /startup/
 RUN chmod +x /startup/prod-entrypoint.sh
 
-RUN mkdir /code
 WORKDIR /code
-ADD base/requirements.txt /code/requirements.txt
+COPY base/requirements.txt ./requirements.txt
 RUN pip install -r requirements.txt
-ADD . /code/
+COPY . ./

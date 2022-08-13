@@ -2,18 +2,21 @@
 import os, datetime
 
 # We can't set the debug just using the env var.
-# Python with evaluate any string as a True bool.
+# Python will evaluate any string as a True bool.
 DEBUG = False
 if os.environ.get('DJANGO_DEBUG', 'False').lower() == 'true':
     DEBUG = True
 
-SERVE_MEDIA = True
+# If you are using the api behind a reverse proxy,
+# then generate the correct absolute URI's:
+if os.environ.get('USE_X_FORWARDED_HOST', 'False').lower() == 'true':
+    USE_X_FORWARDED_HOST = True
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 PROJECT_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'ChangeMe!')
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # Force Django to use https headers if its behind a https proxy.
 # See: https://docs.djangoproject.com/en/2.0/ref/settings/#secure-proxy-ssl-header
@@ -27,7 +30,7 @@ DATABASES = {
         'ENGINE': os.environ.get('DATABASE_ENGINE', 'django.db.backends.mysql'),
         'NAME': os.environ.get('MYSQL_DATABASE', 'ownrecipes'),
         'USER': os.environ.get('MYSQL_USER', 'root'),
-        'PASSWORD': os.environ.get('MYSQL_ROOT_PASSWORD', ''),
+        'PASSWORD': os.environ.get('MYSQL_PASSWORD', os.environ.get('MYSQL_ROOT_PASSWORD')),
         'HOST': os.environ.get('MYSQL_HOST', 'db'),
         'PORT': os.environ.get('MYSQL_PORT', '3306'),
         'TEST': {
@@ -38,6 +41,8 @@ DATABASES = {
 if 'django.db.backends.mysql' in DATABASES['default']['ENGINE']:
     DATABASES['default'].setdefault('OPTIONS', {})
     DATABASES['default']['OPTIONS']['charset'] = 'utf8mb4'
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/2.0/ref/settings/#allowed-hosts
@@ -104,7 +109,6 @@ INSTALLED_APPS = (
     'django_filters',
     'rest_framework',
     'rest_framework.authtoken',
-    'coreapi',
 
     'base',
     'v1.recipe',
@@ -183,9 +187,15 @@ if not DEBUG:
         'rest_framework.renderers.JSONRenderer',
     )
 
-CORS_ORIGIN_WHITELIST = (
-    os.environ.get('NODE_URL', 'localhost:8080')
-)
+if 'http' in os.environ.get('NODE_URL', 'localhost:8080'):
+    CORS_ALLOWED_ORIGINS = (
+        os.environ.get('NODE_URL', 'localhost:8080')
+    )
+else:
+    CORS_ALLOWED_ORIGINS = (
+        f"http://{os.environ.get('NODE_URL', 'localhost:8080')}",
+        f"https://{os.environ.get('NODE_URL', 'localhost:8080')}"
+    )
 
 # Static and i18n settings
 STATICFILES_FINDERS = (
@@ -209,22 +219,74 @@ USE_I18N = True
 # calendars according to the current locale
 USE_L10N = True
 
+SERVE_MEDIA = True
+FILE_UPLOAD_PERMISSIONS = 0o644
+
+RECIPE_IMAGE_QUALITY = os.environ.get('RECIPE_IMAGE_QUALITY', 'MEDIUM')
+
 # Absolute path to the directory that holds media.
-# Example: "/home/media/media.lawrence.com/"
+# Example: "/opt/ownrecipes/ownrecipes-api/site-media/"
 MEDIA_ROOT = os.path.join(PROJECT_PATH, 'site-media')
 STATIC_ROOT = os.path.join(PROJECT_PATH, 'static-files')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
-# Examples: "http://media.lawrence.com", "http://example.com/media/"
-MEDIA_URL = '/site-media/'
-STATIC_URL = '/static-files/'
+# Examples: "http://ownrecipes.domain.com/site-media/"
+MEDIA_URL = f"/{os.environ.get('SITE_MEDIA_URL', 'site-media')}/"
+STATIC_URL = f"/{os.environ.get('STATIC_FILES_URL', 'static-files')}/"
+
+# Change this to access the Django Admin Pages from a different url.
+ADMIN_URL = os.environ.get('ADMIN_URL', 'admin')
 
 ugettext = lambda s: s
 LANGUAGES = (
      ('en', ugettext('English')),
      ('de', ugettext('German')),
    )
+
+LOGGING_LEVEL = os.environ.get('LOGGING', 'ERROR').upper()
+if LOGGING_LEVEL != 'OFF':
+    LOGS_ROOT = os.path.join(PROJECT_PATH, 'logs')
+    if not os.path.exists(LOGS_ROOT):
+        os.makedirs(LOGS_ROOT)
+
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'formatters': {
+            'verbose': {
+                'format': '{levelname} {asctime} {module} {message}',
+                'style': '{',
+            },
+        },
+        'handlers': {
+            'file': {
+                'level': LOGGING_LEVEL,
+                'formatter': 'verbose',
+                'class': 'logging.handlers.TimedRotatingFileHandler',
+                'filename': os.path.join(LOGS_ROOT, f"{LOGGING_LEVEL.lower()}.log"),
+                'when': 'midnight',
+                'backupCount': 10,
+            },
+        },
+        'loggers': {
+            'v1': {
+                'handlers': ['file'],
+                'level': LOGGING_LEVEL,
+                'propagate': True,
+            },
+            'django': {
+                'handlers': ['file'],
+                'level': LOGGING_LEVEL,
+                'propagate': True,
+            },
+            'rest_framework': {
+                'handlers': ['file'],
+                'level': LOGGING_LEVEL,
+                'propagate': False,
+            },
+        },
+    }
 
 try:
     from local_settings import *

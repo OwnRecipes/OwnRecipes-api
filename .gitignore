@@ -1,6 +1,7 @@
 # Folders
 site-media/
 static-files/
+logs/
 database/
 .idea/
 
@@ -13,3 +14,6 @@ database/
 *.js.map
 *.log
 .coverage
+
+# env
+.env*.local

@@ -34,7 +34,7 @@ class GrocerySharedAdmin(admin.ModelAdmin):
     list_display = ['list', 'shared_by', 'shared_to']
     list_filter = ['shared_by', 'shared_to']
     search_fields = ['shared_by__username', 'shared_to__username']
-    ordering = ['list']
+    ordering = ['list',]
 
 
 admin.site.register(GroceryList, GroceryListAdmin)
