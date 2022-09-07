@@ -3,7 +3,7 @@
 
 import random
 from django.db.models import Avg, Value
-from django.db.models.functions import Coalesce
+from django.db.models.functions import Coalesce, Floor
 
 from rest_framework import permissions, viewsets, filters
 from rest_framework.response import Response
@@ -56,7 +56,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
         # TODO: this many not be very efficient on huge query sets.
         # I don't think I will ever get to the point of this mattering
-        query = query.annotate(rating_avg=Coalesce(Avg('rating__rating'), Value(0.0)))
+        query = query.annotate(rating_avg=Coalesce(Floor(Avg('rating__rating')), Value(0.0)))
         query_ratings = self.request.query_params.get('rating').split(',')
 
         return query.filter(rating_avg__in = query_ratings)
