@@ -120,7 +120,6 @@ INSTALLED_APPS = (
     'v1.rating',
 
     'imagekit',
-    'django_extensions',
     'corsheaders'
 )
 

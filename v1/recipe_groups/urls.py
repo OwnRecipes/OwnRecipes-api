@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-from django.conf.urls import url, include
+from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from v1.recipe_groups import views
+from . import views
 
 # Create a router and register our viewsets with it.
 router = DefaultRouter()
@@ -16,5 +16,5 @@ router.register(r'tag-count', views.TagCountViewSet, basename='tag-count')
 router.register(r'tag', views.TagViewSet)
 
 urlpatterns = [
-    url('', include(router.urls)),
+    path('', include(router.urls)),
 ]
