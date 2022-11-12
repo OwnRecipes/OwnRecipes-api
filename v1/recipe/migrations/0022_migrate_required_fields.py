@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
                 i.course = None
             if i.cuisine and i.cuisine.title == '-':
                 i.cuisine = None
-            if i.directions and i.directions.length == 1:
+            if i.directions and i.directions == '-':
                 i.directions = ''
             if i.prep_time == -313373:
                 i.prep_time = None
