@@ -3,8 +3,9 @@
 
 from django.db import models
 from django.contrib.auth.models import User
-from django_extensions.db.fields import AutoSlugField
 from django.utils.translation import gettext_lazy as _
+
+from v1.common.db_fields import AutoSlugField
 
 
 class Cuisine(models.Model):

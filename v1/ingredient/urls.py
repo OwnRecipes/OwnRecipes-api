@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-from django.conf.urls import url, include
+from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
 from . import views
@@ -12,5 +12,5 @@ router.register(r'ingredient', views.IngredientViewSet)
 router.register(r'ingredient-group', views.IngredientGroupViewSet)
 
 urlpatterns = [
-    url('', include(router.urls)),
+    path('', include(router.urls)),
 ]

@@ -20,7 +20,7 @@ class Validators(object):
         return None
 
     def is_digit(self, item):
-        if self.partial and item is None:
+        if item is None:
             return None
         try:
             int(item)
@@ -65,6 +65,8 @@ class SaveRecipe(Validators):
                     title=self.course.get('title'),
                     defaults={'author': self.author},
                 )
+        else:
+            self.data['course'] = None
 
     def _save_cuisine(self):
         """
@@ -81,6 +83,8 @@ class SaveRecipe(Validators):
                     title=self.cuisine.get('title'),
                     defaults={'author': self.author},
                 )
+        else:
+            self.data['cuisine'] = None
 
     @staticmethod
     def _delete_recipe_groups():
@@ -154,15 +158,12 @@ class SaveRecipe(Validators):
     def _validate(self):
         fields = {
             "title": [self.required],
-            "directions": [self.required],
 
             "servings": [self.required, self.is_digit],
-            "prep_time": [self.required, self.is_digit],
-            "cook_time": [self.required, self.is_digit],
+            "prep_time": [self.is_digit],
+            "cook_time": [self.is_digit],
 
             "ingredient_groups": [self.required],
-            "cuisine": [self.required],
-            "course": [self.required],
         }
 
         errors = {}

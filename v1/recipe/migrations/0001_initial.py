@@ -5,7 +5,8 @@ from __future__ import unicode_literals
 from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
-import django_extensions.db.fields
+
+from v1.common.db_fields import AutoSlugField
 
 
 class Migration(migrations.Migration):
@@ -31,7 +32,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('title', models.CharField(max_length=250, verbose_name='Recipe Title')),
-                ('slug', django_extensions.db.fields.AutoSlugField(blank=True, editable=False, populate_from='title', unique=True, verbose_name='slug')),
+                ('slug', AutoSlugField(blank=True, editable=False, populate_from='title', unique=True, verbose_name='slug')),
                 ('photo', models.ImageField(blank=True, upload_to='upload/recipe_photos', verbose_name='photo')),
                 ('info', models.TextField(help_text='enter information about the recipe', verbose_name='info')),
                 ('directions', models.TextField(verbose_name='directions')),
