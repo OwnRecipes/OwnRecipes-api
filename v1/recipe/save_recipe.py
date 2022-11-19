@@ -55,7 +55,7 @@ class SaveRecipe(Validators):
         Add the Course instance to the self.data dict for use when we save the recipe
         If the Course doesn't exist create a new one.
         """
-        if self.course:
+        if self.course is not None:
             # Lookup the course by ID. If the ID isn't there, lookup by title
             # if that isn't found, create it.
             if self.course.get('id'):
@@ -65,15 +65,15 @@ class SaveRecipe(Validators):
                     title=self.course.get('title'),
                     defaults={'author': self.author},
                 )
-        else:
-            self.data['course'] = None
+            else:
+                self.data['course'] = None
 
     def _save_cuisine(self):
         """
         Add the Cuisine instance to the self.data dict for use when we save the recipe.
         If the Cuisine doesn't exist create a new one.
         """
-        if self.cuisine:
+        if self.cuisine is not None:
             # Lookup the cuisine by ID. If the ID isn't there, lookup by title
             # if that isn't found, create it.
             if self.cuisine.get('id'):
@@ -83,8 +83,8 @@ class SaveRecipe(Validators):
                     title=self.cuisine.get('title'),
                     defaults={'author': self.author},
                 )
-        else:
-            self.data['cuisine'] = None
+            else:
+                self.data['cuisine'] = None
 
     @staticmethod
     def _delete_recipe_groups():
