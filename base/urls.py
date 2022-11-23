@@ -14,7 +14,7 @@ urlpatterns = [
     path('openapi', get_schema_view(
         title='OwnRecipes',
         description='OwnRecipes OpenAPI',
-        version='3.1.0',
+        version='3.1.1',
     ), name='openapi'),
 
     # Backend REST API
@@ -25,5 +25,5 @@ urlpatterns = [
     path('', TemplateView.as_view(template_name='index.html'), name='home'),
 
     # Admin
-    path(f'{settings.ADMIN_URL}/', admin.site.urls),
+    path(settings.ADMIN_URL, admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

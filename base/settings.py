@@ -228,14 +228,14 @@ RECIPE_IMAGE_QUALITY = os.environ.get('RECIPE_IMAGE_QUALITY', 'MEDIUM')
 MEDIA_ROOT = os.path.join(PROJECT_PATH, 'site-media')
 STATIC_ROOT = os.path.join(PROJECT_PATH, 'static-files')
 
-# URL that handles the media served from MEDIA_ROOT. Make sure to use a
-# trailing slash if there is a path component (optional in other cases).
+# URL that handles the media served from MEDIA_ROOT.
 # Examples: "http://ownrecipes.domain.com/site-media/"
 MEDIA_URL = f"/{os.environ.get('SITE_MEDIA_URL', 'site-media')}/"
 STATIC_URL = f"/{os.environ.get('STATIC_FILES_URL', 'static-files')}/"
 
-# Change this to access the Django Admin Pages from a different url.
-ADMIN_URL = os.environ.get('ADMIN_URL', 'admin')
+# URL that the django admin page is served from.
+# Examples: "http://ownrecipes.domain.com/admin/"
+ADMIN_URL = f"{os.environ.get('ADMIN_URL', 'admin')}/"
 
 ugettext = lambda s: s
 LANGUAGES = (

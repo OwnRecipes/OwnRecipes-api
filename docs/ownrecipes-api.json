@@ -507,7 +507,16 @@
           {
             "TokenAuth": []
           }
-        ]
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecipeRequest"
+              }
+            }
+          }
+        }
       }
     },
     "/recipe_groups/course-count": {
@@ -1230,7 +1239,8 @@
           "title": {
             "type": "string",
             "example": "Tasty Chili",
-            "maxLength": 250
+            "maxLength": 250,
+            "minLength": 1
           },
           "info": {
             "type": "string"
@@ -1263,8 +1273,7 @@
           },
           "prep_time": {
             "type": "number",
-            "minimum": 0,
-            "description": "Zero means no prep_time needed."
+            "minimum": 0
           },
           "cook_time": {
             "type": "number",
@@ -1301,10 +1310,9 @@
           "ingredient_groups",
           "servings",
           "directions",
-          "prep_time",
-          "cook_time",
           "subrecipes",
-          "source"
+          "source",
+          "public"
         ]
       },
       "RecipeResponse": {
@@ -1367,13 +1375,11 @@
           },
           "prep_time": {
             "type": "number",
-            "minimum": 0,
-            "description": "Zero means no prep_time needed."
+            "minimum": 0
           },
           "cook_time": {
             "type": "number",
-            "minimum": 0,
-            "description": "Zero means no cook_time needed."
+            "minimum": 0
           },
           "subrecipes": {
             "type": "array",
@@ -1419,13 +1425,9 @@
           "info",
           "rating",
           "tags",
-          "course",
-          "cuisine",
           "ingredient_groups",
           "servings",
           "directions",
-          "prep_time",
-          "cook_time",
           "subrecipes",
           "author",
           "username",
