@@ -22,6 +22,9 @@
       "name": "Error"
     },
     {
+      "name": "Grocery"
+    },
+    {
       "name": "News"
     },
     {
@@ -111,6 +114,428 @@
             "TokenAuth": []
           }
         ]
+      }
+    },
+    "/list/lists": {
+      "get": {
+        "summary": "Get GroceryList list",
+        "tags": [
+          "Grocery"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroceryListIterator"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-grocery-lists",
+        "description": "Get all GroceryLists for that are eligable for the current user."
+      },
+      "post": {
+        "summary": "Create GroceryList",
+        "operationId": "post-grocery-list",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroceryListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "Grocery"
+        ],
+        "description": "Create grocery list.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GroceryListRequest"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "TokenAuth": []
+          }
+        ]
+      }
+    },
+    "/list/lists/{id}": {
+      "parameters": [
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "id",
+          "in": "path",
+          "required": true
+        }
+      ],
+      "get": {
+        "summary": "Get GroceryList",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroceryListResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "operationId": "get-grocery-list",
+        "description": "Get Grocery list by id.",
+        "tags": [
+          "Grocery"
+        ]
+      },
+      "delete": {
+        "summary": "Delete GroceryList",
+        "operationId": "delete-grocery-list",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "description": "Deletes the grocery list. Only the author and admin may use this.",
+        "security": [
+          {
+            "TokenAuth": []
+          }
+        ],
+        "tags": [
+          "Grocery"
+        ]
+      },
+      "patch": {
+        "summary": "Update GroceryList",
+        "operationId": "patch-grocery-list",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroceryListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "description": "Updates an existing grocery list.",
+        "security": [
+          {
+            "TokenAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GroceryListRequest"
+              }
+            }
+          }
+        },
+        "tags": [
+          "Grocery"
+        ]
+      }
+    },
+    "/list/items": {
+      "get": {
+        "summary": "Get GroceryList list",
+        "tags": [
+          "Grocery"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroceryListItemIterator"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "operationId": "get-grocery-list-items",
+        "description": "Get all grocery list items for the specific list.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "number"
+            },
+            "in": "query",
+            "name": "list",
+            "description": "Grocery list id.",
+            "required": true
+          }
+        ]
+      },
+      "post": {
+        "summary": "Create GroceryList item",
+        "operationId": "post-grocery-list-item",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroceryListItemResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "Grocery"
+        ],
+        "description": "Create grocery list item.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GroceryListItemCreate"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "TokenAuth": []
+          }
+        ]
+      },
+      "parameters": []
+    },
+    "/list/bulk_item": {
+      "parameters": [],
+      "delete": {
+        "summary": "Delete GroceryList items",
+        "operationId": "delete-grocery-list-items",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "Grocery"
+        ],
+        "description": "Delete grocery list items by id.",
+        "security": [
+          {
+            "TokenAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "description": "Grocery list item ids to delete.",
+                "items": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update GroceryList items",
+        "operationId": "update-grocery-list-items",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "description": "Update grocery list items.",
+        "security": [
+          {
+            "TokenAuth": []
+          }
+        ],
+        "tags": [
+          "Grocery"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GroceryListItemUpdate"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/list/lists/items/{itemId}": {
+      "parameters": [
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "itemId",
+          "in": "path",
+          "required": true
+        }
+      ],
+      "get": {
+        "summary": "Get GroceryList item",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroceryListItemResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "operationId": "get-grocery-list-item",
+        "description": "Get Grocery list item by id.",
+        "tags": [
+          "Grocery"
+        ]
+      },
+      "delete": {
+        "summary": "Delete GroceryList item",
+        "operationId": "delete-grocery-list-item",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "description": "Deletes the grocery list item. Only the author and admin may use this.",
+        "security": [
+          {
+            "TokenAuth": []
+          }
+        ],
+        "tags": [
+          "Grocery"
+        ]
+      },
+      "patch": {
+        "summary": "Update GroceryList item",
+        "operationId": "patch-grocery-list-item",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroceryListItemResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "tags": [
+          "Grocery"
+        ],
+        "description": "Updates an existing grocery list item.",
+        "security": [
+          {
+            "TokenAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GroceryListItemUpdate"
+              }
+            }
+          }
+        }
       }
     },
     "/news/entry": {
@@ -468,8 +893,8 @@
           "401": {
             "description": "Unauthorized"
           },
-          "403": {
-            "description": "Forbidden"
+          "404": {
+            "description": "Not Found"
           }
         },
         "tags": [
@@ -760,7 +1185,7 @@
         ]
       },
       "CategoryIterator": {
-        "title": "NewsIterator",
+        "title": "CategoryIterator",
         "type": "object",
         "properties": {
           "count": {
@@ -837,6 +1262,198 @@
             }
           }
         }
+      },
+      "GroceryListRequest": {
+        "title": "GroceryListRequest",
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "maxLength": 250,
+            "example": "My grocery list"
+          }
+        },
+        "required": [
+          "title"
+        ],
+        "description": ""
+      },
+      "GroceryListResponse": {
+        "title": "GroceryListResponse",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "readOnly": true
+          },
+          "slug": {
+            "type": "string",
+            "example": "my-grocery-list-1"
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 250,
+            "example": "My grocery list"
+          },
+          "pub_date": {
+            "type": "string",
+            "example": "2011-05-20",
+            "description": "ISO8601 date"
+          },
+          "author": {
+            "description": "Owner of this list.",
+            "type": "string"
+          },
+          "item_count": {
+            "type": "number",
+            "description": "Number of groceries in this list.",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "title",
+          "pub_date",
+          "author",
+          "item_count"
+        ],
+        "description": ""
+      },
+      "GroceryListIterator": {
+        "title": "GroceryListIterator",
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "number"
+          },
+          "next": {
+            "type": "number",
+            "nullable": true
+          },
+          "previous": {
+            "type": "number",
+            "nullable": true
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GroceryListResponse"
+            }
+          }
+        },
+        "required": [
+          "count",
+          "next",
+          "previous",
+          "results"
+        ]
+      },
+      "GroceryListItemCreate": {
+        "title": "GroceryListItemCreate",
+        "type": "object",
+        "description": "",
+        "properties": {
+          "list": {
+            "type": "number",
+            "description": "Grocery list id."
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 250,
+            "example": "200 g Flour"
+          },
+          "order": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "list",
+          "title"
+        ]
+      },
+      "GroceryListItemUpdate": {
+        "title": "GroceryListItemUpdate",
+        "type": "object",
+        "description": "",
+        "properties": {
+          "title": {
+            "type": "string",
+            "maxLength": 250,
+            "example": "200 g Flour"
+          },
+          "completed": {
+            "type": "boolean"
+          },
+          "order": {
+            "type": "number"
+          }
+        }
+      },
+      "GroceryListItemResponse": {
+        "title": "GroceryListResponse",
+        "type": "object",
+        "description": "",
+        "properties": {
+          "id": {
+            "type": "number",
+            "readOnly": true
+          },
+          "list": {
+            "type": "number",
+            "example": 0,
+            "description": "Grocery list id",
+            "readOnly": true
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 250,
+            "example": "200 g Flour"
+          },
+          "completed": {
+            "type": "boolean"
+          },
+          "order": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "list",
+          "title",
+          "completed",
+          "order"
+        ]
+      },
+      "GroceryListItemIterator": {
+        "title": "GroceryListItemIterator",
+        "type": "object",
+        "description": "",
+        "properties": {
+          "count": {
+            "type": "number"
+          },
+          "next": {
+            "type": "number",
+            "nullable": true
+          },
+          "previous": {
+            "type": "number",
+            "nullable": true
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GroceryListItemResponse"
+            }
+          }
+        },
+        "required": [
+          "count",
+          "next",
+          "previous",
+          "results"
+        ]
       },
       "Ingredient": {
         "title": "Ingredient",
@@ -1039,7 +1656,7 @@
         ]
       },
       "RatingIterator": {
-        "title": "RecipeIterator",
+        "title": "RatingIterator",
         "type": "object",
         "properties": {
           "count": {
