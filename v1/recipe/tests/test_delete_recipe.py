@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 # encoding: utf-8
+import os
 import shutil
 from pathlib import Path
 
+from django.conf import settings
 from django.test import TestCase
 from django.contrib.auth.models import User
 from rest_framework.test import APIRequestFactory
@@ -36,15 +38,18 @@ class RecipeSerializerTests(TestCase):
         self.assertEqual(response.status_code, 204)
 
     def test_simple_delete_recipe_with_photo(self):
+        media_path = settings.MEDIA_ROOT + '/upload/recipe_photos'
         # add photo
         recipe = Recipe.objects.get(slug='tasty-chili')
         recipe.photo = "upload/recipe_photos/food.jpg"
         recipe.save()
         # copy file
-        shutil.copy2('v1/fixtures/test/food.jpg', 'site-media/upload/recipe_photos')
+        if not os.path.exists(media_path+'/'):
+            os.makedirs(os.path.dirname(media_path+'/'))
+        shutil.copy2('v1/fixtures/test/food.jpg', media_path)
 
         # photo is saved on file system?
-        my_file = Path("site-media/upload/recipe_photos/food.jpg")
+        my_file = Path(media_path + "/food.jpg")
         self.assertTrue(my_file.is_file(), "File not found")
 
         # delete
@@ -55,7 +60,7 @@ class RecipeSerializerTests(TestCase):
         self.assertEqual(response.status_code, 204)
 
         # photo is deleted on file system?
-        my_file = Path("site-media/upload/recipe_photos/food.jpg")
+        my_file = Path(media_path + "/food.jpg")
         self.assertFalse(my_file.is_file(), "Deleting File failed")
 
 

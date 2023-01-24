@@ -87,7 +87,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
                     if os.path.exists(img_path):
                         os.remove(img_path)
                 except FileNotFoundError as e:
-                    logging.error('Failed.', exc_info=e)
+                    logging.error('Deletion of image failed. ' + img_path + ' could not be found for deletion during deletion of recipe.', exc_info=e)
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
 

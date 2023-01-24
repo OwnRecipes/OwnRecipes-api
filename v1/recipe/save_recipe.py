@@ -198,10 +198,10 @@ class SaveRecipe(Validators):
             new_img = instance.photo.path
         if old_img and old_img != new_img:
             try:
-                if os.path.exists(old_img):
+                if os.path.isfile(old_img):
                     os.remove(old_img)
             except FileNotFoundError as e:
-                logging.error('Failed.', exc_info=e)
+                logging.error('Deletion of image failed. ' + old_img + ' could not be found for deletion after an update with a new image.', exc_info=e)
 
         self._delete_recipe_groups()
 
