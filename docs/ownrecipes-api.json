@@ -1694,7 +1694,8 @@
             "maximum": 5
           },
           "comment": {
-            "type": "string"
+            "type": "string",
+            "maxLength": 1000
           },
           "recipe": {
             "type": "string",
@@ -1729,7 +1730,7 @@
           },
           "comment": {
             "type": "string",
-            "maxLength": 250
+            "maxLength": 1000
           },
           "recipe": {
             "type": "string",
