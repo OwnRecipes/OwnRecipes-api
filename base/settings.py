@@ -223,6 +223,10 @@ FILE_UPLOAD_PERMISSIONS = 0o644
 
 RECIPE_IMAGE_QUALITY = os.environ.get('RECIPE_IMAGE_QUALITY', 'MEDIUM')
 
+DELETE_ORPHAN_FILES = True
+if os.environ.get('DELETE_ORPHAN_FILES', 'True').lower() == 'false':
+    DELETE_ORPHAN_FILES = False
+
 # Absolute path to the directory that holds media.
 # Example: "/opt/ownrecipes/ownrecipes-api/site-media/"
 MEDIA_ROOT = os.path.join(PROJECT_PATH, 'site-media')
