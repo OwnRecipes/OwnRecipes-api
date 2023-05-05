@@ -1536,19 +1536,18 @@
         "title": "LoginResponse",
         "type": "object",
         "properties": {
-          "id": {
-            "type": "number",
-            "description": "user id",
-            "readOnly": true
-          },
-          "token": {
+          "access": {
             "type": "string",
-            "description": "JWT"
+            "description": "JWT (includes user_id, username, email, is_staff)"
+          },
+          "refresh": {
+            "type": "string",
+            "description": "token to update the access token"
           }
         },
         "required": [
-          "id",
-          "token"
+          "access",
+          "refresh"
         ]
       },
       "NewsIterator": {

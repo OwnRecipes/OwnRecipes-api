@@ -4,7 +4,7 @@ django-imagekit==4.1.0
 djangorestframework==3.14.0
 
 djangorestframework-bulk==0.2.1
-djangorestframework-jwt==1.11.0
+djangorestframework-simplejwt==5.2.2
 django-filter==22.1
 django-cors-headers==3.13.0
 

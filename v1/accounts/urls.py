@@ -2,9 +2,10 @@
 # encoding: utf-8
 
 from django.urls import path
-from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from . import views
 
 urlpatterns = [
-    path('obtain-auth-token/', obtain_jwt_token),
-    path('refresh-auth-token/', refresh_jwt_token)
+    path('obtain-auth-token/', views.MyObtainTokenPairView.as_view()),
+    path('refresh-auth-token/', TokenRefreshView.as_view())
 ]

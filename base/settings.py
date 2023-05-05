@@ -109,6 +109,7 @@ INSTALLED_APPS = (
     'django_filters',
     'rest_framework',
     'rest_framework.authtoken',
+    'rest_framework_simplejwt',
 
     'base',
     'v1.recipe',
@@ -154,7 +155,7 @@ LANGUAGE_CODE = 'en-us'
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ),
@@ -168,15 +169,11 @@ REST_FRAMEWORK = {
     }
 }
 
-# http://getblimp.github.io/django-rest-framework-jwt/#additional-settings
-JWT_AUTH = {
-    # We are returning custom data to our UI.
-    'JWT_RESPONSE_PAYLOAD_HANDLER': 'v1.accounts.jwt_handler.handler',
-
-    # Allow for token refresh and increase the timeout of the user token.
-    'JWT_ALLOW_REFRESH': True,
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=14),
-    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(weeks=30),
+# https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(minutes=30),
+    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=15),
+    'ROTATE_REFRESH_TOKENS': True,
 }
 
 # We don't want the API to serve static in production.
