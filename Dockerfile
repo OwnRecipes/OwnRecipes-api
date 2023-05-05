@@ -1,4 +1,4 @@
-FROM python:3.8.13-alpine3.15
+FROM python:3.8.16-alpine
 ENV PYTHONUNBUFFERED 1
 
 RUN apk update && apk upgrade && \
