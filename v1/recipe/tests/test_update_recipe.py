@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+import os
+import shutil
+from pathlib import Path
+
+from django.conf import settings
 from django.test import TestCase
 from django.contrib.auth.models import User
 from rest_framework.test import APIRequestFactory
@@ -272,3 +277,77 @@ class RecipeSerializerTests(TestCase):
         response = view(request, slug='tasty-chili')
 
         self.assertTrue(response.data.get('id', True))
+
+    def test_patch_recipe_with_photo(self):
+        """Test that orphan photos are deleted"""
+        PHOTO_PATH = os.path.join('upload', 'recipe_photos')
+        media_path = os.path.join(settings.MEDIA_ROOT, PHOTO_PATH)
+        if not os.path.exists(media_path):
+            os.makedirs(os.path.dirname(media_path))
+
+        view = views.RecipeViewSet.as_view({'patch': 'update'})
+        data = {
+            "ingredient_groups": [
+                {
+                    "id": 3,
+                    "title": "",
+                    "ingredients": []
+                }
+            ],
+            "directions": 'test',
+            "title": "Recipe name",
+            "info": "Recipe info rgo",
+            "source": "google.com",
+            "prep_time": 60,
+            "cook_time": 60,
+            "servings": 8,
+            "cuisine": {"id": 1},
+            "course": {"id": 2},
+            "photo": os.path.join(PHOTO_PATH, 'food.jpg')
+        }
+
+        data_new_file = {
+            "ingredient_groups": [
+                {
+                    "id": 3,
+                    "title": "",
+                    "ingredients": []
+                }
+            ],
+            "directions": 'test',
+            "title": "Recipe name",
+            "info": "Recipe info rgo",
+            "source": "google.com",
+            "prep_time": 60,
+            "cook_time": 60,
+            "servings": 8,
+            "cuisine": {"id": 1},
+            "course": {"id": 2},
+            "photo": os.path.join(PHOTO_PATH, 'food2.jpg')
+        }
+
+        # add data with photo url
+        request = self.factory.patch('/api/v1/recipe/recipes/tasty-chili', data=data, format='json')
+        # print(request)
+        request.user = self.staff
+        response = view(request, slug='tasty-chili')
+        self.assertEqual(response.data.get('info'), 'Recipe info rgo')
+        self.assertTrue(response.data.get('photo').endswith(os.path.join(PHOTO_PATH, 'food.jpg')))
+        # copy file
+        shutil.copy2('v1/fixtures/test/food.jpg', media_path)
+
+        # check if copying file succeeded
+        my_file = Path(media_path, 'food.jpg')
+        self.assertTrue(my_file.is_file(), 'File not found')
+
+        # patch recipe and check if the file has been replaced
+        request = self.factory.patch('/api/v1/recipe/recipes/tasty-chili', data=data_new_file, format='json')
+        # print(request)
+        request.user = self.staff
+        response = view(request, slug='tasty-chili')
+        self.assertEqual(response.data.get('info'), 'Recipe info rgo')
+        self.assertTrue(response.data.get('photo').endswith(os.path.join(PHOTO_PATH, 'food2.jpg')))
+
+        # photo should be deleted
+        my_file = Path(media_path, 'food.jpg')
+        self.assertFalse(my_file.is_file(), 'Deleting File failed')
