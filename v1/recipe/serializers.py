@@ -47,14 +47,14 @@ class SubRecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SubRecipe
-        fields = (
+        fields = [
             'child_recipe_id',
             'slug',
             'numerator',
             'denominator',
             'measurement',
             'title',
-        )
+        ]
 
 
 class MiniBrowseSerializer(FieldLimiter, serializers.ModelSerializer):
@@ -65,15 +65,15 @@ class MiniBrowseSerializer(FieldLimiter, serializers.ModelSerializer):
 
     class Meta:
         model = Recipe
-        fields = (
+        fields = [
             'id',
             'slug',
             'title',
             'pub_date',
             'rating',
             'photo_thumbnail',
-            'info'
-        )
+            'info',
+        ]
 
 
 class RecipeSerializer(FieldLimiter, serializers.ModelSerializer):
@@ -84,9 +84,10 @@ class RecipeSerializer(FieldLimiter, serializers.ModelSerializer):
     tags = TagSerializer(many=True, required=False)
     rating = AverageRating(source='id')
     subrecipes = SerializerMethodField()
-    pub_date = serializers.DateTimeField(read_only=True)
-    update_date = serializers.DateTimeField(read_only=True)
     username = serializers.ReadOnlyField(source='author.username')
+    pub_date = serializers.DateTimeField(read_only=True)
+    update_username = serializers.DateTimeField(read_only=True)
+    update_date = serializers.DateTimeField(read_only=True)
     course = CourseSerializer()
     cuisine = CuisineSerializer()
 

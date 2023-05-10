@@ -9,7 +9,7 @@ from django.db.models import Avg
 from v1.recipe_groups.models import Cuisine, Course, Tag
 from v1.recipe.models import Recipe
 from v1.recipe_groups import serializers
-from v1.common.permissions import IsOwnerOrReadOnly
+from v1.common.permissions import IsParentRecipeOwnerOrReadOnly
 from v1.common.recipe_search import get_search_results
 from v1.rating.average_rating import convert_rating_to_int
 
@@ -23,8 +23,7 @@ class CuisineViewSet(viewsets.ModelViewSet):
     """
     queryset = Cuisine.objects.all()
     serializer_class = serializers.CuisineSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
-                          IsOwnerOrReadOnly)
+    permission_classes = (IsParentRecipeOwnerOrReadOnly,)
     lookup_field = 'slug'
 
 class CuisineCountViewSet(viewsets.ModelViewSet):
@@ -35,8 +34,7 @@ class CuisineCountViewSet(viewsets.ModelViewSet):
     Uses `slug` as the PK for any lookups.
     """
     serializer_class = serializers.AggCuisineSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
-                          IsOwnerOrReadOnly)
+    permission_classes = (IsParentRecipeOwnerOrReadOnly,)
     lookup_field = 'slug'
 
     def get_queryset(self):
@@ -92,8 +90,7 @@ class CourseViewSet(viewsets.ModelViewSet):
     """
     queryset = Course.objects.all()
     serializer_class = serializers.CourseSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
-                          IsOwnerOrReadOnly)
+    permission_classes = (IsParentRecipeOwnerOrReadOnly,)
     lookup_field = 'slug'
 
 class CourseCountViewSet(viewsets.ModelViewSet):
@@ -104,8 +101,7 @@ class CourseCountViewSet(viewsets.ModelViewSet):
     Uses `slug` as the PK for any lookups.
     """
     serializer_class = serializers.AggCourseSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
-                          IsOwnerOrReadOnly)
+    permission_classes = (IsParentRecipeOwnerOrReadOnly,)
     lookup_field = 'slug'
 
     def get_queryset(self):
@@ -161,8 +157,7 @@ class TagViewSet(viewsets.ModelViewSet):
     """
     queryset = Tag.objects.all()
     serializer_class = serializers.TagSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
-                          IsOwnerOrReadOnly)
+    permission_classes = (IsParentRecipeOwnerOrReadOnly,)
     lookup_field = 'title'
     ordering_fields = ('title',)
 
@@ -174,8 +169,7 @@ class TagCountViewSet(viewsets.ModelViewSet):
     Uses `title` as the PK for any lookups.
     """
     serializer_class = serializers.AggTagSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
-                          IsOwnerOrReadOnly)
+    permission_classes = (IsParentRecipeOwnerOrReadOnly,)
     lookup_field = 'slug'
 
     def get_queryset(self):

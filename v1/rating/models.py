@@ -13,18 +13,20 @@ class Rating(models.Model):
     Django Model to hold a Rating of a recipe.
     Ratings share a many to one relationship.
     Meaning each Recipe will have many Ratings.
-    :author: = User that created the comment
     :recipe: = The recipe the comment is related to
     :comment: = A comment on the recipe
     :rating: = A rating 1-5
+    :author: = User that created the comment
     :pub_date: = When the rating was created
+    :update_author: = User that updated the comment
     :update_date: = When the rating was updated
     """
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     comment = models.CharField(_('comment'), max_length=1000)
     rating = models.IntegerField(_('rating'), default=0)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     pub_date = models.DateTimeField(auto_now_add=True)
+    update_author = models.ForeignKey(User, related_name='rating_update', on_delete=models.DO_NOTHING, blank=True, null=True)
     update_date = models.DateTimeField(auto_now=True)
 
     def __str__(self):

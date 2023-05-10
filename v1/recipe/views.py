@@ -4,12 +4,13 @@
 import random
 from django.db.models import Avg
 
-from rest_framework import permissions, viewsets, filters
+from rest_framework import viewsets, filters
 from rest_framework.response import Response
 
 from . import serializers
 from .models import Recipe
 from .save_recipe import SaveRecipe
+from v1.common.permissions import IsOwnerOrReadOnly
 from v1.recipe_groups.models import Cuisine, Course, Tag
 
 
@@ -20,7 +21,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     """
     lookup_field = 'slug'
     serializer_class = serializers.RecipeSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    permission_classes = (IsOwnerOrReadOnly,)
     filter_backends = (filters.SearchFilter, filters.OrderingFilter)
     search_fields = ('title', 'tags__title', 'ingredient_groups__ingredients__title')
     ordering_fields = ('pub_date', 'title', 'rating')

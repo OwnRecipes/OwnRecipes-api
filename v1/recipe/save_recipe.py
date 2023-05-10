@@ -178,21 +178,6 @@ class SaveRecipe(Validators):
         if len(errors) > 0:
             raise ParseError(errors)
 
-    def update(self, instance):
-        """ Update and return a new `Recipe` instance, given the validated data """
-        self._save_course()
-        self._save_cuisine()
-        for attr, value in self.data.items():
-            setattr(instance, attr, value)
-        self._save_ingredient_data(instance)
-        self._save_subrecipe_data(instance)
-        self._save_tags(instance)
-        instance.save()
-
-        self._delete_recipe_groups()
-
-        return instance
-
     def create(self):
         """ Create and return a new `Recipe` instance, given the validated data """
         self._save_course()
@@ -207,3 +192,18 @@ class SaveRecipe(Validators):
         self._delete_recipe_groups()
 
         return recipe
+
+    def update(self, instance):
+        """ Update and return a new `Recipe` instance, given the validated data """
+        self._save_course()
+        self._save_cuisine()
+        for attr, value in self.data.items():
+            setattr(instance, attr, value)
+        self._save_ingredient_data(instance)
+        self._save_subrecipe_data(instance)
+        self._save_tags(instance)
+        instance.save()
+
+        self._delete_recipe_groups()
+
+        return instance

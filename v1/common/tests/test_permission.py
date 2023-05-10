@@ -4,7 +4,7 @@
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser, User
 from django.test import TestCase, RequestFactory
-from v1.common.permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
+from v1.common.permissions import IsAdminOrReadOnly, IsParentRecipeOwnerOrReadOnly
 
 
 class PermissionTest(TestCase):
@@ -22,15 +22,15 @@ class PermissionTest(TestCase):
         request = self.factory.get(f'/{settings.ADMIN_URL}')
         request.user = self.user
         self.assertTrue(
-            IsOwnerOrReadOnly().has_permission(request, None)
+            IsParentRecipeOwnerOrReadOnly().has_permission(request, None)
         )
         self.assertTrue(
-            IsOwnerOrReadOnly().has_object_permission(request, None, None)
+            IsParentRecipeOwnerOrReadOnly().has_object_permission(request, None, None)
         )
         request = self.factory.post(f'/{settings.ADMIN_URL}')
         request.user = self.user
         self.assertTrue(
-            IsOwnerOrReadOnly().has_permission(request, None)
+            IsParentRecipeOwnerOrReadOnly().has_permission(request, None)
         )
 
         # Try and access something as an anonymous user.
@@ -38,15 +38,15 @@ class PermissionTest(TestCase):
         request = self.factory.get(f'/{settings.ADMIN_URL}')
         request.user = AnonymousUser()
         self.assertTrue(
-            IsOwnerOrReadOnly().has_permission(request, None)
+            IsParentRecipeOwnerOrReadOnly().has_permission(request, None)
         )
         self.assertTrue(
-            IsOwnerOrReadOnly().has_object_permission(request, None, None)
+            IsParentRecipeOwnerOrReadOnly().has_object_permission(request, None, None)
         )
         request = self.factory.post(f'/{settings.ADMIN_URL}')
         request.user = AnonymousUser()
         self.assertTrue(
-            IsOwnerOrReadOnly().has_permission(request, None)
+            IsParentRecipeOwnerOrReadOnly().has_permission(request, None)
         )
 
     def test_is_admin_or_read_only(self):

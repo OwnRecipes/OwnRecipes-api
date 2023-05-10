@@ -18,7 +18,7 @@ class IngredientGroup(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name='ingredient_groups')
 
     class Meta:
-        unique_together = ('title', 'recipe')
+        unique_together = ['title', 'recipe']
 
     def __str__(self):
         return '%s' % self.title

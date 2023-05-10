@@ -13,11 +13,11 @@ class CourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = (
+        fields = [
             'id',
             'author',
             'title',
-        )
+        ]
 
 
 class CuisineSerializer(serializers.ModelSerializer):
@@ -28,11 +28,11 @@ class CuisineSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cuisine
-        fields = (
+        fields = [
             'id',
             'author',
             'title',
-        )
+        ]
 
 class TagSerializer(serializers.ModelSerializer):
     """ Standard `rest_framework` ModelSerializer """

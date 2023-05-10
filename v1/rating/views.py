@@ -2,14 +2,14 @@
 # encoding: utf-8
 
 from django.db.models import Avg
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets
 from rest_framework.views import APIView
 
 from rest_framework.response import Response
 
 from .models import Rating
 from .serializers import RatingSerializer
-from .permissions import IsOwnerOrReadOnly
+from v1.common.permissions import IsOwnerOrReadOnly
 
 from .models import Recipe
 from v1.recipe_groups.models import Cuisine, Course, Tag
@@ -24,10 +24,7 @@ class RatingViewSet(viewsets.ModelViewSet):
     """
     queryset = Rating.objects.all().order_by('id')
     serializer_class = RatingSerializer
-    permission_classes = (
-        permissions.IsAuthenticatedOrReadOnly,
-        IsOwnerOrReadOnly
-    )
+    permission_classes = (IsOwnerOrReadOnly,)
     filterset_fields = ('recipe', 'recipe__slug', 'author', 'rating', 'update_date')
 
 

@@ -13,12 +13,13 @@ class RatingsSerializerTests(TestCase):
         user = User.objects.create(username='testuser')
         user.set_password('12345')
         user.save()
+
         self.client.login(username='testuser', password='12345')
         self.user_id = getattr(user, 'id')
         self.user_name = getattr(user, 'username')
 
     def test_create_rating(self):
-        new_rating_data = {"recipe": "tasty-chili", "author": self.user_id,
+        new_rating_data = {"recipe": "tasty-chili",
                            "comment": "test_rating test_create_rating äöüÄÖÜ@€", "rating": 3}
 
         # rating post request
@@ -33,9 +34,9 @@ class RatingsSerializerTests(TestCase):
         self.assertEqual(retrieved_rating_data['id'], inserted_rating_id)
         self.assertEqual(retrieved_rating_data['recipe'], new_rating_data['recipe'])
         self.assertEqual(retrieved_rating_data['comment'], new_rating_data['comment'])
-        self.assertEqual(retrieved_rating_data['author'], new_rating_data['author'])
         self.assertEqual(retrieved_rating_data['rating'], new_rating_data['rating'])
-        self.assertEqual(retrieved_rating_data['username'], self.user_name)
+        self.assertEqual(retrieved_rating_data['author'], self.user_id)
+        self.assertEqual(retrieved_rating_data['pub_username'], self.user_name)
         self.assertIsNotNone(retrieved_rating_data['pub_date'])
         self.assertIsNotNone(retrieved_rating_data['update_date'])
         recipe_slug = retrieved_rating_data['recipe']
@@ -47,7 +48,7 @@ class RatingsSerializerTests(TestCase):
         self.assertEqual(retrieved_recipe_data['slug'], new_rating_data['recipe'])
 
     def test_update_rating(self):
-        new_rating_data = {"recipe": "tasty-chili", "author": self.user_id,
+        new_rating_data = {"recipe": "tasty-chili",
                            "comment": "test_rating test_update_rating äöüÄÖÜ@€", "rating": 3}
 
         # rating post request
@@ -62,7 +63,14 @@ class RatingsSerializerTests(TestCase):
         self.assertEqual(retrieved_rating_data['id'], inserted_rating_id)
 
         # rating put request
-        update_rating_data = {"recipe": "tasty-chili", "author": self.user_id,
+        user2 = User.objects.create(username='testuserr2', is_superuser=True, is_staff=True)
+        user2.set_password('12346')
+        user2.save()
+
+        self.client.login(username='testuserr2', password='12346')
+        user2_id = getattr(user2, 'id')
+
+        update_rating_data = {"recipe": "tasty-chili",
                               "comment": "test_rating test_update_rating äöüÄÖÜ@€ UPDATED", "rating": 4}
 
         response = self.client.put('/api/v1/rating/rating/' + str(inserted_rating_id) + '/',
@@ -76,11 +84,12 @@ class RatingsSerializerTests(TestCase):
         self.assertEqual(retrieved_rating_data['id'], inserted_rating_id)
         self.assertEqual(retrieved_rating_data['recipe'], update_rating_data['recipe'])
         self.assertEqual(retrieved_rating_data['comment'], update_rating_data['comment'])
-        self.assertEqual(retrieved_rating_data['author'], update_rating_data['author'])
+        self.assertEqual(retrieved_rating_data['author'], self.user_id)
+        self.assertEqual(retrieved_rating_data['update_author'], user2_id)
         self.assertEqual(retrieved_rating_data['rating'], update_rating_data['rating'])
 
     def test_delete_rating(self):
-        new_rating_data = {"recipe": "tasty-chili", "author": self.user_id,
+        new_rating_data = {"recipe": "tasty-chili",
                            "comment": "test_rating test_delete_rating äöüÄÖÜ@€", "rating": 3}
 
         # rating post request

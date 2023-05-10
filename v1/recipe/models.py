@@ -47,7 +47,6 @@ class Recipe(models.Model):
         They allow another recipe to be show in the Ingredient section.
 
     :title: = Title of the Recipe
-    :author: = Creator of the Recipe
     :photo: = Raw Image of a Recipe
     :photo_thumbnail: = compressed image of the photo
     :info: = Description of the recipe
@@ -55,12 +54,14 @@ class Recipe(models.Model):
     :prep_time: = How long it takes to prepare the recipe
     :cook_time: = How long the recipe takes to cook
     :servings: = How many people the recipe with serve
+    :public: = If the recipe can be viewed by others
+    :author: = Creator of the Recipe
     :pub_date: = When the recipe was created
+    :update_author: = User that updated the recipe
     :update_date: = When the recipe was updated
     """
     title = models.CharField(_("Recipe Title"), max_length=250)
     slug = AutoSlugField(_('slug'), populate_from='title', unique=True)
-    author = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     photo = ProcessedImageField(verbose_name='photo',
                                 blank=True,
                                 upload_to="upload/recipe_photos",
@@ -81,9 +82,11 @@ class Recipe(models.Model):
     prep_time = models.IntegerField(_('prep time'), help_text="enter time in minutes", null=True, blank=True)
     cook_time = models.IntegerField(_('cook time'), help_text="enter time in minutes", null=True, blank=True)
     servings = models.IntegerField(_('servings'), help_text="enter total number of servings")
-    pub_date = models.DateTimeField(auto_now_add=True)
-    update_date = models.DateTimeField(auto_now=True)
     public = models.BooleanField(default=True)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    pub_date = models.DateTimeField(auto_now_add=True)
+    update_author = models.ForeignKey(User, related_name='recipe_update', on_delete=models.DO_NOTHING, blank=True, null=True)
+    update_date = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return '%s' % self.title

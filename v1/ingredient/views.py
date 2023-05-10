@@ -5,7 +5,7 @@ from rest_framework import permissions, viewsets
 
 from .models import Ingredient, IngredientGroup
 from .serializers import IngredientSerializer, IngredientGroupSerializer
-from v1.common.permissions import IsOwnerOrReadOnly
+from v1.common.permissions import IsParentRecipeOwnerOrReadOnly
 
 
 class IngredientGroupViewSet(viewsets.ModelViewSet):
@@ -15,10 +15,7 @@ class IngredientGroupViewSet(viewsets.ModelViewSet):
     """
     queryset = IngredientGroup.objects.all()
     serializer_class = IngredientGroupSerializer
-    permission_classes = (
-        permissions.IsAuthenticatedOrReadOnly,
-        IsOwnerOrReadOnly
-    )
+    permission_classes = (IsParentRecipeOwnerOrReadOnly,)
     filterset_fields = ('recipe',)
     ordering_fields = ('id',)
 
@@ -30,9 +27,6 @@ class IngredientViewSet(viewsets.ModelViewSet):
     """
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
-    permission_classes = (
-        permissions.IsAuthenticatedOrReadOnly,
-        IsOwnerOrReadOnly
-    )
+    permission_classes = (IsParentRecipeOwnerOrReadOnly,)
     filterset_fields = ('ingredient_group', 'ingredient_group__recipe')
     ordering_fields = ('id',)
