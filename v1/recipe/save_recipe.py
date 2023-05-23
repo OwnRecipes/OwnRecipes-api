@@ -190,10 +190,7 @@ class SaveRecipe(Validators):
 
         self._save_course()
         self._save_cuisine()
-        recipe = Recipe.objects.create(
-            author=self.author,
-            **self.data
-        )
+        recipe.save()
         self._save_ingredient_data(recipe)
         self._save_subrecipe_data(recipe)
         self._save_tags(recipe)
