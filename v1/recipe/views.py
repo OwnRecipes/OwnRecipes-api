@@ -2,10 +2,12 @@
 # encoding: utf-8
 
 import random
+from django.core.exceptions import ValidationError
 from django.db.models import Avg
 
 from rest_framework import viewsets, filters
 from rest_framework.response import Response
+from rest_framework import status
 
 from . import serializers
 from .models import Recipe
@@ -62,21 +64,27 @@ class RecipeViewSet(viewsets.ModelViewSet):
         return query.filter(rating_avg__in = query_ratings)
 
     def create(self, request, *args, **kwargs):
-        return Response(
-            serializers.RecipeSerializer(
-                SaveRecipe(request.data, self.request.user).create(),
-                context={'request': request}
-            ).data
-        )
+        try:
+            return Response(
+                serializers.RecipeSerializer(
+                    SaveRecipe(request.data, self.request.user).create(),
+                    context={'request': request}
+                ).data
+            )
+        except ValidationError as err:
+            return Response(err, status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
-        return Response(
-            serializers.RecipeSerializer(
-                SaveRecipe(request.data, self.request.user, partial=partial).update(self.get_object()),
-                context={'request': request}
-            ).data
-        )
+        try:
+            return Response(
+                serializers.RecipeSerializer(
+                    SaveRecipe(request.data, self.request.user, partial=partial).update(self.get_object()),
+                    context={'request': request}
+                ).data
+            )
+        except ValidationError as err:
+            return Response(err, status=status.HTTP_400_BAD_REQUEST)
 
 
 class MiniBrowseViewSet(viewsets.mixins.ListModelMixin,
