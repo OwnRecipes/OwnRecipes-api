@@ -12,6 +12,8 @@ RUN apk update && apk upgrade && \
 
 COPY base/prod-entrypoint.sh /startup/
 RUN chmod +x /startup/prod-entrypoint.sh
+COPY base/gc.sh /etc/periodic/daily/gc
+RUN chmod a+x /etc/periodic/daily/gc
 
 WORKDIR /code
 COPY base/requirements.txt ./requirements.txt
