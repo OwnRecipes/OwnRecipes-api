@@ -199,6 +199,7 @@ class SaveRecipe(Validators):
         self._save_cuisine()
         for attr, value in self.data.items():
             setattr(instance, attr, value)
+        setattr(instance, 'update_author', self.author)
         self._save_ingredient_data(instance)
         self._save_subrecipe_data(instance)
         self._save_tags(instance)

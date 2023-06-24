@@ -81,15 +81,16 @@ class RecipeSerializer(FieldLimiter, serializers.ModelSerializer):
     photo = CustomImageField(required=False)
     photo_thumbnail = CustomImageField(required=False)
     ingredient_groups = IngredientGroupSerializer(many=True)
+    subrecipes = SerializerMethodField()
     tags = TagSerializer(many=True, required=False)
     rating = AverageRating(source='id')
-    subrecipes = SerializerMethodField()
-    username = serializers.ReadOnlyField(source='author.username')
-    pub_date = serializers.DateTimeField(read_only=True)
-    update_username = serializers.DateTimeField(read_only=True)
-    update_date = serializers.DateTimeField(read_only=True)
     course = CourseSerializer()
     cuisine = CuisineSerializer()
+    pub_username = serializers.ReadOnlyField(source='author.username')
+    pub_date = serializers.DateTimeField(read_only=True)
+    update_author = serializers.PrimaryKeyRelatedField(read_only=True, required=False)
+    update_username = serializers.ReadOnlyField(source='update_author.username')
+    update_date = serializers.DateTimeField(read_only=True)
 
     def get_subrecipes(self, obj):
         try:
@@ -100,4 +101,29 @@ class RecipeSerializer(FieldLimiter, serializers.ModelSerializer):
 
     class Meta:
         model = Recipe
-        fields = '__all__'
+        fields = [
+            'id',
+            'photo',
+            'photo_thumbnail',
+            'ingredient_groups',
+            'subrecipes',
+            'tags',
+            'rating',
+            'course',
+            'cuisine',
+            'pub_username',
+            'pub_date',
+            'update_author',
+            'update_username',
+            'update_date',
+            'title',
+            'slug',
+            'info',
+            'directions',
+            'source',
+            'prep_time',
+            'cook_time',
+            'servings',
+            'public',
+            'author',
+        ]
