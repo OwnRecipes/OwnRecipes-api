@@ -72,7 +72,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 ).data
             )
         except ValidationError as err:
-            return Response(err, status=status.HTTP_400_BAD_REQUEST)
+            return Response(err.message_dict, status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
@@ -84,7 +84,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 ).data
             )
         except ValidationError as err:
-            return Response(err, status=status.HTTP_400_BAD_REQUEST)
+            return Response(err.message_dict, status=status.HTTP_400_BAD_REQUEST)
 
 
 class MiniBrowseViewSet(viewsets.mixins.ListModelMixin,
