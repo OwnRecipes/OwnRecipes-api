@@ -18,9 +18,11 @@ PROJECT_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
+use_ssl = False
 # Force Django to use https headers if its behind a https proxy.
 # See: https://docs.djangoproject.com/en/2.0/ref/settings/#secure-proxy-ssl-header
 if os.environ.get('HTTP_X_FORWARDED_PROTO', 'False').lower() == 'true':
+    use_ssl = True
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 SITE_ID = 1
@@ -54,6 +56,19 @@ if env_allowed_host is not None:
         ALLOWED_HOSTS += [host.strip() for host in env_allowed_host.split(',')]
     else:
         ALLOWED_HOSTS.append(env_allowed_host)
+
+if use_ssl:
+    build_CSRF_TRUSTED_ORIGINS = ['127.0.0.1']
+
+    if env_allowed_host is not None:
+        if ',' in env_allowed_host:
+            build_CSRF_TRUSTED_ORIGINS += [host.strip() for host in env_allowed_host.split(',')]
+        else:
+            build_CSRF_TRUSTED_ORIGINS.append(env_allowed_host)
+    if 'localhost' in build_CSRF_TRUSTED_ORIGINS:
+        build_CSRF_TRUSTED_ORIGINS.remove('localhost')
+
+    CSRF_TRUSTED_ORIGINS = [f"https://*.{host}" for host in build_CSRF_TRUSTED_ORIGINS]
 
 # List of callables that know how to import templates from various sources.
 TEMPLATES = [
