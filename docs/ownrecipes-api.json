@@ -1893,6 +1893,12 @@
             "maximum": 5,
             "description": "Zero means no rating."
           },
+          "tags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Tag"
+            }
+          },
           "photo_thumbnail": {
             "type": "string"
           },

@@ -62,6 +62,7 @@ class MiniBrowseSerializer(FieldLimiter, serializers.ModelSerializer):
     photo_thumbnail = CustomImageField(required=False)
     pub_date = serializers.DateTimeField(read_only=True)
     rating = AverageRating(source='id')
+    tags = TagSerializer(many=True, required=False)
 
     class Meta:
         model = Recipe
@@ -73,6 +74,7 @@ class MiniBrowseSerializer(FieldLimiter, serializers.ModelSerializer):
             'rating',
             'photo_thumbnail',
             'info',
+            'tags',
         ]
 
 
