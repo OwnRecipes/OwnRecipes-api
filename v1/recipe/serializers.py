@@ -10,7 +10,6 @@ from v1.recipe.models import Recipe, SubRecipe
 from v1.ingredient.serializers import IngredientGroupSerializer
 from v1.recipe_groups.serializers import TagSerializer, CourseSerializer, CuisineSerializer
 from v1.recipe.mixins import FieldLimiter
-from v1.rating.average_rating import average_rating
 
 
 class CustomImageField(ImageField):
@@ -35,11 +34,6 @@ class CustomImageField(ImageField):
         return super(ImageField, self).to_representation(value)
 
 
-class AverageRating(serializers.ReadOnlyField):
-    def to_representation(self, value):
-        return average_rating(value)
-
-
 class SubRecipeSerializer(serializers.ModelSerializer):
     """ Standard `rest_framework` ModelSerializer """
     slug = serializers.ReadOnlyField(source='child_recipe.slug')
@@ -59,9 +53,8 @@ class SubRecipeSerializer(serializers.ModelSerializer):
 
 class MiniBrowseSerializer(FieldLimiter, serializers.ModelSerializer):
     """ Used to get random recipes and limit the return data. """
-    photo_thumbnail = CustomImageField(required=False)
     pub_date = serializers.DateTimeField(read_only=True)
-    rating = AverageRating(source='id')
+    photo_thumbnail = CustomImageField(required=False)
     tags = TagSerializer(many=True, required=False)
 
     class Meta:
@@ -85,7 +78,6 @@ class RecipeSerializer(FieldLimiter, serializers.ModelSerializer):
     ingredient_groups = IngredientGroupSerializer(many=True)
     subrecipes = SerializerMethodField()
     tags = TagSerializer(many=True, required=False)
-    rating = AverageRating(source='id')
     course = CourseSerializer()
     cuisine = CuisineSerializer()
     pub_username = serializers.ReadOnlyField(source='author.username')

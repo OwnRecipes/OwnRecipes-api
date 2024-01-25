@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-from django.db.models import Avg
+from django.db.models import Count, IntegerField
+from django.db.models.functions import Floor
 from rest_framework import viewsets
 from rest_framework.views import APIView
 
@@ -14,7 +15,6 @@ from v1.common.permissions import IsOwnerOrReadOnly
 from .models import Recipe
 from v1.recipe_groups.models import Cuisine, Course, Tag
 from v1.common.recipe_search import get_search_results
-from v1.rating.average_rating import convert_rating_to_int
 
 
 class RatingViewSet(viewsets.ModelViewSet):
@@ -77,10 +77,11 @@ class RatingCountViewSet(APIView):
             0: 0,
         }
         query = query.filter(**filter_set)
-        # TODO: this many not be very efficient on huge query sets.
-        # I don't think I will ever get to the point of this mattering
-        for x in query.annotate(rating_avg=Avg('rating__rating')):
-            results[convert_rating_to_int(x.rating_avg)] += 1
+        query = query.annotate(rating_avg_c=Floor('rating', output_field=IntegerField())).values('rating_avg_c').annotate(rCount=Count('rating_avg_c')).order_by()
+
+        query_result = list(query)
+        for r in query_result:
+            results[r['rating_avg_c']] = r['rCount']
 
         return Response({
             'results': [{"rating": k, "total": v} for k, v in results.items()]

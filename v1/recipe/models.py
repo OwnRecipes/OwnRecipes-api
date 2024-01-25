@@ -52,6 +52,7 @@ class Recipe(models.Model):
     :info: = Description of the recipe
     :directions: = How to make the recipe
     :prep_time: = How long it takes to prepare the recipe
+    :rating = avg of ratings. 0 if none.
     :cook_time: = How long the recipe takes to cook
     :servings: = How many people the recipe with serve
     :public: = If the recipe can be viewed by others
@@ -77,6 +78,7 @@ class Recipe(models.Model):
     tags = models.ManyToManyField(Tag, verbose_name=_('tag'), blank=True)
     subrecipes = models.ManyToManyField('self', verbose_name=_('subrecipes'), through='SubRecipe', symmetrical=False)
     info = models.TextField(_('info'), help_text="enter information about the recipe", blank=True)
+    rating = models.FloatField(_('rating avg'), help_text="calculated avg of ratings", default=0, editable=False)
     directions = models.TextField(_('direction_text'), help_text="directions", blank=True)
     source = models.CharField(_('source'), max_length=200, blank=True)
     prep_time = models.IntegerField(_('prep time'), help_text="enter time in minutes", null=True, blank=True)
