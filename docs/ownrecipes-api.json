@@ -1893,6 +1893,11 @@
             "maximum": 5,
             "description": "Zero means no rating."
           },
+          "rating_count": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Zero means no rating."
+          },
           "tags": {
             "type": "array",
             "items": {
@@ -2029,6 +2034,11 @@
             "type": "number",
             "minimum": 0,
             "maximum": 5,
+            "description": "Zero means no rating."
+          },
+          "rating_count": {
+            "type": "number",
+            "minimum": 0,
             "description": "Zero means no rating."
           },
           "tags": {

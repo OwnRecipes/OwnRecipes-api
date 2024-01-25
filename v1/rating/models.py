@@ -55,5 +55,6 @@ def update_recipe_rating(recipe=Recipe):
     ratings = Rating.objects.filter(recipe__id=recipe.id)
     rating_avg = ratings.aggregate(Avg('rating'))['rating__avg'] or 0
     recipe.rating = floor(rating_avg*10)/10 # floor to 1 decimal
+    recipe.rating_count = ratings.count()
     recipe.save()
     return
