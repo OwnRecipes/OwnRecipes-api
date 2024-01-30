@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-from rest_framework import permissions, viewsets
+from rest_framework import viewsets
 
 from .models import Ingredient, IngredientGroup
 from .serializers import IngredientSerializer, IngredientGroupSerializer

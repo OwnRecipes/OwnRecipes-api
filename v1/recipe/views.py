@@ -5,9 +5,8 @@ import random
 from django.core.exceptions import ValidationError
 from django.db.models.functions import Floor
 
-from rest_framework import viewsets, filters
+from rest_framework import filters, status, viewsets
 from rest_framework.response import Response
-from rest_framework import status
 
 from . import serializers
 from .models import Recipe
