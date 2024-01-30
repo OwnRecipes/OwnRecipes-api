@@ -169,3 +169,10 @@ class RecipeSerializerTests(TestCase):
         response = self.client.post('/api/v1/recipe/recipes/', self.data, content_type="application/json")
         self.assertEqual(response.status_code, 400)
         self.assertTrue("Ensure this value has at most 250 characters" in str(response.data))
+
+    def test_create_recipe_ingredient_title_too_long(self):
+        self.data['ingredient_groups'][2]['ingredients'][1]['title'] = "Recipe name Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium."
+        response = self.client.post('/api/v1/recipe/recipes/', self.data, content_type="application/json")
+        self.assertEqual(response.status_code, 400)
+        self.assertTrue("ingredient_groups[2].ingredients[1].title" in str(response.data))
+        self.assertTrue("Ensure this value has at most 250 characters" in str(response.data))
