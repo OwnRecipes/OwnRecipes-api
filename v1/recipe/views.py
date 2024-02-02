@@ -51,6 +51,18 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 slug__in=self.request.query_params.get('tag__slug').split(',')
             )
 
+        if 'author__username' in self.request.query_params:
+            filter_set['author__username'] = self.request.query_params.get('author__username')
+
+        if 'source' in self.request.query_params:
+            filter_set['source__contains'] = self.request.query_params.get('source')
+
+        if 'info' in self.request.query_params:
+            filter_set['info__contains'] = self.request.query_params.get('info')
+
+        if 'directions' in self.request.query_params:
+            filter_set['directions__contains'] = self.request.query_params.get('directions')
+
         query = query.filter(**filter_set)
         if 'rating' not in self.request.query_params:
             return query
@@ -109,14 +121,10 @@ class MiniBrowseViewSet(viewsets.mixins.ListModelMixin,
                 slug__in=self.request.query_params.get('course__slug').split(',')
             )
         if 'tag__slug' in self.request.query_params:
-            # filter tags with OR
             filter_set['tags__in'] = Tag.objects.filter(
                 slug__in=self.request.query_params.get('tag__slug').split(',')
             )
-            # filter tags with AND (for future use)
-            # tags = self.request.query_params.get('tag__slug').split(',')
-            # for t in tags:
-            #     qs = qs.filter(tags__in=Tag.objects.filter(slug=t))
+
         qs = qs.filter(**filter_set)
         # Get the limit from the request and the count from the DB.
         # Compare to make sure you aren't accessing more than possible.
