@@ -234,9 +234,14 @@ class SaveRecipe(Validators):
         recipe.full_clean()
         recipe.save()
 
-        self._save_ingredient_data(recipe)
-        self._save_subrecipe_data(recipe)
-        self._save_tags(recipe)
+        try:
+            self._save_ingredient_data(recipe)
+            self._save_subrecipe_data(recipe)
+            self._save_tags(recipe)
+        except Exception as err:
+            recipe.delete()
+            raise err
+
         self._delete_recipe_groups()
 
         return recipe
