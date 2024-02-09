@@ -10,9 +10,9 @@ from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
 
 from v1.recipe.models import Recipe
+from v1.common.permissions import IsOwner
 from .models import MenuItem
 from .serializers import MenuItemSerializer
-from .permissions import IsMenuItemOwner
 
 class MenuItemViewSet(viewsets.ModelViewSet):
     """
@@ -21,7 +21,7 @@ class MenuItemViewSet(viewsets.ModelViewSet):
     """
     queryset = MenuItem.objects.all()
     serializer_class = MenuItemSerializer
-    permission_classes = (IsMenuItemOwner,)
+    permission_classes = (IsOwner,)
     filter_backends = (DjangoFilterBackend, filters.OrderingFilter)
     filterset_fields = ('recipe', 'start_date', 'complete_date', 'complete')
     ordering_fields = ('start_date', 'id')

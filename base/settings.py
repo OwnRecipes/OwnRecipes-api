@@ -18,9 +18,11 @@ PROJECT_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
+use_ssl = False
 # Force Django to use https headers if its behind a https proxy.
 # See: https://docs.djangoproject.com/en/2.0/ref/settings/#secure-proxy-ssl-header
 if os.environ.get('HTTP_X_FORWARDED_PROTO', 'False').lower() == 'true':
+    use_ssl = True
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 SITE_ID = 1
@@ -54,6 +56,19 @@ if env_allowed_host is not None:
         ALLOWED_HOSTS += [host.strip() for host in env_allowed_host.split(',')]
     else:
         ALLOWED_HOSTS.append(env_allowed_host)
+
+if use_ssl:
+    build_CSRF_TRUSTED_ORIGINS = ['127.0.0.1']
+
+    if env_allowed_host is not None:
+        if ',' in env_allowed_host:
+            build_CSRF_TRUSTED_ORIGINS += [host.strip() for host in env_allowed_host.split(',')]
+        else:
+            build_CSRF_TRUSTED_ORIGINS.append(env_allowed_host)
+    if 'localhost' in build_CSRF_TRUSTED_ORIGINS:
+        build_CSRF_TRUSTED_ORIGINS.remove('localhost')
+
+    CSRF_TRUSTED_ORIGINS = [f"https://*.{host}" for host in build_CSRF_TRUSTED_ORIGINS]
 
 # List of callables that know how to import templates from various sources.
 TEMPLATES = [
@@ -109,6 +124,8 @@ INSTALLED_APPS = (
     'django_filters',
     'rest_framework',
     'rest_framework.authtoken',
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
 
     'base',
     'v1.recipe',
@@ -154,7 +171,7 @@ LANGUAGE_CODE = 'en-us'
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ),
@@ -168,15 +185,12 @@ REST_FRAMEWORK = {
     }
 }
 
-# http://getblimp.github.io/django-rest-framework-jwt/#additional-settings
-JWT_AUTH = {
-    # We are returning custom data to our UI.
-    'JWT_RESPONSE_PAYLOAD_HANDLER': 'v1.accounts.jwt_handler.handler',
-
-    # Allow for token refresh and increase the timeout of the user token.
-    'JWT_ALLOW_REFRESH': True,
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=14),
-    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(weeks=30),
+# https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(minutes=30),
+    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=15),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
 }
 
 # We don't want the API to serve static in production.
@@ -216,7 +230,7 @@ USE_I18N = True
 
 # If you set this to False, Django will not format dates, numbers and
 # calendars according to the current locale
-USE_L10N = True
+# USE_L10N = True
 
 SERVE_MEDIA = True
 FILE_UPLOAD_PERMISSIONS = 0o644

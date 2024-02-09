@@ -17,3 +17,10 @@ database/
 
 # env
 .env*.local
+
+# python virtualenv
+bin/
+lib/
+lib64
+share/
+pyvenv.cfg

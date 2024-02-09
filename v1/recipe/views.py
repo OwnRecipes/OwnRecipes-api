@@ -2,14 +2,16 @@
 # encoding: utf-8
 
 import random
-from django.db.models import Avg
+from django.core.exceptions import ValidationError
+from django.db.models.functions import Floor
 
-from rest_framework import permissions, viewsets, filters
+from rest_framework import filters, status, viewsets
 from rest_framework.response import Response
 
 from . import serializers
 from .models import Recipe
 from .save_recipe import SaveRecipe
+from v1.common.permissions import IsOwnerOrReadOnly
 from v1.recipe_groups.models import Cuisine, Course, Tag
 
 
@@ -20,7 +22,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     """
     lookup_field = 'slug'
     serializer_class = serializers.RecipeSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    permission_classes = (IsOwnerOrReadOnly,)
     filter_backends = (filters.SearchFilter, filters.OrderingFilter)
     search_fields = ('title', 'tags__title', 'ingredient_groups__ingredients__title')
     ordering_fields = ('pub_date', 'title', 'rating')
@@ -49,33 +51,49 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 slug__in=self.request.query_params.get('tag__slug').split(',')
             )
 
+        if 'author__username' in self.request.query_params:
+            filter_set['author__username'] = self.request.query_params.get('author__username')
+
+        if 'source' in self.request.query_params:
+            filter_set['source__contains'] = self.request.query_params.get('source')
+
+        if 'info' in self.request.query_params:
+            filter_set['info__contains'] = self.request.query_params.get('info')
+
+        if 'directions' in self.request.query_params:
+            filter_set['directions__contains'] = self.request.query_params.get('directions')
+
         query = query.filter(**filter_set)
         if 'rating' not in self.request.query_params:
             return query
 
-        # TODO: this many not be very efficient on huge query sets.
-        # I don't think I will ever get to the point of this mattering
-        query = query.annotate(rating_avg=Avg('rating__rating'))
+        query = query.annotate(rating_c=Floor('rating'))
         query_ratings = self.request.query_params.get('rating').split(',')
 
-        return query.filter(rating_avg__in = query_ratings)
+        return query.filter(rating_c__in = query_ratings)
 
     def create(self, request, *args, **kwargs):
-        return Response(
-            serializers.RecipeSerializer(
-                SaveRecipe(request.data, self.request.user).create(),
-                context={'request': request}
-            ).data
-        )
+        try:
+            return Response(
+                serializers.RecipeSerializer(
+                    SaveRecipe(request.data, self.request.user).create(),
+                    context={'request': request}
+                ).data
+            )
+        except ValidationError as err:
+            return Response(err.message_dict, status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
-        return Response(
-            serializers.RecipeSerializer(
-                SaveRecipe(request.data, self.request.user, partial=partial).update(self.get_object()),
-                context={'request': request}
-            ).data
-        )
+        try:
+            return Response(
+                serializers.RecipeSerializer(
+                    SaveRecipe(request.data, self.request.user, partial=partial).update(self.get_object()),
+                    context={'request': request}
+                ).data
+            )
+        except ValidationError as err:
+            return Response(err.message_dict, status=status.HTTP_400_BAD_REQUEST)
 
 
 class MiniBrowseViewSet(viewsets.mixins.ListModelMixin,
@@ -103,14 +121,10 @@ class MiniBrowseViewSet(viewsets.mixins.ListModelMixin,
                 slug__in=self.request.query_params.get('course__slug').split(',')
             )
         if 'tag__slug' in self.request.query_params:
-            # filter tags with OR
             filter_set['tags__in'] = Tag.objects.filter(
                 slug__in=self.request.query_params.get('tag__slug').split(',')
             )
-            # filter tags with AND (for future use)
-            # tags = self.request.query_params.get('tag__slug').split(',')
-            # for t in tags:
-            #     qs = qs.filter(tags__in=Tag.objects.filter(slug=t))
+
         qs = qs.filter(**filter_set)
         # Get the limit from the request and the count from the DB.
         # Compare to make sure you aren't accessing more than possible.

@@ -2,7 +2,7 @@
 # encoding: utf-8
 
 from django.db.models import Count
-from django.core.exceptions import FieldDoesNotExist
+from django.core.exceptions import FieldDoesNotExist, ValidationError
 from rest_framework.exceptions import ParseError
 
 from v1.recipe.models import Recipe, SubRecipe
@@ -111,23 +111,54 @@ class SaveRecipe(Validators):
                     ingredient.delete()
                 ingredient_group.delete()
 
+            ingr_group_ix = -1 # zero based index
             for ingredient_group in self.ingredients:
-                group = IngredientGroup.objects.create(
+                ingr_group_ix += 1
+                group = IngredientGroup(
                     recipe=recipe, title=ingredient_group.get('title')
                 )
+                try:
+                    # Django validation
+                    group.full_clean()
+                except ValidationError as err:
+                    msg_dict = {}
+                    for key in err.message_dict:
+                        # Properly append the model attribute key
+                        msg_dict_key = f'ingredient_groups[{ingr_group_ix}].{key}'
+                        msg_dict[msg_dict_key] = err.message_dict[key]
+                        msg_dict[msg_dict_key].append(f'Ingredient_Group="{group.title}"') # Workaround to display the value at the frontend
+                    raise ValidationError(msg_dict)
+                group.save()
+
+                ingr_ix = -1 # zero based index
                 for ingredient in ingredient_group.get('ingredients'):
+                    ingr_ix += 1
                     ingredient.pop('id') if ingredient.get('id') else None
-                    Ingredient.objects.create(
+                    ingr = Ingredient(
                         ingredient_group=group, **ingredient
                     )
+                    try:
+                        # Django validation
+                        ingr.full_clean()
+                    except ValidationError as err:
+                        msg_dict = {}
+                        for key in err.message_dict:
+                            # Properly append the model attribute key
+                            msg_dict_key = f'ingredient_groups[{ingr_group_ix}].ingredients[{ingr_ix}].{key}'
+                            msg_dict[msg_dict_key] = err.message_dict[key]
+                            msg_dict[msg_dict_key].append(f'Ingredient="{ingr.title}"') # Workaround to display the value at the frontend
+                        raise ValidationError(msg_dict)
+                    ingr.save()
 
     def _save_subrecipe_data(self, recipe):
         if self.subrecipes is not None:
             for subrecipe in SubRecipe.objects.filter(parent_recipe=recipe):
                 subrecipe.delete()
 
+            subr_ix = -1
             for subrecipe in self.subrecipes:
                 if subrecipe.get('title'):
+                    subr_ix += 1
                     child_recipe = Recipe.objects.filter(title=subrecipe.get('title', '')).first()
                     if recipe:
                         obj = SubRecipe.objects.create(
@@ -137,6 +168,18 @@ class SaveRecipe(Validators):
                             child_recipe=child_recipe,
                             parent_recipe=recipe
                         )
+                        try:
+                            # Django validation
+                            obj.full_clean()
+                        except ValidationError as err:
+                            msg_dict = {}
+                            for key in err.message_dict:
+                                # Properly append the model attribute key
+                                msg_dict_key = f'subrecipes[{subr_ix}].{key}'
+                                msg_dict[msg_dict_key] = err.message_dict[key]
+                                msg_dict[msg_dict_key].append(f'Subrecipe="{child_recipe.title}') # Workaround to display the value at the frontend
+                            raise ValidationError(msg_dict)
+
                         obj.save()
 
     def _clean_data(self):
@@ -178,12 +221,43 @@ class SaveRecipe(Validators):
         if len(errors) > 0:
             raise ParseError(errors)
 
-    def update(self, instance):
-        """ Update and return a new `Recipe` instance, given the validated data """
+    def create(self):
+        """ Create and return a new `Recipe` instance, given the validated data """
         self._save_course()
         self._save_cuisine()
+
+        recipe = Recipe(
+            author=self.author,
+            **self.data
+        )
+        # django validation
+        recipe.full_clean()
+        recipe.save()
+
+        try:
+            self._save_ingredient_data(recipe)
+            self._save_subrecipe_data(recipe)
+            self._save_tags(recipe)
+        except Exception as err:
+            recipe.delete()
+            raise err
+
+        self._delete_recipe_groups()
+
+        return recipe
+
+    def update(self, instance):
+        """ Update and return a new `Recipe` instance, given the validated data """
+
+        self._save_course()
+        self._save_cuisine()
+
         for attr, value in self.data.items():
             setattr(instance, attr, value)
+        setattr(instance, 'update_author', self.author)
+        # django validation
+        instance.full_clean()
+
         self._save_ingredient_data(instance)
         self._save_subrecipe_data(instance)
         self._save_tags(instance)
@@ -192,18 +266,3 @@ class SaveRecipe(Validators):
         self._delete_recipe_groups()
 
         return instance
-
-    def create(self):
-        """ Create and return a new `Recipe` instance, given the validated data """
-        self._save_course()
-        self._save_cuisine()
-        recipe = Recipe.objects.create(
-            author=self.author,
-            **self.data
-        )
-        self._save_ingredient_data(recipe)
-        self._save_subrecipe_data(recipe)
-        self._save_tags(recipe)
-        self._delete_recipe_groups()
-
-        return recipe

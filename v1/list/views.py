@@ -7,10 +7,11 @@ from rest_framework_bulk import ListBulkCreateUpdateDestroyAPIView
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Q
 
+from v1.common.permissions import IsOwner
 from .models import GroceryList, GroceryItem
 from .serializers import GroceryListSerializer, \
     GroceryItemSerializer, BulkGroceryItemSerializer
-from .permissions import IsListOwner, IsItemOwner
+from .permissions import IsItemOwner
 
 
 class GroceryListViewSet(viewsets.ModelViewSet):
@@ -20,7 +21,7 @@ class GroceryListViewSet(viewsets.ModelViewSet):
     """
     lookup_field = 'slug'
     serializer_class = GroceryListSerializer
-    permission_classes = (IsListOwner,)
+    permission_classes = (IsOwner,)
     filter_backends = (DjangoFilterBackend, filters.OrderingFilter)
     ordering_fields = ('pub_date',)
     ordering = ('pub_date',)

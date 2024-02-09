@@ -15,7 +15,7 @@ class IngredientSerializer(serializers.ModelSerializer):
             'numerator',
             'denominator',
             'measurement',
-            'title'
+            'title',
         ]
 
 
@@ -25,4 +25,8 @@ class IngredientGroupSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = IngredientGroup
-        fields = ['id', 'title', 'ingredients']
+        fields = [
+            'id',
+            'title',
+            'ingredients',
+        ]

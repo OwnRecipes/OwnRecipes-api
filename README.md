@@ -27,6 +27,12 @@ docker-compose -f test.yml -p test run --rm --entrypoint sh api
 python manage.py test
 ```
 
+Or without docker:
+```bash
+cd ownrecipes-api
+/bin/bash -ac '. .env.service.local; exec python3 manage.py test'
+```
+
 Note: Running the test for the first time may need some time, as the DB is doing some internal stuff.
 
 #### REST Endpoints
@@ -40,3 +46,30 @@ You can access the API roots via there app names:
 * Lists - http://localhost:8000/api/v1/list/
 
 You can also check the [OpenAPI document](docs/ownrecipes-api.json) for more detailed information.
+
+#### Debug DB calls
+
+```python
+from django.db import reset_queries
+from django.db import connection
+
+reset_queries()
+# Run your query here
+print(connection.queries)
+>>> []
+```
+
+#### Run commands
+
+You can run commands (like the test command to run the tests).
+
+E. g. without docker:
+```bash
+cd ownrecipes-api
+/bin/bash -ac '. .env.service.local; exec python3 manage.py calc_ratings'
+```
+
+Commands:
+
+* test - run tests
+* calc_ratings - (re-)calculate recipe rating fields (rating, rating_count)

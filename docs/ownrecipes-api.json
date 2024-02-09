@@ -1077,7 +1077,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RatingRequest"
+                "$ref": "#/components/schemas/RatingCreate"
               }
             }
           }
@@ -1131,6 +1131,9 @@
           "401": {
             "description": "Unauthorized"
           },
+          "403": {
+            "description": "Forbidden"
+          },
           "404": {
             "description": "Not Found"
           }
@@ -1139,6 +1142,49 @@
           "Rating"
         ],
         "description": "Delete rating.",
+        "security": [
+          {
+            "TokenAuth": []
+          }
+        ]
+      },
+      "patch": {
+        "summary": "Update Rating",
+        "operationId": "patch-rating-by-id",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RatingResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "description": "Update rating.",
+        "tags": [
+          "Rating"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RatingUpdate"
+              }
+            }
+          }
+        },
         "security": [
           {
             "TokenAuth": []
@@ -1536,19 +1582,18 @@
         "title": "LoginResponse",
         "type": "object",
         "properties": {
-          "id": {
-            "type": "number",
-            "description": "user id",
-            "readOnly": true
-          },
-          "token": {
+          "access": {
             "type": "string",
-            "description": "JWT"
+            "description": "JWT (includes user_id, username, email, is_staff)"
+          },
+          "refresh": {
+            "type": "string",
+            "description": "token to update the access token"
           }
         },
         "required": [
-          "id",
-          "token"
+          "access",
+          "refresh"
         ]
       },
       "NewsIterator": {
@@ -1684,8 +1729,33 @@
           "results"
         ]
       },
-      "RatingRequest": {
-        "title": "RatingRequest",
+      "RatingCreate": {
+        "title": "RatingCreate",
+        "type": "object",
+        "properties": {
+          "recipe": {
+            "type": "string",
+            "description": "Recipe slug",
+            "readOnly": true
+          },
+          "rating": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 5
+          },
+          "comment": {
+            "type": "string",
+            "maxLength": 1000
+          }
+        },
+        "required": [
+          "recipe",
+          "rating",
+          "comment"
+        ]
+      },
+      "RatingUpdate": {
+        "title": "RatingUpdate",
         "type": "object",
         "properties": {
           "rating": {
@@ -1696,23 +1766,11 @@
           "comment": {
             "type": "string",
             "maxLength": 1000
-          },
-          "recipe": {
-            "type": "string",
-            "description": "Recipe slug",
-            "readOnly": true
-          },
-          "author": {
-            "type": "number",
-            "description": "user-id of the rating creator ?",
-            "readOnly": true
           }
         },
         "required": [
           "rating",
-          "comment",
-          "recipe",
-          "author"
+          "comment"
         ]
       },
       "RatingResponse": {
@@ -1737,19 +1795,14 @@
             "description": "Recipe slug",
             "readOnly": true
           },
-          "user_id": {
-            "type": "number",
-            "description": "user-id of the rating creator.",
-            "readOnly": true
-          },
-          "username": {
-            "type": "string",
-            "description": "username of the rating creator.",
-            "readOnly": true
-          },
           "author": {
             "type": "number",
             "description": "user-id of the rating creator ?",
+            "readOnly": true
+          },
+          "pub_username": {
+            "type": "string",
+            "description": "username of the rating creator.",
             "readOnly": true
           },
           "pub_date": {
@@ -1758,7 +1811,15 @@
             "description": "ISO8601 date",
             "example": "2022-05-20T13:45:04.322238-05:00"
           },
-          "upd_date": {
+          "update_author": {
+            "description": "update author user id",
+            "type": "number"
+          },
+          "update_username": {
+            "type": "string",
+            "description": "update author username"
+          },
+          "update_date": {
             "type": "string",
             "format": "date-time",
             "description": "ISO8601 date",
@@ -1770,9 +1831,8 @@
           "rating",
           "comment",
           "recipe",
-          "user_id",
-          "username",
-          "author"
+          "author",
+          "pub_username"
         ]
       },
       "RecipeIterator": {
@@ -1832,6 +1892,17 @@
             "minimum": 0,
             "maximum": 5,
             "description": "Zero means no rating."
+          },
+          "rating_count": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Zero means no rating."
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Tag"
+            }
           },
           "photo_thumbnail": {
             "type": "string"
@@ -1965,6 +2036,11 @@
             "maximum": 5,
             "description": "Zero means no rating."
           },
+          "rating_count": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Zero means no rating."
+          },
           "tags": {
             "type": "array",
             "items": {
@@ -2005,12 +2081,21 @@
               "$ref": "#/components/schemas/SubRecipe"
             }
           },
+          "source": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "public": {
+            "type": "boolean",
+            "description": "If unauthorized visitors may view the recipe.",
+            "default": true
+          },
           "author": {
             "type": "number",
             "description": "author user id",
             "readOnly": true
           },
-          "username": {
+          "pub_username": {
             "type": "string",
             "description": "Author username"
           },
@@ -2020,20 +2105,19 @@
             "description": "ISO8601 date",
             "format": "date-time"
           },
+          "update_author": {
+            "type": "number",
+            "description": "update author user id"
+          },
+          "update_username": {
+            "type": "string",
+            "description": "Update author username"
+          },
           "update_date": {
             "type": "string",
             "example": "2022-05-20T13:45:04.322238-05:00",
             "description": "ISO8601 date",
             "format": "date-time"
-          },
-          "source": {
-            "type": "string",
-            "maxLength": 200
-          },
-          "public": {
-            "type": "boolean",
-            "description": "If unauthorized visitors may view the recipe.",
-            "default": true
           }
         },
         "required": [
@@ -2047,12 +2131,11 @@
           "servings",
           "directions",
           "subrecipes",
-          "author",
-          "username",
-          "pub_date",
-          "update_date",
           "source",
-          "public"
+          "public",
+          "author",
+          "pub_username",
+          "pub_date"
         ]
       },
       "SubRecipe": {

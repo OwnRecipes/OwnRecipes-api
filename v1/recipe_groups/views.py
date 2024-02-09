@@ -2,16 +2,14 @@
 # encoding: utf-8
 
 from django.db.models import Count
-from rest_framework import permissions
+from django.db.models.functions import Floor
 from rest_framework import viewsets
-from django.db.models import Avg
 
 from v1.recipe_groups.models import Cuisine, Course, Tag
 from v1.recipe.models import Recipe
 from v1.recipe_groups import serializers
-from v1.common.permissions import IsOwnerOrReadOnly
+from v1.common.permissions import IsParentRecipeOwnerOrReadOnly
 from v1.common.recipe_search import get_search_results
-from v1.rating.average_rating import convert_rating_to_int
 
 
 class CuisineViewSet(viewsets.ModelViewSet):
@@ -23,8 +21,7 @@ class CuisineViewSet(viewsets.ModelViewSet):
     """
     queryset = Cuisine.objects.all()
     serializer_class = serializers.CuisineSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
-                          IsOwnerOrReadOnly)
+    permission_classes = (IsParentRecipeOwnerOrReadOnly,)
     lookup_field = 'slug'
 
 class CuisineCountViewSet(viewsets.ModelViewSet):
@@ -35,8 +32,7 @@ class CuisineCountViewSet(viewsets.ModelViewSet):
     Uses `slug` as the PK for any lookups.
     """
     serializer_class = serializers.AggCuisineSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
-                          IsOwnerOrReadOnly)
+    permission_classes = (IsParentRecipeOwnerOrReadOnly,)
     lookup_field = 'slug'
 
     def get_queryset(self):
@@ -72,13 +68,9 @@ class CuisineCountViewSet(viewsets.ModelViewSet):
 
         query = query.filter(**filter_set)
         if 'rating' in self.request.query_params:
-            # TODO: this many not be very efficient on huge query sets.
-            # I don't think I will ever get to the point of this mattering
-            query = query.annotate(rating_avg=Avg('rating__rating'))
-            query = [
-                recipe.id for recipe in query
-                if str(convert_rating_to_int(recipe.rating_avg)) in self.request.query_params.get('rating').split(',')
-            ]
+            query = query.annotate(rating_c=Floor('rating'))
+            query_ratings = self.request.query_params.get('rating').split(',')
+            query = query.filter(rating_c__in = query_ratings)
 
         return Cuisine.objects.filter(recipe__in=query).order_by('title').annotate(total=Count('recipe', distinct=True))
 
@@ -92,8 +84,7 @@ class CourseViewSet(viewsets.ModelViewSet):
     """
     queryset = Course.objects.all()
     serializer_class = serializers.CourseSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
-                          IsOwnerOrReadOnly)
+    permission_classes = (IsParentRecipeOwnerOrReadOnly,)
     lookup_field = 'slug'
 
 class CourseCountViewSet(viewsets.ModelViewSet):
@@ -104,8 +95,7 @@ class CourseCountViewSet(viewsets.ModelViewSet):
     Uses `slug` as the PK for any lookups.
     """
     serializer_class = serializers.AggCourseSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
-                          IsOwnerOrReadOnly)
+    permission_classes = (IsParentRecipeOwnerOrReadOnly,)
     lookup_field = 'slug'
 
     def get_queryset(self):
@@ -141,13 +131,9 @@ class CourseCountViewSet(viewsets.ModelViewSet):
 
         query = query.filter(**filter_set)
         if 'rating' in self.request.query_params:
-            # TODO: this many not be very efficient on huge query sets.
-            # I don't think I will ever get to the point of this mattering
-            query = query.annotate(rating_avg=Avg('rating__rating'))
-            query = [
-                recipe.id for recipe in query
-                if str(convert_rating_to_int(recipe.rating_avg)) in self.request.query_params.get('rating').split(',')
-            ]
+            query = query.annotate(rating_c=Floor('rating'))
+            query_ratings = self.request.query_params.get('rating').split(',')
+            query = query.filter(rating_c__in = query_ratings)
 
         return Course.objects.filter(recipe__in=query).order_by('title').annotate(total=Count('recipe', distinct=True))
 
@@ -161,8 +147,7 @@ class TagViewSet(viewsets.ModelViewSet):
     """
     queryset = Tag.objects.all()
     serializer_class = serializers.TagSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
-                          IsOwnerOrReadOnly)
+    permission_classes = (IsParentRecipeOwnerOrReadOnly,)
     lookup_field = 'title'
     ordering_fields = ('title',)
 
@@ -174,8 +159,7 @@ class TagCountViewSet(viewsets.ModelViewSet):
     Uses `title` as the PK for any lookups.
     """
     serializer_class = serializers.AggTagSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
-                          IsOwnerOrReadOnly)
+    permission_classes = (IsParentRecipeOwnerOrReadOnly,)
     lookup_field = 'slug'
 
     def get_queryset(self):
@@ -211,12 +195,8 @@ class TagCountViewSet(viewsets.ModelViewSet):
 
         query = query.filter(**filter_set)
         if 'rating' in self.request.query_params:
-            # TODO: this many not be very efficient on huge query sets.
-            # I don't think I will ever get to the point of this mattering
-            query = query.annotate(rating_avg=Avg('rating__rating'))
-            query = [
-                recipe.id for recipe in query
-                if str(convert_rating_to_int(recipe.rating_avg)) in self.request.query_params.get('rating').split(',')
-            ]
+            query = query.annotate(rating_c=Floor('rating'))
+            query_ratings = self.request.query_params.get('rating').split(',')
+            query = query.filter(rating_c__in = query_ratings)
 
         return Tag.objects.filter(recipe__in=query).order_by('title').annotate(total=Count('recipe', distinct=True))

@@ -10,7 +10,13 @@ class GroceryItemSerializer(serializers.ModelSerializer):
     """Generic Serializer for grocery items"""
     class Meta:
         model = GroceryItem
-        fields = ('id', 'list', 'title', 'completed', 'order')
+        fields = [
+            'id',
+            'list',
+            'title',
+            'completed',
+            'order',
+        ]
 
 
 class GroceryListSerializer(serializers.ModelSerializer):
@@ -19,21 +25,26 @@ class GroceryListSerializer(serializers.ModelSerializer):
     This Serializer will also return the username
     of the user that owns the list.
     """
-    author = serializers.ReadOnlyField(source='author.username')
+    author = serializers.PrimaryKeyRelatedField(read_only=True)
+    pub_username = serializers.ReadOnlyField(source='author.username')
 
     class Meta:
         model = GroceryList
-        fields = ('id', 'title', 'slug', 'pub_date', 'author', 'item_count')
+        fields = [
+            'id',
+            'title',
+            'slug',
+            'item_count',
+            'author',
+            'pub_username',
+            'pub_date',
+        ]
 
     def create(self, validated_data):
         # Create the Grocery List.
         # Use the log-in user as the author.
-        grocery_list = GroceryList.objects.create(
-            author=self.context['request'].user,
-            **validated_data
-        )
-
-        return grocery_list
+        validated_data['author'] = self.context['request'].user
+        return super(GroceryListSerializer, self).create(validated_data)
 
 
 class BulkGroceryItemSerializer(BulkSerializerMixin, serializers.ModelSerializer):
@@ -44,4 +55,10 @@ class BulkGroceryItemSerializer(BulkSerializerMixin, serializers.ModelSerializer
     class Meta:
         model = GroceryItem
         list_serializer_class = BulkListSerializer
-        fields = ('id', 'list', 'title', 'completed', 'order')
+        fields = [
+            'id',
+            'list',
+            'title',
+            'completed',
+            'order',
+        ]

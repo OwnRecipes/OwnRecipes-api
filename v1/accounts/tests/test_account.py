@@ -2,6 +2,7 @@
 # encoding: utf-8
 
 from django.test import TestCase
+from rest_framework import status
 from rest_framework_jwt.settings import api_settings
 
 
@@ -22,8 +23,8 @@ class AccountTests(TestCase):
         )
 
         self.assertEqual(resp.status_code, 200)
-        self.assertTrue(resp.json()['id'] == 1)
-        decoded_token = self.jwt_decode_handler(resp.json()['token'])
+        self.assertTrue(bool(resp.json()['refresh']))
+        decoded_token = self.jwt_decode_handler(resp.json()['access'])
         self.assertTrue(decoded_token.get('user_id') == 1)
         self.assertTrue(decoded_token.get('username') == 'testuser1')
 
@@ -37,4 +38,4 @@ class AccountTests(TestCase):
             }
         )
 
-        self.assertEqual(resp.status_code, 400)
+        self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)

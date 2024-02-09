@@ -27,6 +27,128 @@ class RecipeSerializerTests(TestCase):
         self.staff = User.objects.create_user(
             username='staff', email='staff@gmail.com', password='top_secret', is_superuser=True
         )
+        user = User.objects.create(username='testuser')
+        user.set_password('12345')
+        user.save()
+        self.client.login(username='testuser', password='12345')
+        self.user_id = getattr(user, 'id')
+        self.user_name = getattr(user, 'username')
+        self.data = {
+            "ingredient_groups": [
+                {
+                    "id": 3,
+                    "title": "",
+                    "ingredients": []
+                },
+                {
+                    "id": 4,
+                    "title": "Veges",
+                    "ingredients": [
+                        {
+                            "id": 13,
+                            "numerator": 1.0,
+                            "denominator": 2.0,
+                            "measurement": "dash",
+                            "title": "black pepper"
+                        },
+                        {
+                            "id": 14,
+                            "numerator": 4.0,
+                            "denominator": 1.0,
+                            "measurement": "tablespoons",
+                            "title": "chili powder"
+                        },
+                        {
+                            "id": 15,
+                            "numerator": 1.0,
+                            "denominator": 1.0,
+                            "measurement": "tablespoon",
+                            "title": "cumin"
+                        },
+                        {
+                            "id": 16,
+                            "numerator": 1.0,
+                            "denominator": 1.0,
+                            "measurement": "can",
+                            "title": "dark kidney beans"
+                        },
+                        {
+                            "id": 17,
+                            "numerator": 2.0,
+                            "denominator": 1.0,
+                            "measurement": "cans",
+                            "title": "diced tomatos"
+                        },
+                        {
+                            "id": 18,
+                            "numerator": 1.0,
+                            "denominator": 1.0,
+                            "measurement": "whole",
+                            "title": "green bell pepper"
+                        },
+                        {
+                            "id": 19,
+                            "numerator": 1.0,
+                            "denominator": 1.0,
+                            "measurement": "can",
+                            "title": "light kidney beans"
+                        },
+                        {
+                            "id": 20,
+                            "numerator": 1.0,
+                            "denominator": 1.0,
+                            "measurement": "whole",
+                            "title": "serrano pepper"
+                        },
+                        {
+                            "id": 21,
+                            "numerator": 1.0,
+                            "denominator": 1.0,
+                            "measurement": "whole",
+                            "title": "white onion"
+                        }
+                    ]
+                },
+                {
+                    "id": 5,
+                    "title": "Beef",
+                    "ingredients": [
+                        {
+                            "id": 22,
+                            "numerator": 1.0,
+                            "denominator": 1.0,
+                            "measurement": "pound",
+                            "title": "ground pork"
+                        },
+                        {
+                            "id": 23,
+                            "numerator": 1.0,
+                            "denominator": 1.0,
+                            "measurement": "pound",
+                            "title": "ground sirloin"
+                        },
+                        {
+                            "id": 24,
+                            "numerator": 1.0,
+                            "denominator": 1.0,
+                            "measurement": "dash",
+                            "title": "kosher salt"
+                        }
+                    ]
+                }
+            ],
+            "directions": '',
+            "tags": [{'title': 'hi'}, {'title': 'hello'}],
+            "title": "Recipe name",
+            "info": "Recipe info",
+            "source": "google.com",
+            "prep_time": 60,
+            "cook_time": 60,
+            "servings": 8,
+            "rating": 0,
+            "cuisine": {"id": 1},
+            "course": {"id": 2}
+        }
 
     def test_simple_patch_recipe(self):
         """Test to make sure we have the right fields"""
@@ -351,3 +473,12 @@ class RecipeSerializerTests(TestCase):
         # photo should be deleted
         my_file = Path(media_path, 'food.jpg')
         self.assertFalse(my_file.is_file(), 'Deleting File failed')
+
+    def test_update_recipe_too_long_name(self):
+        view = views.RecipeViewSet.as_view({'put': 'update'})
+        self.data['title'] = "Recipe name Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium."
+        request = self.factory.put('/api/v1/recipe/recipes/tasty-chili', data=self.data, format='json')
+        request.user = self.staff
+        response = view(request, slug='tasty-chili')
+        self.assertEqual(response.status_code, 400)
+        self.assertTrue("Ensure this value has at most 250 characters" in str(response.data))
