@@ -63,7 +63,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if 'directions' in self.request.query_params:
             filter_set['directions__contains'] = self.request.query_params.get('directions')
 
-        query = query.filter(**filter_set)
+        query = query.filter(**filter_set).distinct()
         if 'rating' not in self.request.query_params:
             return query
 
@@ -125,7 +125,7 @@ class MiniBrowseViewSet(viewsets.mixins.ListModelMixin,
                 slug__in=self.request.query_params.get('tag__slug').split(',')
             )
 
-        qs = qs.filter(**filter_set)
+        qs = qs.filter(**filter_set).distinct()
         # Get the limit from the request and the count from the DB.
         # Compare to make sure you aren't accessing more than possible.
         limit = int(request.query_params.get('limit', 4))
