@@ -255,6 +255,10 @@ STATIC_URL = f"/{os.environ.get('STATIC_FILES_URL', 'static-files')}/"
 # Examples: "http://ownrecipes.domain.com/admin/"
 ADMIN_URL = f"{os.environ.get('ADMIN_URL', 'admin')}/"
 
+MENU_PLAN_GLOBAL = False
+if os.environ.get('MENU_PLAN_GLOBAL', 'False').lower() == 'true':
+    MENU_PLAN_GLOBAL = True
+
 ugettext = lambda s: s
 LANGUAGES = (
      ('en', ugettext('English')),
