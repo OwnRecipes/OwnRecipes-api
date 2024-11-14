@@ -738,6 +738,14 @@
               "type": "string"
             },
             "in": "query",
+            "name": "season__slug",
+            "description": "Filter results by season by slug name"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
             "name": "tag__slug",
             "description": "Filter results by tag by slug name"
           }
@@ -988,6 +996,28 @@
         "description": "Return for each cuisine the number of associated recipes."
       },
       "parameters": []
+    },
+    "/recipe_groups/season-count": {
+      "get": {
+        "summary": "Get Season Count",
+        "tags": [
+          "Recipe"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryIterator"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-season-count",
+        "description": "Return for each season the number of associated recipes."
+      }
     },
     "/recipe_groups/tag-count": {
       "get": {
@@ -1946,6 +1976,9 @@
           "cuisine": {
             "$ref": "#/components/schemas/Cuisine"
           },
+          "season": {
+            "$ref": "#/components/schemas/Season"
+          },
           "ingredient_groups": {
             "type": "array",
             "items": {
@@ -1996,6 +2029,7 @@
           "tags",
           "course",
           "cuisine",
+          "season",
           "ingredient_groups",
           "servings",
           "directions",
@@ -2052,6 +2086,9 @@
           },
           "cuisine": {
             "$ref": "#/components/schemas/Cuisine"
+          },
+          "season": {
+            "$ref": "#/components/schemas/Season"
           },
           "ingredient_groups": {
             "type": "array",
@@ -2136,6 +2173,25 @@
           "author",
           "pub_username",
           "pub_date"
+        ]
+      },
+      "Season": {
+        "title": "Season",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "readOnly": true
+          },
+          "title": {
+            "type": "string",
+            "description": "Spring, Summer, Autumn, Winter",
+            "maxLength": 100
+          }
+        },
+        "required": [
+          "id",
+          "title"
         ]
       },
       "SubRecipe": {

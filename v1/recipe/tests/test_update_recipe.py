@@ -17,6 +17,7 @@ class RecipeSerializerTests(TestCase):
         'test/users.json',
         'course_data.json',
         'cuisine_data.json',
+        'season_data.json',
         'tag_data.json',
         'ing_data.json',
         'recipe_data.json'
@@ -146,8 +147,9 @@ class RecipeSerializerTests(TestCase):
             "cook_time": 60,
             "servings": 8,
             "rating": 0,
+            "course": {"id": 2},
             "cuisine": {"id": 1},
-            "course": {"id": 2}
+            "season": {"id": 3}
         }
 
     def test_simple_patch_recipe(self):
@@ -266,8 +268,9 @@ class RecipeSerializerTests(TestCase):
             "cook_time": 60,
             "servings": 8,
             "rating": 0,
+            "course": {"id": 2},
             "cuisine": {"id": 1},
-            "course": {"id": 2}
+            "season": {"id": 3}
         }
         request = self.factory.patch('/api/v1/recipe/recipes/tasty-chili', data=data, format='json')
         request.user = self.staff
@@ -391,8 +394,9 @@ class RecipeSerializerTests(TestCase):
             "cook_time": 60,
             "servings": 8,
             "rating": 0,
+            "course": {"id": 2},
             "cuisine": {"id": 1},
-            "course": {"id": 2}
+            "season": {"id": 3}
         }
         request = self.factory.put('/api/v1/recipe/recipes/tasty-chili', data=data, format='json')
         request.user = self.staff
@@ -423,8 +427,9 @@ class RecipeSerializerTests(TestCase):
             "prep_time": 60,
             "cook_time": 60,
             "servings": 8,
-            "cuisine": {"id": 1},
             "course": {"id": 2},
+            "cuisine": {"id": 1},
+            "season": {"id": 3},
             "photo": os.path.join(PHOTO_PATH, 'food.jpg')
         }
 
@@ -443,8 +448,9 @@ class RecipeSerializerTests(TestCase):
             "prep_time": 60,
             "cook_time": 60,
             "servings": 8,
-            "cuisine": {"id": 1},
             "course": {"id": 2},
+            "cuisine": {"id": 1},
+            "season": {"id": 3},
             "photo": os.path.join(PHOTO_PATH, 'food2.jpg')
         }
 

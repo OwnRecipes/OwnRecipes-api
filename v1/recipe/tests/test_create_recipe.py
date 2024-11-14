@@ -15,6 +15,7 @@ class RecipeSerializerTests(TestCase):
         'test/users.json',
         'course_data.json',
         'cuisine_data.json',
+        'season_data.json',
         'tag_data.json',
     ]
 
@@ -142,8 +143,9 @@ class RecipeSerializerTests(TestCase):
             "cook_time": 60,
             "servings": 8,
             "rating": 0,
+            "course": {"id": 2},
             "cuisine": {"id": 1},
-            "course": {"id": 2}
+            "season": {"id": 2}
         }
 
     def test_simple_create_recipe(self):

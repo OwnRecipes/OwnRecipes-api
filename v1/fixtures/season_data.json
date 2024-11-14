@@ -1,0 +1,38 @@
+[
+    {
+        "pk": 1,
+        "model": "recipe_groups.season",
+        "fields": {
+            "author": 1,
+            "slug": "spring",
+            "title": "Spring"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "recipe_groups.season",
+        "fields": {
+            "author": 1,
+            "slug": "summer",
+            "title": "Summer"
+        }
+    },
+    {
+        "pk": 3,
+        "model": "recipe_groups.season",
+        "fields": {
+            "author": 1,
+            "slug": "autumn",
+            "title": "Autumn"
+        }
+    },
+    {
+        "pk": 4,
+        "model": "recipe_groups.season",
+        "fields": {
+            "author": 1,
+            "slug": "winter",
+            "title": "Winter"
+        }
+    }
+]

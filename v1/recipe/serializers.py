@@ -8,7 +8,7 @@ from rest_framework.fields import SerializerMethodField
 
 from v1.recipe.models import Recipe, SubRecipe
 from v1.ingredient.serializers import IngredientGroupSerializer
-from v1.recipe_groups.serializers import TagSerializer, CourseSerializer, CuisineSerializer
+from v1.recipe_groups.serializers import CourseSerializer, CuisineSerializer, SeasonSerializer, TagSerializer
 from v1.recipe.mixins import FieldLimiter
 
 
@@ -81,6 +81,7 @@ class RecipeSerializer(FieldLimiter, serializers.ModelSerializer):
     tags = TagSerializer(many=True, required=False)
     course = CourseSerializer()
     cuisine = CuisineSerializer()
+    season = SeasonSerializer()
     pub_username = serializers.ReadOnlyField(source='author.username')
     pub_date = serializers.DateTimeField(read_only=True)
     update_author = serializers.PrimaryKeyRelatedField(read_only=True, required=False)
@@ -107,6 +108,7 @@ class RecipeSerializer(FieldLimiter, serializers.ModelSerializer):
             'rating_count',
             'course',
             'cuisine',
+            'season',
             'pub_username',
             'pub_date',
             'update_author',

@@ -6,7 +6,7 @@ from django.core.exceptions import FieldDoesNotExist, ValidationError
 from rest_framework.exceptions import ParseError
 
 from v1.recipe.models import Recipe, SubRecipe
-from v1.recipe_groups.models import Tag, Course, Cuisine
+from v1.recipe_groups.models import Course, Cuisine, Season, Tag
 from v1.ingredient.models import IngredientGroup, Ingredient
 
 
@@ -47,6 +47,7 @@ class SaveRecipe(Validators):
         self.tags = self.data.pop('tags', None)
         self.course = self.data.pop('course', None)
         self.cuisine = self.data.pop('cuisine', None)
+        self.season = self.data.pop('season', None)
         self.subrecipes = self.data.pop('subrecipes', None)
         self.ingredients = self.data.pop('ingredient_groups', None)
 
@@ -86,12 +87,31 @@ class SaveRecipe(Validators):
             else:
                 self.data['cuisine'] = None
 
+    def _save_season(self):
+        """
+        Add the Season instance to the self.data dict for use when we save the recipe
+        If the Season doesn't exist create a new one.
+        """
+        if self.season is not None:
+            # Lookup the season by ID. If the ID isn't there, lookup by title
+            # if that isn't found, create it.
+            if self.season.get('id'):
+                self.data['season'] = Season.objects.get(id=self.season.get('id'))
+            elif self.season.get('title'):
+                self.data['season'], created = Season.objects.get_or_create(
+                    title=self.season.get('title'),
+                    defaults={'author': self.author},
+                )
+            else:
+                self.data['season'] = None
+
     @staticmethod
     def _delete_recipe_groups():
-            # Check to see if we have any Cuisines or Courses with no recipes associated with them.
+            # Check to see if we have any Courses, Cuisines or Seasons with no recipes associated with them.
             # Id we do, delete them.
-            Cuisine.objects.all().exclude(author__is_staff='1').annotate(total=Count('recipe', distinct=True)).filter(total=0).delete()
             Course.objects.all().exclude(author__is_staff='1').annotate(total=Count('recipe', distinct=True)).filter(total=0).delete()
+            Cuisine.objects.all().exclude(author__is_staff='1').annotate(total=Count('recipe', distinct=True)).filter(total=0).delete()
+            Season.objects.all().exclude(author__is_staff='1').annotate(total=Count('recipe', distinct=True)).filter(total=0).delete()
 
     def _save_tags(self, recipe):
         if self.tags is not None:
@@ -225,6 +245,7 @@ class SaveRecipe(Validators):
         """ Create and return a new `Recipe` instance, given the validated data """
         self._save_course()
         self._save_cuisine()
+        self._save_season()
 
         recipe = Recipe(
             author=self.author,
@@ -251,6 +272,7 @@ class SaveRecipe(Validators):
 
         self._save_course()
         self._save_cuisine()
+        self._save_season()
 
         for attr, value in self.data.items():
             setattr(instance, attr, value)

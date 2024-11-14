@@ -2,7 +2,7 @@
 # encoding: utf-8
 
 from rest_framework import serializers
-from .models import Cuisine, Course, Tag
+from .models import Course, Cuisine, Season, Tag
 
 
 class CourseSerializer(serializers.ModelSerializer):
@@ -34,6 +34,22 @@ class CuisineSerializer(serializers.ModelSerializer):
             'title',
         ]
 
+
+class SeasonSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)
+    author = serializers.HiddenField(
+        default=serializers.CurrentUserDefault()
+    )
+
+    class Meta:
+        model = Season
+        fields = [
+            'id',
+            'author',
+            'title',
+        ]
+
+
 class TagSerializer(serializers.ModelSerializer):
     """ Standard `rest_framework` ModelSerializer """
     class Meta:
@@ -42,6 +58,16 @@ class TagSerializer(serializers.ModelSerializer):
             'id',
             'title',
         )
+
+
+class AggCourseSerializer(serializers.ModelSerializer):
+    """ Standard `rest_framework` ModelSerializer """
+    total = serializers.IntegerField(read_only=True)
+
+    class Meta:
+        model = Course
+        fields = '__all__'
+
 
 class AggCuisineSerializer(serializers.ModelSerializer):
     """ Standard `rest_framework` ModelSerializer """
@@ -52,13 +78,14 @@ class AggCuisineSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class AggCourseSerializer(serializers.ModelSerializer):
+class AggSeasonSerializer(serializers.ModelSerializer):
     """ Standard `rest_framework` ModelSerializer """
     total = serializers.IntegerField(read_only=True)
 
     class Meta:
-        model = Course
+        model = Season
         fields = '__all__'
+
 
 class AggTagSerializer(serializers.ModelSerializer):
     """ Standard `rest_framework` ModelSerializer """

@@ -8,6 +8,22 @@ from django.utils.translation import gettext_lazy as _
 from v1.common.db_fields import AutoSlugField
 
 
+class Course(models.Model):
+    """
+    Django Model to hold Courses.
+    Courses have a one to Many relation with Recipes.
+    Each Recipe will be assigned a Course.
+    :title: = Title of the Course
+    :author: = Creator of the Course
+    """
+    title = models.CharField(_('title'), max_length=100, unique=True)
+    slug = AutoSlugField(_('slug'), populate_from='title', unique=True)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '%s' % self.title
+
+
 class Cuisine(models.Model):
     """
     Django Model to hold Cuisines.
@@ -24,13 +40,13 @@ class Cuisine(models.Model):
         return self.title
 
 
-class Course(models.Model):
+class Season(models.Model):
     """
-    Django Model to hold Courses.
-    Courses have a one to Many relation with Recipes.
-    Each Recipe will be assigned a Course.
-    :title: = Title of the Course
-    :author: = Creator of the Course
+    Django Model to hold Seasons.
+    Seasons have a one to Many relation with Recipes.
+    Each Recipe will be assigned a Season.
+    :title: = Title of the Season
+    :author: = Creator of the Season
     """
     title = models.CharField(_('title'), max_length=100, unique=True)
     slug = AutoSlugField(_('slug'), populate_from='title', unique=True)

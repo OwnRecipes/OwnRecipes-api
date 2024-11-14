@@ -13,7 +13,7 @@ from .serializers import RatingSerializer
 from v1.common.permissions import IsOwnerOrReadOnly
 
 from .models import Recipe
-from v1.recipe_groups.models import Cuisine, Course, Tag
+from v1.recipe_groups.models import Course, Cuisine, Season, Tag
 from v1.common.recipe_search import get_search_results
 
 
@@ -37,6 +37,14 @@ class RatingCountViewSet(APIView):
         if not self.request.user.is_authenticated:
             filter_set['public'] = True
 
+        if 'course' in self.request.query_params:
+            try:
+                filter_set['course__in'] = Course.objects.filter(
+                    slug__in=self.request.query_params.get('course').split(',')
+                )
+            except:
+                return []
+
         if 'cuisine' in self.request.query_params:
             try:
                 filter_set['cuisine__in'] = Cuisine.objects.filter(
@@ -45,10 +53,10 @@ class RatingCountViewSet(APIView):
             except:
                 return []
 
-        if 'course' in self.request.query_params:
+        if 'season' in self.request.query_params:
             try:
-                filter_set['course__in'] = Course.objects.filter(
-                    slug__in=self.request.query_params.get('course').split(',')
+                filter_set['season__in'] = Season.objects.filter(
+                    slug__in=self.request.query_params.get('season').split(',')
                 )
             except:
                 return []

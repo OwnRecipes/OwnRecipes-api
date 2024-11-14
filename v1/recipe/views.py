@@ -12,7 +12,7 @@ from . import serializers
 from .models import Recipe
 from .save_recipe import SaveRecipe
 from v1.common.permissions import IsOwnerOrReadOnly
-from v1.recipe_groups.models import Cuisine, Course, Tag
+from v1.recipe_groups.models import Course, Cuisine, Season, Tag
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
@@ -36,14 +36,19 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if not self.request.user.is_authenticated:
             filter_set['public'] = True
 
+        if 'course__slug' in self.request.query_params:
+            filter_set['course__in'] = Course.objects.filter(
+                slug__in=self.request.query_params.get('course__slug').split(',')
+            )
+
         if 'cuisine__slug' in self.request.query_params:
             filter_set['cuisine__in'] = Cuisine.objects.filter(
                 slug__in=self.request.query_params.get('cuisine__slug').split(',')
             )
 
-        if 'course__slug' in self.request.query_params:
-            filter_set['course__in'] = Course.objects.filter(
-                slug__in=self.request.query_params.get('course__slug').split(',')
+        if 'season__slug' in self.request.query_params:
+            filter_set['season__in'] = Season.objects.filter(
+                slug__in=self.request.query_params.get('season__slug').split(',')
             )
 
         if 'tag__slug' in self.request.query_params:
@@ -112,13 +117,17 @@ class MiniBrowseViewSet(viewsets.mixins.ListModelMixin,
             qs = Recipe.objects.filter(public=True)
 
         filter_set = {}
+        if 'course__slug' in self.request.query_params:
+            filter_set['course__in'] = Course.objects.filter(
+                slug__in=self.request.query_params.get('course__slug').split(',')
+            )
         if 'cuisine__slug' in self.request.query_params:
             filter_set['cuisine__in'] = Cuisine.objects.filter(
                 slug__in=self.request.query_params.get('cuisine__slug').split(',')
             )
-        if 'course__slug' in self.request.query_params:
-            filter_set['course__in'] = Course.objects.filter(
-                slug__in=self.request.query_params.get('course__slug').split(',')
+        if 'season__slug' in self.request.query_params:
+            filter_set['season__in'] = Season.objects.filter(
+                slug__in=self.request.query_params.get('season__slug').split(',')
             )
         if 'tag__slug' in self.request.query_params:
             filter_set['tags__in'] = Tag.objects.filter(

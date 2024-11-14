@@ -6,7 +6,7 @@ from django.test import TestCase
 
 
 class RatingsSerializerTests(TestCase):
-    fixtures = ['test/users.json', 'course_data.json', 'cuisine_data.json', 'recipe_data.json']
+    fixtures = ['test/users.json', 'course_data.json', 'cuisine_data.json', 'season_data.json', 'recipe_data.json']
 
     def setUp(self):
         # create user / author
