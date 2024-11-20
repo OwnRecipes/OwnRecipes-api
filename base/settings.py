@@ -29,14 +29,14 @@ SITE_ID = 1
 
 DATABASES = {
     'default': {
-        'ENGINE': os.environ.get('DATABASE_ENGINE', 'django.db.backends.mysql'),
-        'NAME': os.environ.get('MYSQL_DATABASE', 'ownrecipes'),
-        'USER': os.environ.get('MYSQL_USER', 'root'),
-        'PASSWORD': os.environ.get('MYSQL_PASSWORD', os.environ.get('MYSQL_ROOT_PASSWORD')),
-        'HOST': os.environ.get('MYSQL_HOST', 'db'),
-        'PORT': os.environ.get('MYSQL_PORT', '3306'),
+        'ENGINE':   os.environ.get('DATABASE_ENGINE'  , 'django.db.backends.mysql'),
+        'NAME':     os.environ.get('DATABASE_NAME'    , os.environ.get('MYSQL_DATABASE'                                          , os.environ.get('POSTGRES_DB'           , 'ownrecipes'))),
+        'USER':     os.environ.get('DATABASE_USER'    , os.environ.get('MYSQL_USER'                                              , os.environ.get('POSTGRES_USER'         , 'root'))),
+        'PASSWORD': os.environ.get('DATABASE_PASSWORD', os.environ.get('MYSQL_PASSWORD', os.environ.get('MYSQL_ROOT_PASSWORD'    , os.environ.get('POSTGRES_PASSWORD')))),
+        'HOST':     os.environ.get('DATABASE_HOST'    , os.environ.get('MYSQL_HOST'                                              , os.environ.get('POSTGRES_HOST'         , 'db'))),
+        'PORT':     os.environ.get('DATABASE_PORT'    , os.environ.get('MYSQL_PORT'                                              , os.environ.get('POSTGRES_PORT'         , '3306'))),
         'TEST': {
-            'NAME': os.environ.get('MYSQL_TEST_DATABASE', 'test_ownrecipes')
+            'NAME': os.environ.get('DATABASE_TEST'    , os.environ.get('MYSQL_TEST_DATABASE'                                     , os.environ.get('POSTGRES_TEST_DATABASE', 'test_ownrecipes')))
         }
     }
 }
