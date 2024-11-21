@@ -55,7 +55,7 @@ class RatingCountViewSet(APIView):
 
         if 'season' in self.request.query_params:
             try:
-                filter_set['season__in'] = Season.objects.filter(
+                filter_set['seasons__in'] = Season.objects.filter(
                     slug__in=self.request.query_params.get('season').split(',')
                 )
             except:
@@ -71,7 +71,7 @@ class RatingCountViewSet(APIView):
 
         if 'search' in self.request.query_params:
             query = get_search_results(
-                ['title', 'ingredient_groups__ingredients__title', 'tags__title'],
+                ['title', 'ingredient_groups__ingredients__title', 'seasons__title', 'tags__title'],
                 query,
                 self.request.query_params.get('search')
             ).distinct()

@@ -139,6 +139,7 @@ class RecipeSerializerTests(TestCase):
                 }
             ],
             "directions": '',
+            "seasons": [{'title': 'autumn'}, {'title': 'winter'}],
             "tags": [{'title': 'hi'}, {'title': 'hello'}],
             "title": "Recipe name",
             "info": "Recipe info",
@@ -148,8 +149,7 @@ class RecipeSerializerTests(TestCase):
             "servings": 8,
             "rating": 0,
             "course": {"id": 2},
-            "cuisine": {"id": 1},
-            "season": {"id": 3}
+            "cuisine": {"id": 1}
         }
 
     def test_simple_patch_recipe(self):
@@ -260,6 +260,7 @@ class RecipeSerializerTests(TestCase):
                 }
             ],
             "directions": '',
+            "seasons": [{'title': 'autumn'}, {'title': 'winter'}],
             "tags": [{'title': 'hi'}, {'title': 'hello'}],
             "title": "Recipe name",
             "info": "Recipe info",
@@ -269,8 +270,7 @@ class RecipeSerializerTests(TestCase):
             "servings": 8,
             "rating": 0,
             "course": {"id": 2},
-            "cuisine": {"id": 1},
-            "season": {"id": 3}
+            "cuisine": {"id": 1}
         }
         request = self.factory.patch('/api/v1/recipe/recipes/tasty-chili', data=data, format='json')
         request.user = self.staff
@@ -386,6 +386,7 @@ class RecipeSerializerTests(TestCase):
                 }
             ],
             "directions": '',
+            "seasons": [{'title': 'autumn'}, {'title': 'winter'}],
             "tags": [{'title': 'hi'}, {'title': 'hello'}],
             "title": "Recipe name",
             "info": "Recipe info",
@@ -395,8 +396,7 @@ class RecipeSerializerTests(TestCase):
             "servings": 8,
             "rating": 0,
             "course": {"id": 2},
-            "cuisine": {"id": 1},
-            "season": {"id": 3}
+            "cuisine": {"id": 1}
         }
         request = self.factory.put('/api/v1/recipe/recipes/tasty-chili', data=data, format='json')
         request.user = self.staff
@@ -429,7 +429,6 @@ class RecipeSerializerTests(TestCase):
             "servings": 8,
             "course": {"id": 2},
             "cuisine": {"id": 1},
-            "season": {"id": 3},
             "photo": os.path.join(PHOTO_PATH, 'food.jpg')
         }
 
@@ -450,7 +449,6 @@ class RecipeSerializerTests(TestCase):
             "servings": 8,
             "course": {"id": 2},
             "cuisine": {"id": 1},
-            "season": {"id": 3},
             "photo": os.path.join(PHOTO_PATH, 'food2.jpg')
         }
 

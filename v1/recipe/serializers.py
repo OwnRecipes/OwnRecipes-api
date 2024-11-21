@@ -55,6 +55,7 @@ class MiniBrowseSerializer(FieldLimiter, serializers.ModelSerializer):
     """ Used to get random recipes and limit the return data. """
     pub_date = serializers.DateTimeField(read_only=True)
     photo_thumbnail = CustomImageField(required=False)
+    seasons = SeasonSerializer(many=True, required=False)
     tags = TagSerializer(many=True, required=False)
 
     class Meta:
@@ -68,6 +69,7 @@ class MiniBrowseSerializer(FieldLimiter, serializers.ModelSerializer):
             'rating_count',
             'photo_thumbnail',
             'info',
+            'seasons',
             'tags',
         ]
 
@@ -78,10 +80,10 @@ class RecipeSerializer(FieldLimiter, serializers.ModelSerializer):
     photo_thumbnail = CustomImageField(required=False)
     ingredient_groups = IngredientGroupSerializer(many=True)
     subrecipes = SerializerMethodField()
+    seasons = SeasonSerializer(many=True, required=False)
     tags = TagSerializer(many=True, required=False)
     course = CourseSerializer()
     cuisine = CuisineSerializer()
-    season = SeasonSerializer()
     pub_username = serializers.ReadOnlyField(source='author.username')
     pub_date = serializers.DateTimeField(read_only=True)
     update_author = serializers.PrimaryKeyRelatedField(read_only=True, required=False)
@@ -103,12 +105,12 @@ class RecipeSerializer(FieldLimiter, serializers.ModelSerializer):
             'photo_thumbnail',
             'ingredient_groups',
             'subrecipes',
+            'seasons',
             'tags',
             'rating',
             'rating_count',
             'course',
             'cuisine',
-            'season',
             'pub_username',
             'pub_date',
             'update_author',

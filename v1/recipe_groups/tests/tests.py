@@ -54,7 +54,7 @@ class RecipeGroupsTests(TestCase):
         self.assertEqual(response.data.get('count'), 4)
 
         results = response.data.get('results')
-        totals = {"spring": 7, "summer": 3, "autumn": 3, "winter": 3}
+        totals = {"spring": 6, "summer": 4, "autumn": 4, "winter": 3}
 
         for item in results:
             self.assertEqual(totals[item.get('slug')], item.get('total'))
@@ -167,7 +167,7 @@ class RecipeGroupsTests(TestCase):
         self.assertEqual(response.data.get('count'), 4)
 
         results = response.data.get('results')
-        totals = {"spring": 7, "summer": 3, "autumn": 3, "winter": 3}
+        totals = {"spring": 6, "summer": 4, "autumn": 4, "winter": 3}
 
         for item in results:
             self.assertEqual(totals[item.get('slug')], item.get('total'))
@@ -177,10 +177,10 @@ class RecipeGroupsTests(TestCase):
         request = self.factory.get('/api/v1/recipe_groups/season-count/?cuisine=american&tag=easy')
         response = view(request)
 
-        self.assertEqual(response.data.get('count'), 1)
+        self.assertEqual(response.data.get('count'), 3)
 
         results = response.data.get('results')
-        totals = {"spring": 4}
+        totals = {"spring": 3, "summer": 1, "autumn": 1}
 
         for item in results:
             self.assertEqual(totals[item.get('slug')], item.get('total'))

@@ -44,10 +44,10 @@ class SaveRecipe(Validators):
         self._validate()
 
         # Remove the complex data objects from processing
+        self.seasons = self.data.pop('seasons', None)
         self.tags = self.data.pop('tags', None)
         self.course = self.data.pop('course', None)
         self.cuisine = self.data.pop('cuisine', None)
-        self.season = self.data.pop('season', None)
         self.subrecipes = self.data.pop('subrecipes', None)
         self.ingredients = self.data.pop('ingredient_groups', None)
 
@@ -87,35 +87,24 @@ class SaveRecipe(Validators):
             else:
                 self.data['cuisine'] = None
 
-    def _save_season(self):
-        """
-        Add the Season instance to the self.data dict for use when we save the recipe
-        If the Season doesn't exist create a new one.
-        """
-        if self.season is not None:
-            # Lookup the season by ID. If the ID isn't there, lookup by title
-            # if that isn't found, create it.
-            if self.season.get('id'):
-                self.data['season'] = Season.objects.get(id=self.season.get('id'))
-            elif self.season.get('title'):
-                self.data['season'], created = Season.objects.get_or_create(
-                    title=self.season.get('title'),
-                    defaults={'author': self.author},
-                )
-            else:
-                self.data['season'] = None
-
     @staticmethod
     def _delete_recipe_groups():
             # Check to see if we have any Courses, Cuisines or Seasons with no recipes associated with them.
             # Id we do, delete them.
             Course.objects.all().exclude(author__is_staff='1').annotate(total=Count('recipe', distinct=True)).filter(total=0).delete()
             Cuisine.objects.all().exclude(author__is_staff='1').annotate(total=Count('recipe', distinct=True)).filter(total=0).delete()
-            Season.objects.all().exclude(author__is_staff='1').annotate(total=Count('recipe', distinct=True)).filter(total=0).delete()
+
+    def _save_seasons(self, recipe):
+        if self.seasons is not None:
+            for season in recipe.seasons.all():
+                recipe.seasons.remove(season)
+
+            for season in self.seasons:
+                obj, created = Season.objects.get_or_create(title=season['title'].strip())
+                recipe.seasons.add(obj)
 
     def _save_tags(self, recipe):
         if self.tags is not None:
-            # TODO: don't delete everything when we edit the recipe. Use an ID.
             for tag in recipe.tags.all():
                 recipe.tags.remove(tag)
 
@@ -245,7 +234,6 @@ class SaveRecipe(Validators):
         """ Create and return a new `Recipe` instance, given the validated data """
         self._save_course()
         self._save_cuisine()
-        self._save_season()
 
         recipe = Recipe(
             author=self.author,
@@ -258,6 +246,7 @@ class SaveRecipe(Validators):
         try:
             self._save_ingredient_data(recipe)
             self._save_subrecipe_data(recipe)
+            self._save_seasons(recipe)
             self._save_tags(recipe)
         except Exception as err:
             recipe.delete()
@@ -272,7 +261,6 @@ class SaveRecipe(Validators):
 
         self._save_course()
         self._save_cuisine()
-        self._save_season()
 
         for attr, value in self.data.items():
             setattr(instance, attr, value)
@@ -282,6 +270,7 @@ class SaveRecipe(Validators):
 
         self._save_ingredient_data(instance)
         self._save_subrecipe_data(instance)
+        self._save_seasons(instance)
         self._save_tags(instance)
         instance.save()
 

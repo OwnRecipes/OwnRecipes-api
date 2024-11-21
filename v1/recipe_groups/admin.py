@@ -5,19 +5,19 @@ from django.contrib import admin
 from .models import Course, Cuisine, Season, Tag
 
 
-class CourseAndCuisineAndSeasonAdmin(admin.ModelAdmin):
+class CourseAndCuisineAdmin(admin.ModelAdmin):
     ordering = ['title']
     list_display = ['title']
     list_filter = ['author']
 
 
-class TagAdmin(admin.ModelAdmin):
+class TagAndSeasonAdmin(admin.ModelAdmin):
     ordering = ['title']
     list_display = ['title']
     list_filter = ['recipe__title']
 
 
-admin.site.register(Course, CourseAndCuisineAndSeasonAdmin)
-admin.site.register(Cuisine, CourseAndCuisineAndSeasonAdmin)
-admin.site.register(Season, CourseAndCuisineAndSeasonAdmin)
-admin.site.register(Tag, TagAdmin)
+admin.site.register(Course, CourseAndCuisineAdmin)
+admin.site.register(Cuisine, CourseAndCuisineAdmin)
+admin.site.register(Season, TagAndSeasonAdmin)
+admin.site.register(Tag, TagAndSeasonAdmin)

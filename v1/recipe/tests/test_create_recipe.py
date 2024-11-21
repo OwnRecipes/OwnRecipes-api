@@ -135,6 +135,7 @@ class RecipeSerializerTests(TestCase):
                 }
             ],
             "directions": '',
+            "seasons": [{'title': 'summer'}],
             "tags": [{'title': 'hi'}, {'title': 'hello'}],
             "title": "Recipe name",
             "info": "Recipe info",
@@ -144,8 +145,7 @@ class RecipeSerializerTests(TestCase):
             "servings": 8,
             "rating": 0,
             "course": {"id": 2},
-            "cuisine": {"id": 1},
-            "season": {"id": 2}
+            "cuisine": {"id": 1}
         }
 
     def test_simple_create_recipe(self):

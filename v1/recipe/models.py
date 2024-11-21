@@ -41,7 +41,7 @@ class Recipe(models.Model):
 
     Courses have a one to Many relation with Recipes.
     Cuisines have a one to Many relation with Recipes.
-    Seasons have a one to Many relation with Recipes.
+    Seasons have a Many to Many relation with Recipes.
     Tags have a Many to Many relation with Recipes.
     Ingredient Groups have a Many to one relation with Recipes.
     Subrecipes have a Many to Many relation with Recipes.
@@ -77,7 +77,7 @@ class Recipe(models.Model):
                                      options={'quality': 70})
     cuisine = models.ForeignKey(Cuisine, on_delete=models.CASCADE, null=True, blank=True)
     course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True)
-    season = models.ForeignKey(Season, on_delete=models.CASCADE, null=True, blank=True)
+    seasons = models.ManyToManyField(Season, verbose_name=_('season'), blank=True)
     tags = models.ManyToManyField(Tag, verbose_name=_('tag'), blank=True)
     subrecipes = models.ManyToManyField('self', verbose_name=_('subrecipes'), through='SubRecipe', symmetrical=False)
     info = models.TextField(_('info'), help_text="enter information about the recipe", blank=True)

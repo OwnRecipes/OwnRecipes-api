@@ -14,6 +14,7 @@ class Course(models.Model):
     Courses have a one to Many relation with Recipes.
     Each Recipe will be assigned a Course.
     :title: = Title of the Course
+    :slug: = Slug of the Course
     :author: = Creator of the Course
     """
     title = models.CharField(_('title'), max_length=100, unique=True)
@@ -30,6 +31,7 @@ class Cuisine(models.Model):
     Cuisines have a one to Many relation with Recipes.
     Each Recipe will be assigned a Cuisine.
     :title: = Title of the Cuisine
+    :slug: = Slug of the Cuisine
     :author: = Creator of the Cuisine
     """
     title = models.CharField(_('title'), max_length=100, unique=True)
@@ -46,14 +48,16 @@ class Season(models.Model):
     Seasons have a one to Many relation with Recipes.
     Each Recipe will be assigned a Season.
     :title: = Title of the Season
-    :author: = Creator of the Season
+    :slug: = Slug of the Season
     """
     title = models.CharField(_('title'), max_length=100, unique=True)
     slug = AutoSlugField(_('slug'), populate_from='title', unique=True)
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return '%s' % self.title
+
+    def recipe_count(self):
+        return self.recipe_set.filter(shared=0).count()
 
 
 class Tag(models.Model):
@@ -62,7 +66,7 @@ class Tag(models.Model):
     Tags have a Many to Many relation with Recipes.
     Each Recipe can have many Tags.
     :title: = Title of the Tag
-    :author: = Creator of the Tag
+    :slug: = Slug of the tag
     """
     title = models.CharField(_('title'), max_length=100, unique=True)
     slug = AutoSlugField(_('slug'), populate_from='title', unique=True)

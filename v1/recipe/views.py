@@ -24,7 +24,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.RecipeSerializer
     permission_classes = (IsOwnerOrReadOnly,)
     filter_backends = (filters.SearchFilter, filters.OrderingFilter)
-    search_fields = ('title', 'tags__title', 'ingredient_groups__ingredients__title')
+    search_fields = ('title', 'seasons__title', 'tags__title', 'ingredient_groups__ingredients__title')
     ordering_fields = ('pub_date', 'title', 'rating')
     ordering = ('-pub_date', 'title')
 
@@ -47,7 +47,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             )
 
         if 'season__slug' in self.request.query_params:
-            filter_set['season__in'] = Season.objects.filter(
+            filter_set['seasons__in'] = Season.objects.filter(
                 slug__in=self.request.query_params.get('season__slug').split(',')
             )
 
@@ -126,7 +126,7 @@ class MiniBrowseViewSet(viewsets.mixins.ListModelMixin,
                 slug__in=self.request.query_params.get('cuisine__slug').split(',')
             )
         if 'season__slug' in self.request.query_params:
-            filter_set['season__in'] = Season.objects.filter(
+            filter_set['seasons__in'] = Season.objects.filter(
                 slug__in=self.request.query_params.get('season__slug').split(',')
             )
         if 'tag__slug' in self.request.query_params:

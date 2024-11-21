@@ -3,36 +3,32 @@
         "pk": 1,
         "model": "recipe_groups.season",
         "fields": {
-            "author": 1,
             "slug": "spring",
-            "title": "Spring"
+            "title": "spring"
         }
     },
     {
         "pk": 2,
         "model": "recipe_groups.season",
         "fields": {
-            "author": 1,
             "slug": "summer",
-            "title": "Summer"
+            "title": "summer"
         }
     },
     {
         "pk": 3,
         "model": "recipe_groups.season",
         "fields": {
-            "author": 1,
             "slug": "autumn",
-            "title": "Autumn"
+            "title": "autumn"
         }
     },
     {
         "pk": 4,
         "model": "recipe_groups.season",
         "fields": {
-            "author": 1,
             "slug": "winter",
-            "title": "Winter"
+            "title": "winter"
         }
     }
 ]

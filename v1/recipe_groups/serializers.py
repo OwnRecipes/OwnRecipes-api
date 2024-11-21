@@ -36,18 +36,13 @@ class CuisineSerializer(serializers.ModelSerializer):
 
 
 class SeasonSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField(required=False)
-    author = serializers.HiddenField(
-        default=serializers.CurrentUserDefault()
-    )
-
+    """ Standard `rest_framework` ModelSerializer """
     class Meta:
         model = Season
-        fields = [
+        fields = (
             'id',
-            'author',
             'title',
-        ]
+        )
 
 
 class TagSerializer(serializers.ModelSerializer):

@@ -53,7 +53,7 @@ class CourseCountViewSet(viewsets.ModelViewSet):
 
         if 'season' in self.request.query_params:
             try:
-                filter_set['season__in'] = Season.objects.filter(
+                filter_set['seasons__in'] = Season.objects.filter(
                     slug__in=self.request.query_params.get('season').split(',')
                 )
             except:
@@ -69,7 +69,7 @@ class CourseCountViewSet(viewsets.ModelViewSet):
 
         if 'search' in self.request.query_params:
             query = get_search_results(
-                ['title', 'ingredient_groups__ingredients__title', 'tags__title'],
+                ['title', 'ingredient_groups__ingredients__title', 'seasons__title', 'tags__title'],
                 query,
                 self.request.query_params.get('search')
             ).distinct()
@@ -124,7 +124,7 @@ class CuisineCountViewSet(viewsets.ModelViewSet):
 
         if 'season' in self.request.query_params:
             try:
-                filter_set['season__in'] = Season.objects.filter(
+                filter_set['seasons__in'] = Season.objects.filter(
                     slug__in=self.request.query_params.get('season').split(',')
                 )
             except:
@@ -140,7 +140,7 @@ class CuisineCountViewSet(viewsets.ModelViewSet):
 
         if 'search' in self.request.query_params:
             query = get_search_results(
-                ['title', 'ingredient_groups__ingredients__title', 'tags__title'],
+                ['title', 'ingredient_groups__ingredients__title', 'seasons__title', 'tags__title'],
                 query,
                 self.request.query_params.get('search')
             ).distinct()
@@ -171,7 +171,7 @@ class SeasonCountViewSet(viewsets.ModelViewSet):
     This viewset automatically provides `list`, `create`, `retrieve`,
     `update` and `destroy` actions.
 
-    Uses `slug` as the PK for any lookups.
+    Uses `title` as the PK for any lookups.
     """
     serializer_class = serializers.AggSeasonSerializer
     permission_classes = (IsParentRecipeOwnerOrReadOnly,)
@@ -275,7 +275,7 @@ class TagCountViewSet(viewsets.ModelViewSet):
 
         if 'season' in self.request.query_params:
             try:
-                filter_set['season__in'] = Season.objects.filter(
+                filter_set['seasons__in'] = Season.objects.filter(
                     slug__in=self.request.query_params.get('season').split(',')
                 )
             except:

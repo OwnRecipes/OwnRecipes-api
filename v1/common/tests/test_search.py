@@ -19,7 +19,7 @@ class GetSearchResultsTests(TestCase):
     def test_get_search_results(self):
         """ Run a search that will return data """
         query = get_search_results(
-            ['title', 'ingredient_groups__ingredients__title', 'tags__title'],
+            ['title', 'ingredient_groups__ingredients__title', 'seasons__title', 'tags__title'],
             Recipe.objects,
             'chili'
         ).distinct()
@@ -29,7 +29,7 @@ class GetSearchResultsTests(TestCase):
     def test_get_search_no_results(self):
         """ Run a search that will return no data """
         query = get_search_results(
-            ['title', 'ingredient_groups__ingredients__title', 'tags__title'],
+            ['title', 'ingredient_groups__ingredients__title', 'seasons__title', 'tags__title'],
             Recipe.objects,
             'blue berry'
         ).distinct()
