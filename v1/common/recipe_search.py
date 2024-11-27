@@ -20,7 +20,7 @@ def get_search_results(search_fields, queryset, search_term):
             search_keyword_string (search_term)
         )
         query = get_search_results(
-            ['title', 'ingredients__title', 'tags__title'],
+            ['title', 'ingredients__title', 'seasons__title', 'tags__title'],
             django_queryset,
             'chicken taco'
         )

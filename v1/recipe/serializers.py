@@ -8,7 +8,7 @@ from rest_framework.fields import SerializerMethodField
 
 from v1.recipe.models import Recipe, SubRecipe
 from v1.ingredient.serializers import IngredientGroupSerializer
-from v1.recipe_groups.serializers import TagSerializer, CourseSerializer, CuisineSerializer
+from v1.recipe_groups.serializers import CourseSerializer, CuisineSerializer, SeasonSerializer, TagSerializer
 from v1.recipe.mixins import FieldLimiter
 
 
@@ -55,6 +55,7 @@ class MiniBrowseSerializer(FieldLimiter, serializers.ModelSerializer):
     """ Used to get random recipes and limit the return data. """
     pub_date = serializers.DateTimeField(read_only=True)
     photo_thumbnail = CustomImageField(required=False)
+    seasons = SeasonSerializer(many=True, required=False)
     tags = TagSerializer(many=True, required=False)
 
     class Meta:
@@ -68,6 +69,7 @@ class MiniBrowseSerializer(FieldLimiter, serializers.ModelSerializer):
             'rating_count',
             'photo_thumbnail',
             'info',
+            'seasons',
             'tags',
         ]
 
@@ -78,6 +80,7 @@ class RecipeSerializer(FieldLimiter, serializers.ModelSerializer):
     photo_thumbnail = CustomImageField(required=False)
     ingredient_groups = IngredientGroupSerializer(many=True)
     subrecipes = SerializerMethodField()
+    seasons = SeasonSerializer(many=True, required=False)
     tags = TagSerializer(many=True, required=False)
     course = CourseSerializer()
     cuisine = CuisineSerializer()
@@ -102,6 +105,7 @@ class RecipeSerializer(FieldLimiter, serializers.ModelSerializer):
             'photo_thumbnail',
             'ingredient_groups',
             'subrecipes',
+            'seasons',
             'tags',
             'rating',
             'rating_count',

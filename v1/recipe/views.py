@@ -12,7 +12,7 @@ from . import serializers
 from .models import Recipe
 from .save_recipe import SaveRecipe
 from v1.common.permissions import IsOwnerOrReadOnly
-from v1.recipe_groups.models import Cuisine, Course, Tag
+from v1.recipe_groups.models import Course, Cuisine, Season, Tag
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
@@ -24,7 +24,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.RecipeSerializer
     permission_classes = (IsOwnerOrReadOnly,)
     filter_backends = (filters.SearchFilter, filters.OrderingFilter)
-    search_fields = ('title', 'tags__title', 'ingredient_groups__ingredients__title')
+    search_fields = ('title', 'seasons__title', 'tags__title', 'ingredient_groups__ingredients__title')
     ordering_fields = ('pub_date', 'title', 'rating')
     ordering = ('-pub_date', 'title')
 
@@ -36,14 +36,19 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if not self.request.user.is_authenticated:
             filter_set['public'] = True
 
+        if 'course__slug' in self.request.query_params:
+            filter_set['course__in'] = Course.objects.filter(
+                slug__in=self.request.query_params.get('course__slug').split(',')
+            )
+
         if 'cuisine__slug' in self.request.query_params:
             filter_set['cuisine__in'] = Cuisine.objects.filter(
                 slug__in=self.request.query_params.get('cuisine__slug').split(',')
             )
 
-        if 'course__slug' in self.request.query_params:
-            filter_set['course__in'] = Course.objects.filter(
-                slug__in=self.request.query_params.get('course__slug').split(',')
+        if 'season__slug' in self.request.query_params:
+            filter_set['seasons__in'] = Season.objects.filter(
+                slug__in=self.request.query_params.get('season__slug').split(',')
             )
 
         if 'tag__slug' in self.request.query_params:
@@ -63,7 +68,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if 'directions' in self.request.query_params:
             filter_set['directions__contains'] = self.request.query_params.get('directions')
 
-        query = query.filter(**filter_set)
+        query = query.filter(**filter_set).distinct()
         if 'rating' not in self.request.query_params:
             return query
 
@@ -112,20 +117,24 @@ class MiniBrowseViewSet(viewsets.mixins.ListModelMixin,
             qs = Recipe.objects.filter(public=True)
 
         filter_set = {}
+        if 'course__slug' in self.request.query_params:
+            filter_set['course__in'] = Course.objects.filter(
+                slug__in=self.request.query_params.get('course__slug').split(',')
+            )
         if 'cuisine__slug' in self.request.query_params:
             filter_set['cuisine__in'] = Cuisine.objects.filter(
                 slug__in=self.request.query_params.get('cuisine__slug').split(',')
             )
-        if 'course__slug' in self.request.query_params:
-            filter_set['course__in'] = Course.objects.filter(
-                slug__in=self.request.query_params.get('course__slug').split(',')
+        if 'season__slug' in self.request.query_params:
+            filter_set['seasons__in'] = Season.objects.filter(
+                slug__in=self.request.query_params.get('season__slug').split(',')
             )
         if 'tag__slug' in self.request.query_params:
             filter_set['tags__in'] = Tag.objects.filter(
                 slug__in=self.request.query_params.get('tag__slug').split(',')
             )
 
-        qs = qs.filter(**filter_set)
+        qs = qs.filter(**filter_set).distinct()
         # Get the limit from the request and the count from the DB.
         # Compare to make sure you aren't accessing more than possible.
         limit = int(request.query_params.get('limit', 4))

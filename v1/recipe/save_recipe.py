@@ -6,7 +6,7 @@ from django.core.exceptions import FieldDoesNotExist, ValidationError
 from rest_framework.exceptions import ParseError
 
 from v1.recipe.models import Recipe, SubRecipe
-from v1.recipe_groups.models import Tag, Course, Cuisine
+from v1.recipe_groups.models import Course, Cuisine, Season, Tag
 from v1.ingredient.models import IngredientGroup, Ingredient
 
 
@@ -44,6 +44,7 @@ class SaveRecipe(Validators):
         self._validate()
 
         # Remove the complex data objects from processing
+        self.seasons = self.data.pop('seasons', None)
         self.tags = self.data.pop('tags', None)
         self.course = self.data.pop('course', None)
         self.cuisine = self.data.pop('cuisine', None)
@@ -88,14 +89,22 @@ class SaveRecipe(Validators):
 
     @staticmethod
     def _delete_recipe_groups():
-            # Check to see if we have any Cuisines or Courses with no recipes associated with them.
+            # Check to see if we have any Courses, Cuisines or Seasons with no recipes associated with them.
             # Id we do, delete them.
-            Cuisine.objects.all().exclude(author__is_staff='1').annotate(total=Count('recipe', distinct=True)).filter(total=0).delete()
             Course.objects.all().exclude(author__is_staff='1').annotate(total=Count('recipe', distinct=True)).filter(total=0).delete()
+            Cuisine.objects.all().exclude(author__is_staff='1').annotate(total=Count('recipe', distinct=True)).filter(total=0).delete()
+
+    def _save_seasons(self, recipe):
+        if self.seasons is not None:
+            for season in recipe.seasons.all():
+                recipe.seasons.remove(season)
+
+            for season in self.seasons:
+                obj, created = Season.objects.get_or_create(title=season['title'].strip())
+                recipe.seasons.add(obj)
 
     def _save_tags(self, recipe):
         if self.tags is not None:
-            # TODO: don't delete everything when we edit the recipe. Use an ID.
             for tag in recipe.tags.all():
                 recipe.tags.remove(tag)
 
@@ -237,6 +246,7 @@ class SaveRecipe(Validators):
         try:
             self._save_ingredient_data(recipe)
             self._save_subrecipe_data(recipe)
+            self._save_seasons(recipe)
             self._save_tags(recipe)
         except Exception as err:
             recipe.delete()
@@ -260,6 +270,7 @@ class SaveRecipe(Validators):
 
         self._save_ingredient_data(instance)
         self._save_subrecipe_data(instance)
+        self._save_seasons(instance)
         self._save_tags(instance)
         instance.save()
 

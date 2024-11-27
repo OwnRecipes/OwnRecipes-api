@@ -738,6 +738,14 @@
               "type": "string"
             },
             "in": "query",
+            "name": "season__slug",
+            "description": "Filter results by season by slug name"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
             "name": "tag__slug",
             "description": "Filter results by tag by slug name"
           }
@@ -988,6 +996,28 @@
         "description": "Return for each cuisine the number of associated recipes."
       },
       "parameters": []
+    },
+    "/recipe_groups/season-count": {
+      "get": {
+        "summary": "Get Season Count",
+        "tags": [
+          "Recipe"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryIterator"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-season-count",
+        "description": "Return for each season the number of associated recipes."
+      }
     },
     "/recipe_groups/tag-count": {
       "get": {
@@ -1934,6 +1964,12 @@
           "info": {
             "type": "string"
           },
+          "seasons": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Season"
+            }
+          },
           "tags": {
             "type": "array",
             "items": {
@@ -1993,6 +2029,7 @@
         "required": [
           "title",
           "info",
+          "season",
           "tags",
           "course",
           "cuisine",
@@ -2040,6 +2077,12 @@
             "type": "number",
             "minimum": 0,
             "description": "Zero means no rating."
+          },
+          "seasons": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Season"
+            }
           },
           "tags": {
             "type": "array",
@@ -2126,6 +2169,7 @@
           "title",
           "info",
           "rating",
+          "seasons",
           "tags",
           "ingredient_groups",
           "servings",
@@ -2171,6 +2215,30 @@
           "id",
           "numerator",
           "denominator"
+        ]
+      },
+      "Season": {
+        "title": "Season",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "readOnly": true
+          },
+          "title": {
+            "type": "string",
+            "description": "spring, summer, autumn, winter",
+            "maxLength": 100
+          },
+          "slug": {
+            "type": "string",
+            "readOnly": true
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "slug"
         ]
       },
       "Tag": {

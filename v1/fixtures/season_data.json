@@ -1,0 +1,34 @@
+[
+    {
+        "pk": 1,
+        "model": "recipe_groups.season",
+        "fields": {
+            "slug": "spring",
+            "title": "spring"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "recipe_groups.season",
+        "fields": {
+            "slug": "summer",
+            "title": "summer"
+        }
+    },
+    {
+        "pk": 3,
+        "model": "recipe_groups.season",
+        "fields": {
+            "slug": "autumn",
+            "title": "autumn"
+        }
+    },
+    {
+        "pk": 4,
+        "model": "recipe_groups.season",
+        "fields": {
+            "slug": "winter",
+            "title": "winter"
+        }
+    }
+]

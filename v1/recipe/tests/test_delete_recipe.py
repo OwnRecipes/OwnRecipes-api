@@ -18,6 +18,7 @@ class RecipeSerializerTests(TestCase):
         'test/users.json',
         'course_data.json',
         'cuisine_data.json',
+        'season_data.json',
         'tag_data.json',
         'ing_data.json',
         'recipe_data.json'

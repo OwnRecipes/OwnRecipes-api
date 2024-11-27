@@ -12,6 +12,7 @@ class RecipeSerializerTests(TestCase):
         'test/users.json',
         'course_data.json',
         'cuisine_data.json',
+        'season_data.json',
         'tag_data.json',
         'ing_data.json',
         'recipe_data.json'
@@ -62,3 +63,39 @@ class RecipeSerializerTests(TestCase):
         get_mini_browse(2)
         get_mini_browse(4)
         get_mini_browse(6)
+
+    def test_list_view_seasons(self):
+        """Try and read the list of recipes"""
+        view = views.RecipeViewSet.as_view({'get': 'list'})
+        # Tasty Chili 2 is summer AND autumn
+        request = self.factory.get('/api/v1/recipe/recipes/?fields=id&season__slug=summer,autumn')
+        response = view(request)
+
+        resultsLen = len(response.data.get('results'))
+
+        uniqueResults = []
+        for r in response.data.get('results'):
+            r_id = r.get('id')
+            if r_id not in uniqueResults:
+                uniqueResults.append(r_id)
+        uniqueResultsLen = len(uniqueResults)
+
+        self.assertEqual(resultsLen, uniqueResultsLen)
+
+    def test_list_view_tags(self):
+        """Try and read the list of recipes"""
+        view = views.RecipeViewSet.as_view({'get': 'list'})
+        # Tasty Chili 2 is easy AND gluten-free
+        request = self.factory.get('/api/v1/recipe/recipes/?fields=id&tag__slug=easy,gluten-free')
+        response = view(request)
+
+        resultsLen = len(response.data.get('results'))
+
+        uniqueResults = []
+        for r in response.data.get('results'):
+            r_id = r.get('id')
+            if r_id not in uniqueResults:
+                uniqueResults.append(r_id)
+        uniqueResultsLen = len(uniqueResults)
+
+        self.assertEqual(resultsLen, uniqueResultsLen)

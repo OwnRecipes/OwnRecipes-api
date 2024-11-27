@@ -2,7 +2,7 @@
 # encoding: utf-8
 
 from django.contrib import admin
-from .models import Cuisine, Course, Tag
+from .models import Course, Cuisine, Season, Tag
 
 
 class CourseAndCuisineAdmin(admin.ModelAdmin):
@@ -11,7 +11,7 @@ class CourseAndCuisineAdmin(admin.ModelAdmin):
     list_filter = ['author']
 
 
-class TagAdmin(admin.ModelAdmin):
+class TagAndSeasonAdmin(admin.ModelAdmin):
     ordering = ['title']
     list_display = ['title']
     list_filter = ['recipe__title']
@@ -19,4 +19,5 @@ class TagAdmin(admin.ModelAdmin):
 
 admin.site.register(Course, CourseAndCuisineAdmin)
 admin.site.register(Cuisine, CourseAndCuisineAdmin)
-admin.site.register(Tag, TagAdmin)
+admin.site.register(Season, TagAndSeasonAdmin)
+admin.site.register(Tag, TagAndSeasonAdmin)
