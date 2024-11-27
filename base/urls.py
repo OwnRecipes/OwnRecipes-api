@@ -14,7 +14,7 @@ urlpatterns = [
     path('openapi', get_schema_view(
         title='OwnRecipes',
         description='OwnRecipes OpenAPI',
-        version='3.3.0',
+        version='3.4.0',
     ), name='openapi'),
 
     # Backend REST API
