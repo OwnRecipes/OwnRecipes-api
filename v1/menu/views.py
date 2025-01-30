@@ -30,7 +30,7 @@ class MenuItemViewSet(viewsets.ModelViewSet):
     serializer_class = MenuItemSerializer
     permission_classes = (IsGlobalOrOwner,)
     filter_backends = (DjangoFilterBackend, filters.OrderingFilter)
-    filterset_fields = ('recipe', 'start_date', 'complete_date', 'complete')
+    filterset_fields = ('start_date', 'complete_date', 'complete', 'recipe', 'ext_title', 'ext_source')
     ordering_fields = ('start_date', 'id')
 
     def get_queryset(self):

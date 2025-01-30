@@ -1802,7 +1802,15 @@
         "properties": {
           "recipe": {
             "type": "number",
-            "description": "Recipe id"
+            "description": "Recipe id. Either this, or ext_ fields must be filled."
+          },
+          "ext_title": {
+            "type": "string",
+            "description": "External recipe title. Either this, or recipe must be filled."
+          },
+          "ext_source": {
+            "type": "string",
+            "description": "External recipe source"
           },
           "start_date": {
             "type": "string",
@@ -1815,7 +1823,6 @@
           }
         },
         "required": [
-          "recipe",
           "start_date",
           "complete"
         ]
@@ -1831,6 +1838,14 @@
           "recipe_data": {
             "$ref": "#/components/schemas/RecipeList"
           },
+          "ext_title": {
+            "type": "string",
+            "description": "External recipe title. Either this, or recipe must be filled."
+          },
+          "ext_source": {
+            "type": "string",
+            "description": "External recipe source"
+          },
           "start_date": {
             "type": "string",
             "format": "date-time",
@@ -1843,7 +1858,6 @@
         },
         "required": [
           "id",
-          "recipe_data",
           "start_date",
           "complete"
         ]

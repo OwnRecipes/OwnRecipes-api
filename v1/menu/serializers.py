@@ -22,12 +22,13 @@ class MenuItemSerializer(FieldLimiter, serializers.ModelSerializer):
         fields = [
             'id',
             'author',
-            'complete',
-            'recipe',
             'start_date',
+            'complete',
             'complete_date',
             'recipe',
             'recipe_data',
+            'ext_title',
+            'ext_source',
         ]
         extra_kwargs = {'recipe': {'write_only': True}}
 
