@@ -25,6 +25,9 @@
       "name": "Grocery"
     },
     {
+      "name": "Menu"
+    },
+    {
       "name": "News"
     },
     {
@@ -536,6 +539,144 @@
             }
           }
         }
+      }
+    },
+    "/menu/menu-item": {
+      "get": {
+        "summary": "Get MenuItems",
+        "tags": [
+          "Menu"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MenuItemIterator"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-menu-items",
+        "description": "Get all MenuItems of the user"
+      },
+      "post": {
+        "summary": "Create MenuItem",
+        "operationId": "post-menu-item",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "description": "Creates a new MenuItem.",
+        "security": [
+          {
+            "TokenAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MenuItemRequest"
+              }
+            }
+          }
+        },
+        "tags": [
+          "Menu"
+        ]
+      }
+    },
+    "/menu/menu-item/{menuItemId}": {
+      "parameters": [
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "menuItemId",
+          "in": "path",
+          "required": true
+        }
+      ],
+      "get": {
+        "summary": "Get MenuItem",
+        "tags": [
+          "Menu"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MenuItemResponse"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-menu-item",
+        "description": "Get a single MenuItem"
+      },
+      "put": {
+        "summary": "Put MenuItem",
+        "operationId": "put-menu-item",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "TokenAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MenuItemRequest"
+              }
+            }
+          }
+        },
+        "description": "Update MenuItem",
+        "tags": [
+          "Menu"
+        ]
+      },
+      "delete": {
+        "summary": "Delete MenuItem",
+        "operationId": "delete-menu-item",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "description": "Delete MenuItem",
+        "security": [
+          {
+            "TokenAuth": []
+          }
+        ],
+        "tags": [
+          "Menu"
+        ]
       }
     },
     "/news/entry": {
@@ -1624,6 +1765,87 @@
         "required": [
           "access",
           "refresh"
+        ]
+      },
+      "MenuItemIterator": {
+        "title": "MenuItemIterator",
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "number"
+          },
+          "next": {
+            "type": "number",
+            "nullable": true
+          },
+          "previous": {
+            "type": "number",
+            "nullable": true
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MenuItemResponse"
+            }
+          }
+        },
+        "required": [
+          "count",
+          "next",
+          "previous",
+          "results"
+        ]
+      },
+      "MenuItemRequest": {
+        "title": "MenuItemRequest",
+        "type": "object",
+        "properties": {
+          "recipe": {
+            "type": "number",
+            "description": "Recipe id"
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO8601 date",
+            "example": "2022-05-20T13:45:04.322238-05:00"
+          },
+          "complete": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "recipe",
+          "start_date",
+          "complete"
+        ]
+      },
+      "MenuItemResponse": {
+        "title": "MenuItemResponse",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "readOnly": true
+          },
+          "recipe_data": {
+            "$ref": "#/components/schemas/RecipeList"
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO8601 date",
+            "example": "2022-05-20T13:45:04.322238-05:00"
+          },
+          "complete": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "recipe_data",
+          "start_date",
+          "complete"
         ]
       },
       "NewsIterator": {
